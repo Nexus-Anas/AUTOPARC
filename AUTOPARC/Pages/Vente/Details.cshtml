@@ -1,0 +1,105 @@
+﻿@page
+@model AUTOPARC.Pages.Vente.DetailsModel
+@{
+    ViewData["Title"] = "Ajouter Vente";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Ventes</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Form de Modification de Vente</h4>
+            <hr>
+            <div class="mt-4">
+                <div class="container-fluid">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="card" style="background-color:#F2F2F2">
+                                <div class="card-header font-weight-bold">Ventes</div>
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <h3 class="text-center title-1 font-weight-bold">Ajouter Vente</h3>
+                                    </div>
+                                    <hr>
+                                    <form method="post">
+                                        <input asp-for="Ventes.Id" type="hidden"/>
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Ventes.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
+                                                <select asp-for="Ventes.VehiculeId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.Vehicules)
+                                                    {
+                                                        <option value="@item.Id">@item.Matricule</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-6">
+                                                <label asp-for="Ventes.PrixVente">Prix de Vente</label>
+                                                <input asp-for="Ventes.PrixVente" class="form-control" type="text" aria-required="true">
+                                            </div>
+
+                                            <div class="form-group col-6">
+                                                <label asp-for="Ventes.MontantRecu">Montant Recu</label>
+                                                <input asp-for="Ventes.MontantRecu" class="form-control" type="text" aria-required="true">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-6">
+                                                <label asp-for="Ventes.MethodePayementId">Methode de Payement</label>
+                                                <select asp-for="Ventes.MethodePayementId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.MethodePayements)
+                                                    {
+                                                        <option value="@item.Id">@item.Methode</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label asp-for="Ventes.DateVente">Date Vente</label>
+                                                <input asp-for="Ventes.DateVente" class="form-control" type="date" aria-required="true">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-6">
+                                                <label asp-for="Ventes.NomAcheteur">Nom Acheteur</label>
+                                                <input asp-for="Ventes.NomAcheteur" class="form-control" type="text" aria-required="true">
+                                            </div>
+
+                                            <div class="form-group col-6">
+                                                <label asp-for="Ventes.ContactAcheteur">Contact Acheteur</label>
+                                                <input asp-for="Ventes.ContactAcheteur" class="form-control" type="text" aria-required="true">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-md-4 mt-3">
+                                                <button asp-page-handler="Update" class="btn btn-lg btn-primary btn-block">Modifier</button>
+                                            </div>
+                                            <div class="col-md-4 mt-3">
+                                                <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer cette historique de vente?')">Supprimer</button>
+                                            </div>
+                                            <div class="col-md-4 mt-3">
+                                                <a asp-page="/Vente/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

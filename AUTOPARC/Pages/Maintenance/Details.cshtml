@@ -1,0 +1,141 @@
+﻿@page
+@model AUTOPARC.Pages.Maintenance.DetailsModel
+@{
+    ViewData["Title"] = "Details Maintenance";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Maintenances</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Form de Maintenance</h4>
+            <hr>
+            <div class="mt-4">
+                <div class="container-fluid">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="card" style="background-color:#F2F2F2">
+                                <div class="card-header fs-4 font-weight-bold">Maintenance</div>
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <h3 class="text-center title-1 font-weight-bold">Modifier Maintenance</h3>
+                                    </div>
+                                    <hr>
+                                    <form method="post">
+                                        <input type="hidden" asp-for="Maintenances.Id" />
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Maintenances.TypeId" class="control-label mb-1">Type Maintenance</label>
+                                                <select asp-for="Maintenances.TypeId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.TypeMaintenances)
+                                                    {
+                                                        <option value="@item.Id">@item.Type</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Maintenances.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
+                                                <select asp-for="Maintenances.VehiculeId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.Vehicules)
+                                                    {
+                                                        <option value="@item.Id">@item.Matricule</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Maintenances.DateMaintenance" class="control-label mb-1">Date Maintenance</label>
+                                                <input asp-for="Maintenances.DateMaintenance" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-4">
+                                                <label asp-for="Maintenances.Cout" class="control-label mb-1">Coût (DH)</label>
+                                                <input asp-for="Maintenances.Cout" class="form-control" type="text" aria-required="true">
+                                            </div>
+
+                                            <div class="form-group col-4">
+                                                <label asp-for="Maintenances.MontantPayee" class="control-label mb-1">Montant Payé (DH)</label>
+                                                <input asp-for="Maintenances.MontantPayee" class="form-control fs-5" type="text" aria-required="true">
+                                            </div>
+
+                                            <div class="form-group col-4">
+                                                <label asp-for="Maintenances.MethodePayementId" class="control-label mb-1">Methode de Payement</label>
+                                                <select asp-for="Maintenances.MethodePayementId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.MethodePayements)
+                                                    {
+                                                        <option value="@item.Id">@item.Methode</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Maintenances.Description" class="control-label mb-1">Description</label>
+                                                <textarea asp-for="Maintenances.Description" class="form-control" rows="4" aria-required="true"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Maintenances.UrlDoc" class="control-label mb-1">URL Document</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputFileAdd">URL</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input asp-for="Maintenances.UrlDoc" type="file" class="custom-file-input" id="inputFile">
+                                                        <label class="custom-file-label fs-5" for="inputFile">Choisir un fichier...</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-md-4 mt-3">
+                                                <button asp-page-handler="Update" class="btn btn-lg btn-info btn-block">Modifier</button>
+                                            </div>
+                                            <div class="col-md-4 mt-3">
+                                                <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer ce document?')" style="background-color:crimson">Supprimer</button>
+                                            </div>
+                                            <div class="col-md-4 mt-3">
+                                                <a asp-page="/Maintenance/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section DocUploadJS {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inputFile').on("change", function () {
+                var inputPicture = $(this).val().split("\\").pop();
+                $(this).next(".custom-file-label").html(inputPicture);
+            });
+        });
+    </script>
+}

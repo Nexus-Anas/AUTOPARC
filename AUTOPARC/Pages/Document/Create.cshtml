@@ -1,0 +1,134 @@
+﻿@page
+@model AUTOPARC.Pages.Document.CreateModel
+@{
+    ViewData["Title"] = "Ajouter Document";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Documents</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Form du Document</h4>
+            <hr>
+            <div class="mt-4">
+                <div class="container-fluid">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="card" style="background-color:#F2F2F2">
+                                <div class="card-header fs-4 font-weight-bold">Document</div>
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <h3 class="text-center title-1 font-weight-bold">Nouveau Document</h3>
+                                    </div>
+                                    <hr>
+                                    <form method="post">
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.Numero" class="control-label mb-1">Numéro Document</label>
+                                                <span asp-validation-for="Docs.Numero" class="text text-danger"></span>
+                                                <input asp-for="Docs.Numero" type="text" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.TypeId" class="control-label mb-1">Type Document</label>
+                                                <span asp-validation-for="Docs.TypeId" class="text text-danger"></span>
+                                                <select asp-for="Docs.TypeId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.TypeDocs)
+                                                    {
+                                                        <option value="@item.Id">@item.Type</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
+                                                <span asp-validation-for="Docs.VehiculeId" class="text text-danger"></span>
+                                                <select asp-for="Docs.VehiculeId" class="form-control form-select">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.Vehicules)
+                                                    {
+                                                        <option value="@item.Id">@item.Matricule</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.FrsId" class="control-label mb-1">Fournisseur</label>
+                                                <span asp-validation-for="Docs.FrsId" class="text text-danger"></span>
+                                                <select asp-for="Docs.FrsId" class="form-control form-select fs-5">
+                                                    <option value="value">Choisir...</option>
+                                                    @foreach (var item in Model.Fournisseurs)
+                                                    {
+                                                        <option value="@item.Id">@item.Nom</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-6">
+                                                <label asp-for="Docs.DateDebut" class="control-label mb-1">Date Début</label>
+                                                <span asp-validation-for="Docs.DateDebut" class="text text-danger"></span>
+                                                <input asp-for="Docs.DateDebut" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                                            </div>
+
+                                            <div class="form-group col-6">
+                                                <label asp-for="Docs.DateFin" class="control-label mb-1">Date Fin</label>
+                                                <span asp-validation-for="Docs.DateFin" class="text text-danger"></span>
+                                                <input asp-for="Docs.DateFin" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.UrlDoc" class="control-label mb-1 fs-5">URL Document</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputFileAdd">URL</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input asp-for="Docs.UrlDoc" type="file" class="custom-file-input" id="inputFile">
+                                                        <label class="custom-file-label fs-5" for="inputFile">Choisir un fichier...</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <button asp-page-handler="Create" class="btn btn-lg btn-info btn-block fs-4 mt-4">Valider</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section DocUploadJS {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inputFile').on("change", function () {
+                var inputPicture = $(this).val().split("\\").pop();
+                $(this).next(".custom-file-label").html(inputPicture);
+            });
+        });
+    </script>
+}

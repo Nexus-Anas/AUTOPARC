@@ -1,0 +1,91 @@
+﻿@page
+@model AUTOPARC.Pages.Maintenance.TypeMaintenance.IndexModel
+@{
+    ViewData["Title"] = "Liste des Types Maintenances";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Maintenances</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Liste des Types Maintenances</h4>
+            <hr>
+            @if (Model.checkTypeID)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>Vous ne pouvez pas supprimer ce type de maintenance car il existe dans la table des maintenances!</p>
+                </div>
+            }
+            <div class="mt-4">
+                <div class="d-flex justify-content-center mb-3">
+                    <div class="col-xl-6 col-lg-8 col-md-6 col-sm-8 col-12">
+                        <div class="input-group">
+                            <button class="btn btn-info" style="font-size:18px" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus"></i>&nbsp; Nouveau type</button>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post">
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" style="font-size:20px">AJOUTER TYPE</h5>
+                                    <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input asp-for="TypeMaintenances.Type" type="text" class="form-control" style="font-size:18px" placeholder="Entrer un nouveau type" style="font-size:16px">
+                                </div>
+                                <div class="modal-footer">
+                                    <button asp-page-handler="Create" class="btn btn-info" style="font-size:18px">Confirmer</button>
+                                    <button data-dismiss="modal" class="btn btn-secondary" style="font-size:18px">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="d-flex justify-content-center">
+                        <div class="table-responsive col-xl-6 col-lg-8 col-md-6 col-sm-8 col-12">
+                            <table id="zero_config" class="table table-borderless table-striped table-earning">
+
+                                <thead>
+                                    <tr>
+                                        <th class="text text-white bg-info">Type Maintenances</th>
+                                        <th class="text-white bg-info d-flex justify-content-end">
+                                            <div class="btn-group mr-3" role="group">
+                                                Action
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.TypeMaintenancesList)
+                                    {
+                                        <tr>
+                                            <td class="text-dark" style="font-size:18px;">@item.Type</td>
+                                            <td class="text-dark d-flex justify-content-end">
+                                                <div class="btn-group" role="group">
+                                                    <a asp-route-id="@item.Id" asp-page="Update" class="text text-white btn btn-info"><i class="bi bi-pen-fill"></i></a>
+                                                    <button asp-route-id="@item.Id" asp-page-handler="Delete" onclick="return confirm('Voulez-vous vraiment supprimer ce type de maintenance?')" class="text text-white btn btn-danger" style="background-color:crimson"><i class="bi bi-trash-fill"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

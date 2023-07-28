@@ -1,0 +1,63 @@
+﻿@page
+@model AUTOPARC.Pages.Vente.IndexModel
+@{
+    ViewData["Title"] = "Liste des Ventes";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Ventes</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Liste des Ventes</h4>
+            <hr>
+
+            <div class="mt-5">
+                <div class="table-responsive">
+                    <table id="zero_config" class="table table-borderless table-striped table-earning">
+                        <thead>
+                            <tr>
+                                <th class="text text-white bg-info">Matricule</th>
+                                <th class="text text-white bg-info">Date Vente</th>
+                                <th class="text text-white text-center bg-info">Prix Vente</th>
+                                <th class="text text-white text-center bg-info">Montant Recu</th>
+                                <th class="text text-white text-center bg-info">Reste</th>
+                                <th class="text text-white text-center bg-info">Etat</th>
+                                <th class="text text-white text-center bg-info">Methode de Paiment</th>
+                                <th class="text text-white text-center bg-info">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Ventes)
+                            {
+                                decimal reste = item.PrixVente - item.MontantRecu;
+                                string textColor = reste == 0 ? "text-success" : "text-danger";
+                                string badge = reste == 0 ? "badge badge-success" : "badge badge-danger";
+                                string state = reste == 0 ? "payé" : "impayé";
+
+                                <tr>
+                                    <td class="text-dark" style="font-size:18px;">@item.Vehicule.Matricule</td>
+                                    <td class="text-dark" style="font-size:18px;">@item.DateVente?.ToShortDateString()</td>
+                                    <td class="text-dark text-center" style="font-size:18px;">@item.PrixVente</td>
+                                    <td class="text-dark text-center" style="font-size:18px;">@item.MontantRecu</td>
+                                    <td class="text-center" style="font-size:18px;">
+                                        <span class="@textColor font-weight-bold">@reste</span>
+                                    </td>
+                                    <td class="text-center"><span class="@badge mt-1">@state</span></td>
+                                    <td class="text-dark text-center" style="font-size:18px;">@item.MethodePayement.Methode</td>
+                                    <td class="text-dark">
+                                        <a asp-route-id="@item.Id" asp-page="/Vente/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

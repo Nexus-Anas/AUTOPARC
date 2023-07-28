@@ -1,0 +1,93 @@
+﻿@page
+@model AUTOPARC.Pages.Fournisseur.DetailsModel
+@{
+    ViewData["Title"] = "Details Fournisseur";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Fournisseurs</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Modifier Fournisseur</h4>
+            <hr>
+            <form method="post">
+                <input type="hidden" asp-for="Fournisseurs.Id" />
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Fournisseurs.Nom" class="control-label mb-1 fs-4">Nom <span style="color:red">*</span></label>
+                        <input asp-for="Fournisseurs.Nom" type="text" class="required form-control fs-4">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Fournisseurs.Email" class="control-label mb-1 fs-4">Email </label>
+                        <input asp-for="Fournisseurs.Email" type="text" class="form-control fs-4">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Fournisseurs.Telephone" class="control-label mb-1 fs-4">Telephone </label>
+                        <input asp-for="Fournisseurs.Telephone" type="text" class="form-control fs-4">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Fournisseurs.Portable" class="control-label mb-1 fs-4">Portable</label>
+                        <input asp-for="Fournisseurs.Portable" type="text" class="form-control fs-4">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Fournisseurs.Adresse" class="control-label mb-1">Adresse </label>
+                        <textarea asp-for="Fournisseurs.Adresse" class="form-control" rows="4" aria-required="true"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12 fs-4">
+                        <label asp-for="Fournisseurs.VilleId">Ville <span style="color:red">*</span></label>
+                        <select asp-for="Fournisseurs.VilleId" class="form-control form-select fs-4">
+                            <option value="value">Choisir...</option>
+                            @foreach (var item in Model.Villes)
+                            {
+                                <option value="@item.Id">@item.Nom</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12 fs-4">
+                        <label asp-for="Fournisseurs.TypeFrsId">Type Fournisseur <span style="color:red">*</span></label>
+                        <select asp-for="Fournisseurs.TypeFrsId" class="form-control form-select fs-4">
+                            <option value="value">Choisir...</option>
+                            @foreach (var item in Model.TypeFournisseurs)
+                            {
+                                <option value="@item.Id">@item.Type</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-4 mt-3">
+                        <button asp-page-handler="Update" class="btn btn-lg btn-primary btn-block">Modifier</button>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer ce fournisseur?')">Supprimer</button>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <a asp-page="/Fournisseur/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

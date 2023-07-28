@@ -1,0 +1,244 @@
+﻿@page
+@model AUTOPARC.Pages.Vehicule.DetailsModel
+@{
+    ViewData["Title"] = "Modifier Vehicule";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Vehicules</h3>
+    </div>
+
+    <form method="post">
+        <input asp-for="Vehicules.Id" type="hidden"/>
+        <div class="card">
+            <div class="card-body wizard-content">
+                <h4 class="card-title title-2">Modifier Vehicules</h4>
+                <hr>
+                <div class="form-row">
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.Matricule">Matricule <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.Matricule" class="text-danger"></span>
+                        <input asp-for="Vehicules.Matricule" type="text" class="required form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.CategorieId">Categorie <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.CategorieId" class="text-danger"></span>
+                        <select asp-for="Vehicules.CategorieId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Categories)
+                            {
+                                <option value="@item.Id">@item.Categorie</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.MarqueId">Marque <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.MarqueId" class="text-danger"></span>
+                        <select asp-for="Vehicules.MarqueId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Marques)
+                            {
+                                <option value="@item.Id">@item.Marque</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.ModeleId">Modele <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.ModeleId" class="text-danger"></span>
+                        <select asp-for="Vehicules.ModeleId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Modeles)
+                            {
+                                <option value="@item.Id">@item.Modele</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.CarburantId">Carburant <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.CarburantId" class="text-danger"></span>
+                        <select asp-for="Vehicules.CarburantId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.TypeCarburants)
+                            {
+                                <option value="@item.Id">@item.Type</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.EtatVehiculeId">Etat <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.EtatVehiculeId" class="text-danger"></span>
+                        <select asp-for="Vehicules.EtatVehiculeId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Etatvehicules)
+                            {
+                                <option value="@item.Id">@item.Etat</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.FrsId">Fournisseur <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.FrsId" class="text-danger"></span>
+                        <select asp-for="Vehicules.FrsId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Fournisseurs)
+                            {
+                                <option value="@item.Id">@item.Nom</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.PrixAchat">Prix Achat <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.PrixAchat" class="text-danger"></span>
+                        <input asp-for="Vehicules.PrixAchat" type="text" class="required form-control">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.MontantPayee">Montant Payee <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.MontantPayee" class="text-danger"></span>
+                        <input asp-for="Vehicules.MontantPayee" type="text" class="required form-control">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.MethodePayementId">Methode de Payement <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.MethodePayementId" class="text-danger"></span>
+                        <select asp-for="Vehicules.MethodePayementId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.MethodePayements)
+                            {
+                                <option value="@item.Id">@item.Methode</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.DateAchat">Date Achat</label>
+                        <span asp-validation-for="Vehicules.DateAchat" class="text-danger"></span>
+                        <input asp-for="Vehicules.DateAchat" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.DateMisEnCirculation">Date mis en Circulation</label>
+                        <span asp-validation-for="Vehicules.DateMisEnCirculation" class="text-danger"></span>
+                        <input asp-for="Vehicules.DateMisEnCirculation" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Vehicules.Note">Note</label>
+                        <textarea asp-for="Vehicules.Note" class="form-control" rows="4" aria-required="true"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body wizard-content">
+                <h4 class="card-title title-2">Informations Optionels</h4>
+                <hr>
+                <div class="form-row">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.Moteur" class="text text-dark">Moteur</label>
+                        <input asp-for="Vehicules.Moteur" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.Architecture" class="text text-dark">Architecture</label>
+                        <input asp-for="Vehicules.Architecture" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <label asp-for="Vehicules.BoiteAVitesse" class="text text-dark">Boîte a Vitesse</label>
+                        <input asp-for="Vehicules.BoiteAVitesse" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.Longueur" class="text text-dark">Longueur</label>
+                        <input asp-for="Vehicules.Longueur" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.Largeur" class="text text-dark">Largeur</label>
+                        <input asp-for="Vehicules.Largeur" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.Hauteur" class="text text-dark">Hauteur</label>
+                        <input asp-for="Vehicules.Hauteur" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.VolumeCoffre" class="text text-dark">Volume Coffre</label>
+                        <input asp-for="Vehicules.VolumeCoffre" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.PuissanceFiscale" class="text text-dark">Puissance Fiscale</label>
+                        <input asp-for="Vehicules.PuissanceFiscale" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.PuissanceMax" class="text text-dark">Puissance Max</label>
+                        <input asp-for="Vehicules.PuissanceMax" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.VitesseMax" class="text text-dark">Vitesse Max</label>
+                        <input asp-for="Vehicules.VitesseMax" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.ConsomationMixte" class="text text-dark">Conso. Mixte</label>
+                        <input asp-for="Vehicules.ConsomationMixte" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.NbrPlace" class="text text-dark">Nombre de Place</label>
+                        <input asp-for="Vehicules.NbrPlace" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.Poids" class="text text-dark">Poids</label>
+                        <input asp-for="Vehicules.Poids" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-4 mt-3">
+                        <button asp-page-handler="Update" class="btn btn-lg btn-primary btn-block">Modifier</button>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer ce fournisseur?')">Supprimer</button>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <a asp-page="/Vehicule/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+</div>

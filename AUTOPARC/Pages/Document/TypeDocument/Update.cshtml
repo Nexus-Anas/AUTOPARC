@@ -1,0 +1,43 @@
+﻿@page
+@model AUTOPARC.Pages.Document.TypeDocument.UpdateModel
+@{
+    ViewData["Title"] = "Modifier Document";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Documents</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Modifier Type Document</h4>
+            <hr>
+            <div class="mt-4">
+
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <form method="post">
+                            <input type="hidden" asp-for="TypeDocs.Id" />
+                            <div class="card" style=" background-color:#DFDDDE">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="font-size: 18px;">Modifier</h5>
+                                    <input asp-for="TypeDocs.Type" type="text" class="form-control" placeholder="Entrer un nouveau type" style="font-size:18px">
+
+                                    <div class="form-group row">
+                                        <div class="col">
+                                            <button asp-page-handler="Update" class="btn btn-info mt-3" style="font-size: 18px;" onclick="return confirm('Voulez-vous vraiment mettre à jour ce type de document?')">Modifier</button>
+                                            <a asp-page="/Document/TypeDocument/Index" class="btn btn-secondary mt-3 ml-2" style="font-size: 18px;">Retour</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
