@@ -36,9 +36,9 @@
 
                                 <tr style="font-size:18px">
                                     <td class="text-dark">@item.Matricule</td>
-                                    <td class="text-dark">@item.Categorie.Categorie</td>
-                                    <td class="text-dark">@item.Marque.Marque</td>
-                                    <td class="text-dark">@item.Modele.Modele</td>
+                                    <td class="text-dark">@item.Categorie.Nom</td>
+                                    <td class="text-dark">@item.Marque.Nom</td>
+                                    <td class="text-dark">@item.Modele.Nom</td>
                                     <td class="text-center" style="font-size:20px"><span class="badge @badge">@item.EtatVehicule.Etat</span></td>
                                     <td class="text-dark">
                                         <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>

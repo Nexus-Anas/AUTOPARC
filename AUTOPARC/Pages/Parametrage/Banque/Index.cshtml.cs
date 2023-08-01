@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Operation.Ville
+namespace AUTOPARC.Pages.Parametrage.Banque
 {
     public class IndexModel : PageModel
     {
@@ -17,15 +17,16 @@ namespace AUTOPARC.Pages.Operation.Ville
 
 
         [BindProperty]
-        public Villes Villes { get; set; }
-        public List<Villes> VillesList { get; set; }
+        public Banques Banques { get; set; }
+        public List<Banques> BanquesList { get; set; }
 
         public bool checkTypeID;
 
 
 
+
         public async Task OnGet()
-            => VillesList = await _db.Villes.ToListAsync();
+            => BanquesList = await _db.Banques.ToListAsync();
 
 
 
@@ -35,9 +36,9 @@ namespace AUTOPARC.Pages.Operation.Ville
             if (!ModelState.IsValid)
                 return Page();
 
-            await _db.Villes.AddAsync(Villes);
+            await _db.Banques.AddAsync(Banques);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Operation/Ville/Index");
+            return RedirectToPage("/Parametrage/Banque/Index");
         }
 
 
@@ -45,22 +46,22 @@ namespace AUTOPARC.Pages.Operation.Ville
 
         public async Task<IActionResult> OnPostDelete(int id)
         {
-            var ville = await _db.Villes.FindAsync(id);
+            var banque = await _db.Banques.FindAsync(id);
 
-            if (ville is null)
+            if (banque is null)
                 return NotFound();
 
-            var frs = await _db.Fournisseurs.Where(x => x.VilleId == ville.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            if (frs != 0)
+            var check = await _db.Cheques.Where(x => x.BanqueId == banque.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            if (check != 0)
             {
                 checkTypeID = true;
                 await OnGet();
                 return Page();
             }
 
-            _db.Villes.Remove(ville);
+            _db.Banques.Remove(banque);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Operation/Ville/Index");
+            return RedirectToPage("/Parametrage/Banque/Index");
         }
     }
 }

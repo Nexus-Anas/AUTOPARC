@@ -15,7 +15,7 @@ namespace AUTOPARC.Models
         }
 
         public int Id { get; set; }
-        public string Modele { get; set; }
+        public string Nom { get; set; }
         public int MarqueId { get; set; }
 
         public virtual Marques Marque { get; set; }

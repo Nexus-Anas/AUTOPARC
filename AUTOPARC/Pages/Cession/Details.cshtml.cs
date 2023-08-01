@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Vente
+namespace AUTOPARC.Pages.Cession
 {
     public class DetailsModel : PageModel
     {
@@ -16,9 +16,9 @@ namespace AUTOPARC.Pages.Vente
 
 
         [BindProperty]
-        public Ventes Ventes { get; set; }
+        public Cessions Cessions { get; set; }
         public List<Vehicules> Vehicules { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -26,9 +26,9 @@ namespace AUTOPARC.Pages.Vente
 
         public async Task OnGet(int id)
         {
-            Ventes = await _db.Ventes.FindAsync(id);
+            Cessions = await _db.Cessions.FindAsync(id);
             Vehicules = await _db.Vehicules.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
 
 
@@ -39,17 +39,17 @@ namespace AUTOPARC.Pages.Vente
             if (!ModelState.IsValid)
                 return Page();
 
-            var vente = await _db.Ventes.FindAsync(Ventes.Id);
-            vente.VehiculeId = Ventes.VehiculeId;
-            vente.DateVente = Ventes.DateVente;
-            vente.PrixVente = Ventes.PrixVente;
-            vente.MontantRecu = Ventes.MontantRecu;
-            vente.MethodePayementId = Ventes.MethodePayementId;
-            vente.NomAcheteur = Ventes.NomAcheteur;
-            vente.ContactAcheteur = Ventes.ContactAcheteur;
+            var vente = await _db.Cessions.FindAsync(Cessions.Id);
+            vente.VehiculeId = Cessions.VehiculeId;
+            vente.DateCession = Cessions.DateCession;
+            vente.PrixCession = Cessions.PrixCession;
+            vente.MontantRecu = Cessions.MontantRecu;
+            vente.ModePaimentId = Cessions.ModePaimentId;
+            vente.NomAcheteur = Cessions.NomAcheteur;
+            vente.ContactAcheteur = Cessions.ContactAcheteur;
 
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Vente/Index");
+            return RedirectToPage("/Cession/Index");
         }
 
 
@@ -60,9 +60,9 @@ namespace AUTOPARC.Pages.Vente
             if (!ModelState.IsValid)
                 return Page();
 
-            _db.Ventes.Remove(Ventes);
+            _db.Cessions.Remove(Cessions);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Vente/Index");
+            return RedirectToPage("/Cession/Index");
         }
     }
 }

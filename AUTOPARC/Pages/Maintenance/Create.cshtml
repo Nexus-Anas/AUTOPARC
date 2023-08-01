@@ -75,9 +75,9 @@
                                                 <label asp-for="Maintenances.MethodePayementId" class="control-label mb-1">Methode de Payement</label>
                                                 <select asp-for="Maintenances.MethodePayementId" class="form-control form-select">
                                                     <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.MethodePayements)
+                                                    @foreach (var item in Model.ModePaiments)
                                                     {
-                                                        <option value="@item.Id">@item.Methode</option>
+                                                        <option value="@item.Id">@item.Mode</option>
                                                     }
                                                 </select>
                                             </div>

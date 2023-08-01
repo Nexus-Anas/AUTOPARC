@@ -24,7 +24,9 @@ namespace AUTOPARC.Pages.Vehicule
         public List<TypeCarburants> TypeCarburants { get; set; }
         public List<EtatVehicules> Etatvehicules { get; set; }
         public List<Fournisseurs> Fournisseurs { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
+
+        public bool check_Prix_MontantPayee;
 
 
 
@@ -37,7 +39,7 @@ namespace AUTOPARC.Pages.Vehicule
             TypeCarburants = await _db.TypeCarburants.ToListAsync();
             Etatvehicules = await _db.EtatVehicules.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
 
 
@@ -50,6 +52,15 @@ namespace AUTOPARC.Pages.Vehicule
                 await OnGet();
                 return Page();
             }
+
+            var condition = Vehicules.PrixAchat < Vehicules.MontantPayee;
+            if (condition)
+            {
+                check_Prix_MontantPayee = true;
+                await OnGet();
+                return Page();
+            }
+
             await _db.Vehicules.AddAsync(Vehicules);
             await _db.SaveChangesAsync();
             return RedirectToPage("/Vehicule/Index");

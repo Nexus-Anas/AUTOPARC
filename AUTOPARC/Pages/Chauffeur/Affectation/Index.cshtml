@@ -1,5 +1,5 @@
 ﻿@page
-@model AUTOPARC.Pages.Chauffeur.Historique.IndexModel
+@model AUTOPARC.Pages.Chauffeur.Affectation.IndexModel
 @{
     ViewData["Title"] = "Liste d'Historique Chauffeur - Vehicule";
 }
@@ -28,13 +28,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.HistoriqueChauffeurVehicule)
+                            @foreach (var item in Model.AffectationChauffeurVehicules)
                             {
                                 <tr style="font-size:16px">
                                     <td class="text-dark">@item.Vehicule.Matricule</td>
                                     <td class="text-dark">@item.Chauffeur.Nom @item.Chauffeur.Prenom</td>
-                                    <td class="text-dark">@item.DateDebutAffectation?.ToShortDateString()</td>
-                                    <td class="text-dark">@item.DateFinAffectation?.ToShortDateString()</td>
+                                    <td class="text-dark">@item.DateDebutAffectation.ToShortDateString()</td>
+                                    <td class="text-dark">@item.DateFinAffectation.ToShortDateString()</td>
                                     <td class="text-dark">
                                         <a asp-route-id="@item.Id" asp-page="/Fournisseur/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>

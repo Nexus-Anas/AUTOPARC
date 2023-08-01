@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Operation.MethodePayement
+namespace AUTOPARC.Pages.Parametrage.ModePaiment
 {
     public class IndexModel : PageModel
     {
@@ -17,15 +17,15 @@ namespace AUTOPARC.Pages.Operation.MethodePayement
 
 
         [BindProperty]
-        public MethodePayements MethodePayements { get; set; }
-        public List<MethodePayements> MethodePayementsList { get; set; }
+        public ModePaiments ModePaiments { get; set; }
+        public List<ModePaiments> ModePaimentsList { get; set; }
 
         public bool checkTypeID;
 
 
 
         public async Task OnGet()
-            => MethodePayementsList = await _db.MethodePayements.ToListAsync();
+            => ModePaimentsList = await _db.ModePaiments.ToListAsync();
 
 
 
@@ -35,9 +35,9 @@ namespace AUTOPARC.Pages.Operation.MethodePayement
             if (!ModelState.IsValid)
                 return Page();
 
-            await _db.MethodePayements.AddAsync(MethodePayements);
+            await _db.ModePaiments.AddAsync(ModePaiments);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Operation/MethodePayement/Index");
+            return RedirectToPage("/Parametrage/ModePaiment/Index");
         }
 
 
@@ -45,14 +45,14 @@ namespace AUTOPARC.Pages.Operation.MethodePayement
 
         public async Task<IActionResult> OnPostDelete(int id)
         {
-            var methode = await _db.MethodePayements.FindAsync(id);
+            var methode = await _db.ModePaiments.FindAsync(id);
 
             if (methode is null)
                 return NotFound();
 
-            var vehicule = await _db.Vehicules.Where(x => x.MethodePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            var recharge_carburon = await _db.RechargeCarburants.Where(x => x.MethodePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            var vente = await _db.Ventes.Where(x => x.MethodePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            var vehicule = await _db.Vehicules.Where(x => x.ModePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            var recharge_carburon = await _db.RechargeCarburants.Where(x => x.ModePaimentId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            var vente = await _db.Cessions.Where(x => x.ModePaimentId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var maintenance = await _db.Maintenances.Where(x => x.MethodePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             if (vehicule != 0 && recharge_carburon != 0 && vehicule != 0 && maintenance != 0)
             {
@@ -61,9 +61,9 @@ namespace AUTOPARC.Pages.Operation.MethodePayement
                 return Page();
             }
 
-            _db.MethodePayements.Remove(methode);
+            _db.ModePaiments.Remove(methode);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Operation/MethodePayement/Index");
+            return RedirectToPage("/Parametrage/ModePaiment/Index");
         }
     }
 }

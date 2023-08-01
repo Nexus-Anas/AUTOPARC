@@ -31,7 +31,7 @@ namespace AUTOPARC.Pages.Vehicule.Categorie
                 return Page();
 
             var categorie = await _db.Categories.FindAsync(Categories.Id);
-            categorie.Categorie = Categories.Categorie;
+            categorie.Nom = Categories.Nom;
             await _db.SaveChangesAsync();
             return RedirectToPage("/Vehicule/Categorie/Index");
         }

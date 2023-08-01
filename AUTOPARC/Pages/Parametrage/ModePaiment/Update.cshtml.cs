@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Operation.MethodePayement
+namespace AUTOPARC.Pages.Parametrage.ModePaiment
 {
     public class UpdateModel : PageModel
     {
@@ -14,13 +14,13 @@ namespace AUTOPARC.Pages.Operation.MethodePayement
 
 
         [BindProperty]
-        public MethodePayements MethodePayements { get; set; }
+        public ModePaiments ModePaiments { get; set; }
 
 
 
 
         public async Task OnGet(int id)
-            => MethodePayements = await _db.MethodePayements.FindAsync(id);
+            => ModePaiments = await _db.ModePaiments.FindAsync(id);
 
 
 
@@ -30,10 +30,10 @@ namespace AUTOPARC.Pages.Operation.MethodePayement
             if (!ModelState.IsValid)
                 return Page();
 
-            var methode = await _db.MethodePayements.FindAsync(MethodePayements.Id);
-            methode.Methode = MethodePayements.Methode;
+            var methode = await _db.ModePaiments.FindAsync(ModePaiments.Id);
+            methode.Mode = ModePaiments.Mode;
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Operation/MethodePayement/Index");
+            return RedirectToPage("/Parametrage/ModePaiment/Index");
         }
     }
 }

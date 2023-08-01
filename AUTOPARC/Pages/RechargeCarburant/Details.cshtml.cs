@@ -18,7 +18,7 @@ namespace AUTOPARC.Pages.RechargeCarburant
         [BindProperty]
         public RechargeCarburants RechargeCarburants { get; set; }
         public List<Vehicules> Vehicules { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -28,7 +28,7 @@ namespace AUTOPARC.Pages.RechargeCarburant
         {
             RechargeCarburants = await _db.RechargeCarburants.FindAsync(id);
             Vehicules = await _db.Vehicules.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
 
 
@@ -43,7 +43,7 @@ namespace AUTOPARC.Pages.RechargeCarburant
             recharge_carburant.VehiculeId = RechargeCarburants.VehiculeId;
             recharge_carburant.Quantite = RechargeCarburants.Quantite;
             recharge_carburant.Pu = RechargeCarburants.Pu;
-            recharge_carburant.MethodePayementId = RechargeCarburants.MethodePayementId;
+            recharge_carburant.ModePaimentId = RechargeCarburants.ModePaimentId;
             recharge_carburant.Km = RechargeCarburants.Km;
             recharge_carburant.DateRecharge = RechargeCarburants.DateRecharge;
             recharge_carburant.Note = RechargeCarburants.Note;

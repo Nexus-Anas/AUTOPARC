@@ -17,10 +17,11 @@
             @if (Model.checkTypeID)
             {
                 <div class="alert alert-danger" role="alert">
-                    <p>Vous ne pouvez pas supprimer cette marque de véhicule car elle existe dans la table des véhicules!</p>
+                    <p>Suppression non autorise! Marque deja utilise.</p>
                 </div>
             }
             <div class="mt-4">
+
                 <div class="d-flex justify-content-center mb-3">
                     <div class="col-xl-6 col-lg-8 col-md-6 col-sm-8 col-12">
                         <div class="input-group">
@@ -30,25 +31,6 @@
                 </div>
 
                 <form method="post">
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" style="font-size:20px">AJOUTER MARQUE</h5>
-                                    <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
-                                </div>
-                                <div class="modal-body">
-                                    <input asp-for="Marques.Marque" type="text" class="form-control" style="font-size:18px" placeholder="Entrer une nouvelle marque de vehicules" style="font-size:16px">
-                                </div>
-                                <div class="modal-footer">
-                                    <button asp-page-handler="Create" class="btn btn-primary" style="font-size:18px">Confirmer</button>
-                                    <button data-dismiss="modal" class="btn btn-secondary" style="font-size:18px">Annuler</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Table -->
                     <div class="d-flex justify-content-center">
@@ -67,14 +49,15 @@
                                 </thead>
 
                                 <tbody>
+                                    @{int _id = 0;}
                                     @foreach (var item in Model.MarquesList)
                                     {
                                         <tr>
-                                            <td class="text-dark" style="font-size:18px">@item.Marque</td>
+                                            <td class="text-dark" style="font-size:18px">@item.Nom</td>
                                             <td class="text-dark d-flex justify-content-end">
                                                 <div class="btn-group" role="group">
                                                     <a asp-route-id="@item.Id" asp-page="Update" class="text text-white btn btn-primary"><i class="bi bi-pen-fill"></i></a>
-                                                    <button asp-route-id="@item.Id" asp-page-handler="Delete" onclick="return confirm('Voulez-vous vraiment supprimer cette marque de véhicule?')" class="text text-white btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                                    <a data-toggle="modal" data-target="#deletemodal" class="text text-white btn btn-danger"><i class="bi bi-trash-fill"></i>@{_id = item.Id;}</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -84,6 +67,47 @@
                             </table>
                         </div>
                     </div>
+
+
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" style="font-size:20px">AJOUTER MARQUE</h5>
+                                    <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input asp-for="Marques.Nom" type="text" class="form-control" style="font-size:18px" placeholder="Entrer une nouvelle marque de vehicules" style="font-size:16px">
+                                </div>
+                                <div class="modal-footer">
+                                    <button asp-page-handler="Create" class="btn btn-primary" style="font-size:18px">Confirmer</button>
+                                    <button data-dismiss="modal" class="btn btn-secondary" style="font-size:18px">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" style="font-size:20px">Voulez-vous vraiment supprimer cette marque de véhicule?</h5>
+                                    <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button asp-route-id="@_id" asp-page-handler="Delete" class="btn btn-primary" style="font-size:18px">Confirmer</button>
+                                    <button data-dismiss="modal" class="btn btn-secondary" style="font-size:18px">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </form>
             </div>
         </div>

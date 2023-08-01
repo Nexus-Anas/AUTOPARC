@@ -18,7 +18,7 @@ namespace AUTOPARC.Pages.RechargeCarburant
         public List<RechargeCarburants> RechargeCarburants { get; set; }
         public List<Vehicules> Vehicules { get; set; }
         public List<TypeCarburants> TypeCarburants { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -28,7 +28,7 @@ namespace AUTOPARC.Pages.RechargeCarburant
             RechargeCarburants = await _db.RechargeCarburants.ToListAsync();
             Vehicules = await _db.Vehicules.ToListAsync();
             TypeCarburants = await _db.TypeCarburants.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
     }
 }

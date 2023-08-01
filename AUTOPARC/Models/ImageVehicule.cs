@@ -7,19 +7,12 @@ using System.Collections.Generic;
 
 namespace AUTOPARC.Models
 {
-    public partial class Docs
+    public partial class ImageVehicule
     {
         public int Id { get; set; }
-        public string Numero { get; set; }
-        public int TypeId { get; set; }
         public int VehiculeId { get; set; }
-        public int FrsId { get; set; }
-        public DateTime DateDebut { get; set; }
-        public DateTime DateFin { get; set; }
-        public string UrlDoc { get; set; }
+        public string Url { get; set; }
 
-        public virtual Fournisseurs Frs { get; set; }
-        public virtual TypeDocs Type { get; set; }
         public virtual Vehicules Vehicule { get; set; }
     }
 }

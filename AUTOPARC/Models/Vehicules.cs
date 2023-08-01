@@ -11,11 +11,11 @@ namespace AUTOPARC.Models
     {
         public Vehicules()
         {
+            Cessions = new HashSet<Cessions>();
             Docs = new HashSet<Docs>();
-            HistoriqueChauffeurVehicule = new HashSet<HistoriqueChauffeurVehicule>();
+            ImageVehicule = new HashSet<ImageVehicule>();
             Maintenances = new HashSet<Maintenances>();
             RechargeCarburants = new HashSet<RechargeCarburants>();
-            Ventes = new HashSet<Ventes>();
         }
 
         public int Id { get; set; }
@@ -28,9 +28,10 @@ namespace AUTOPARC.Models
         public int FrsId { get; set; }
         public decimal PrixAchat { get; set; }
         public decimal MontantPayee { get; set; }
-        public int MethodePayementId { get; set; }
+        public int ModePayementId { get; set; }
         public DateTime DateAchat { get; set; }
         public DateTime? DateMisEnCirculation { get; set; }
+        public int Kilometrage { get; set; }
         public string Note { get; set; }
         public string Moteur { get; set; }
         public string Architecture { get; set; }
@@ -51,12 +52,13 @@ namespace AUTOPARC.Models
         public virtual EtatVehicules EtatVehicule { get; set; }
         public virtual Fournisseurs Frs { get; set; }
         public virtual Marques Marque { get; set; }
-        public virtual MethodePayements MethodePayement { get; set; }
+        public virtual ModePaiments ModePayement { get; set; }
         public virtual Modeles Modele { get; set; }
+        public virtual AffectationChauffeurVehicules AffectationChauffeurVehicules { get; set; }
+        public virtual ICollection<Cessions> Cessions { get; set; }
         public virtual ICollection<Docs> Docs { get; set; }
-        public virtual ICollection<HistoriqueChauffeurVehicule> HistoriqueChauffeurVehicule { get; set; }
+        public virtual ICollection<ImageVehicule> ImageVehicule { get; set; }
         public virtual ICollection<Maintenances> Maintenances { get; set; }
         public virtual ICollection<RechargeCarburants> RechargeCarburants { get; set; }
-        public virtual ICollection<Ventes> Ventes { get; set; }
     }
 }

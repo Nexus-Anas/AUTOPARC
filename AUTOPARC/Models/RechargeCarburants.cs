@@ -11,14 +11,16 @@ namespace AUTOPARC.Models
     {
         public int Id { get; set; }
         public int VehiculeId { get; set; }
+        public int ChauffeurId { get; set; }
         public decimal Quantite { get; set; }
         public decimal Pu { get; set; }
-        public int MethodePayementId { get; set; }
-        public decimal? Km { get; set; }
-        public DateTime DateRecharge { get; set; }
+        public int ModePaimentId { get; set; }
+        public int? Km { get; set; }
+        public DateTime? DateRecharge { get; set; }
         public string Note { get; set; }
 
-        public virtual MethodePayements MethodePayement { get; set; }
+        public virtual Chauffeurs Chauffeur { get; set; }
+        public virtual ModePaiments ModePaiment { get; set; }
         public virtual Vehicules Vehicule { get; set; }
     }
 }

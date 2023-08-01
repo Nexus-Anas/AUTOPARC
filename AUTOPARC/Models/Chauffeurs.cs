@@ -11,12 +11,14 @@ namespace AUTOPARC.Models
     {
         public Chauffeurs()
         {
-            HistoriqueChauffeurVehicule = new HashSet<HistoriqueChauffeurVehicule>();
+            Maintenances = new HashSet<Maintenances>();
+            RechargeCarburants = new HashSet<RechargeCarburants>();
         }
 
         public int Id { get; set; }
         public string Nom { get; set; }
         public string Prenom { get; set; }
+        public string Cin { get; set; }
         public DateTime? DateNaissance { get; set; }
         public string Portable { get; set; }
         public string Email { get; set; }
@@ -27,6 +29,8 @@ namespace AUTOPARC.Models
         public DateTime DateEmbauche { get; set; }
         public string Remarques { get; set; }
 
-        public virtual ICollection<HistoriqueChauffeurVehicule> HistoriqueChauffeurVehicule { get; set; }
+        public virtual AffectationChauffeurVehicules AffectationChauffeurVehicules { get; set; }
+        public virtual ICollection<Maintenances> Maintenances { get; set; }
+        public virtual ICollection<RechargeCarburants> RechargeCarburants { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Chauffeur.Historique
+namespace AUTOPARC.Pages.Chauffeur.Affectation
 {
     public class CreateModel : PageModel
     {
@@ -16,7 +16,7 @@ namespace AUTOPARC.Pages.Chauffeur.Historique
 
 
         [BindProperty]
-        public HistoriqueChauffeurVehicule HistoriqueChauffeurVehicule { get; set; }
+        public AffectationChauffeurVehicules AffectationChauffeurVehicules { get; set; }
         public List<Vehicules> Vehicules { get; set; }
         public List<Chauffeurs> Chauffeurs { get; set; }
 
@@ -40,9 +40,9 @@ namespace AUTOPARC.Pages.Chauffeur.Historique
                 return Page();
             }
 
-            await _db.HistoriqueChauffeurVehicule.AddAsync(HistoriqueChauffeurVehicule);
+            await _db.AffectationChauffeurVehicules.AddAsync(AffectationChauffeurVehicules);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Chauffeur/Historique/Index");
+            return RedirectToPage("/Chauffeur/Affectation/Index");
         }
     }
 }

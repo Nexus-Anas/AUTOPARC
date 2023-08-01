@@ -24,7 +24,7 @@ namespace AUTOPARC.Pages.Vehicule
         public List<TypeCarburants> TypeCarburants { get; set; }
         public List<EtatVehicules> Etatvehicules { get; set; }
         public List<Fournisseurs> Fournisseurs { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -38,7 +38,7 @@ namespace AUTOPARC.Pages.Vehicule
             TypeCarburants = await _db.TypeCarburants.ToListAsync();
             Etatvehicules = await _db.EtatVehicules.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
 
 
@@ -59,9 +59,10 @@ namespace AUTOPARC.Pages.Vehicule
             vehicule.FrsId = Vehicules.FrsId;
             vehicule.PrixAchat = Vehicules.PrixAchat;
             vehicule.MontantPayee = Vehicules.MontantPayee;
-            vehicule.MethodePayementId = Vehicules.MethodePayementId;
+            vehicule.ModePayementId = Vehicules.ModePayementId;
             vehicule.DateAchat = Vehicules.DateAchat;
             vehicule.DateMisEnCirculation = Vehicules.DateMisEnCirculation;
+            vehicule.Kilometrage = Vehicules.Kilometrage;
             vehicule.Note = Vehicules.Note;
             vehicule.Moteur = Vehicules.Moteur;
             vehicule.Architecture = Vehicules.Architecture;

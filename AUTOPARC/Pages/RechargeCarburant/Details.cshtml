@@ -54,12 +54,12 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-6">
-                                                <label asp-for="RechargeCarburants.MethodePayementId">Methode de Payement</label>
-                                                <select asp-for="RechargeCarburants.MethodePayementId" class="form-control form-select">
+                                                <label asp-for="RechargeCarburants.ModePaimentId">Methode de Payement</label>
+                                                <select asp-for="RechargeCarburants.ModePaimentId" class="form-control form-select">
                                                     <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.MethodePayements)
+                                                    @foreach (var item in Model.ModePaiments)
                                                     {
-                                                        <option value="@item.Id">@item.Methode</option>
+                                                        <option value="@item.Id">@item.Mode</option>
                                                     }
                                                 </select>
                                             </div>

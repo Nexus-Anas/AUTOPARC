@@ -7,18 +7,18 @@ using System.Collections.Generic;
 
 namespace AUTOPARC.Models
 {
-    public partial class Ventes
+    public partial class Cessions
     {
         public int Id { get; set; }
         public int VehiculeId { get; set; }
-        public DateTime? DateVente { get; set; }
-        public decimal PrixVente { get; set; }
+        public DateTime DateCession { get; set; }
+        public decimal PrixCession { get; set; }
         public decimal MontantRecu { get; set; }
-        public int MethodePayementId { get; set; }
+        public int ModePaimentId { get; set; }
         public string NomAcheteur { get; set; }
         public string ContactAcheteur { get; set; }
 
-        public virtual MethodePayements MethodePayement { get; set; }
+        public virtual ModePaiments ModePaiment { get; set; }
         public virtual Vehicules Vehicule { get; set; }
     }
 }

@@ -1,36 +1,36 @@
 ﻿@page
-@model AUTOPARC.Pages.Vente.CreateModel
+@model AUTOPARC.Pages.Cession.CreateModel
 @{
-    ViewData["Title"] = "Ajouter Vente";
+    ViewData["Title"] = "Ajouter Cession";
 }
 
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Ventes</h3>
+        <h3 class="mb-0 text-center text-light">Cessions</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Form de Vente</h4>
+            <h4 class="card-title title-2">Form de Cession</h4>
             <hr>
             <div class="mt-4">
                 <div class="container-fluid">
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-6">
                             <div class="card" style="background-color:#F2F2F2">
-                                <div class="card-header font-weight-bold">Ventes</div>
+                                <div class="card-header font-weight-bold">Cessions</div>
                                 <div class="card-body">
                                     <div class="card-title">
-                                        <h3 class="text-center title-1 font-weight-bold">Ajouter Vente</h3>
+                                        <h3 class="text-center title-1 font-weight-bold">Ajouter Cession</h3>
                                     </div>
                                     <hr>
                                     <form method="post">
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Ventes.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
-                                                <select asp-for="Ventes.VehiculeId" class="form-control form-select">
+                                                <label asp-for="Cessions.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
+                                                <select asp-for="Cessions.VehiculeId" class="form-control form-select">
                                                     <option value="value">Choisir...</option>
                                                     @foreach (var item in Model.Vehicules)
                                                     {
@@ -42,42 +42,42 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-6">
-                                                <label asp-for="Ventes.PrixVente">Prix de Vente</label>
-                                                <input asp-for="Ventes.PrixVente" class="form-control" type="text" aria-required="true">
+                                                <label asp-for="Cessions.PrixCession">Prix de Vente</label>
+                                                <input asp-for="Cessions.PrixCession" class="form-control" type="text" aria-required="true">
                                             </div>
 
                                             <div class="form-group col-6">
-                                                <label asp-for="Ventes.MontantRecu">Montant Recu</label>
-                                                <input asp-for="Ventes.MontantRecu" class="form-control" type="text" aria-required="true">
+                                                <label asp-for="Cessions.MontantRecu">Montant Recu</label>
+                                                <input asp-for="Cessions.MontantRecu" class="form-control" type="text" aria-required="true">
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-6">
-                                                <label asp-for="Ventes.MethodePayementId">Methode de Payement</label>
-                                                <select asp-for="Ventes.MethodePayementId" class="form-control form-select">
+                                                <label asp-for="Cessions.ModePaimentId">Mode de Paiement</label>
+                                                <select asp-for="Cessions.ModePaimentId" class="form-control form-select">
                                                     <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.MethodePayements)
+                                                    @foreach (var item in Model.ModePaiments)
                                                     {
-                                                        <option value="@item.Id">@item.Methode</option>
+                                                        <option value="@item.Id">@item.Mode</option>
                                                     }
                                                 </select>
                                             </div>
                                             <div class="form-group col-6">
-                                                <label asp-for="Ventes.DateVente">Date Vente</label>
-                                                <input asp-for="Ventes.DateVente" class="form-control" type="date" aria-required="true">
+                                                <label asp-for="Cessions.DateCession">Date Vente</label>
+                                                <input asp-for="Cessions.DateCession" class="form-control" type="date" aria-required="true">
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-6">
-                                                <label asp-for="Ventes.NomAcheteur">Nom Acheteur</label>
-                                                <input asp-for="Ventes.NomAcheteur" class="form-control" type="text" aria-required="true">
+                                                <label asp-for="Cessions.NomAcheteur">Nom Acheteur</label>
+                                                <input asp-for="Cessions.NomAcheteur" class="form-control" type="text" aria-required="true">
                                             </div>
 
                                             <div class="form-group col-6">
-                                                <label asp-for="Ventes.ContactAcheteur">Contact Acheteur</label>
-                                                <input asp-for="Ventes.ContactAcheteur" class="form-control" type="text" aria-required="true">
+                                                <label asp-for="Cessions.ContactAcheteur">Contact Acheteur</label>
+                                                <input asp-for="Cessions.ContactAcheteur" class="form-control" type="text" aria-required="true">
                                             </div>
                                         </div>
 

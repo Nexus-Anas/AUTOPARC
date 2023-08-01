@@ -328,17 +328,17 @@
 
                         <li class=" has-sub">
                             <a class="js-arrow" href="#">
-                                <i class="bi bi-cart3"></i>Ventes
+                                <i class="bi bi-cart3"></i>Cessions
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a asp-page="/Vente/Create" style="font-size:15px">
-                                        <i class="bi bi-cart-plus-fill"></i>Ajouter Vente
+                                    <a asp-page="/Cession/Create" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Ajouter Cession
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-page="/Vente/Index" style="font-size:15px">
-                                        <i class="bi bi-bag-fill"></i>Listes Ventes
+                                    <a asp-page="/Cession/Index" style="font-size:15px">
+                                        <i class="bi bi-bag-fill"></i>Listes Cession
                                     </a>
                                 </li>
                             </ul>
@@ -346,17 +346,22 @@
 
                         <li class=" has-sub">
                             <a class="js-arrow" href="#">
-                                <i class="bi bi-cart3"></i>Operations
+                                <i class="bi bi-cart3"></i>Parametrage
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a asp-page="/Operation/MethodePayement/Index" style="font-size:15px">
-                                        <i class="bi bi-cart-plus-fill"></i>Methode Payement
+                                    <a asp-page="/Parametrage/ModePaiment/Index" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Mode Paiement
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-page="/Operation/Ville/Index" style="font-size:15px">
+                                    <a asp-page="/Parametrage/Ville/Index" style="font-size:15px">
                                         <i class="bi bi-cart-plus-fill"></i>Liste des Villes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/Parametrage/Banque/Index" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Liste des Banques
                                     </a>
                                 </li>
                             </ul>
@@ -554,7 +559,6 @@
             <div class="main-content">
                 @RenderBody()
             </div>
-
         </div>
 
         <!-- Jquery JS-->
@@ -579,6 +583,7 @@
 
         @RenderSection("Scripts", required: false)
         @RenderSection("DocUploadJS", false);
+        @RenderSection("InputNumberPattern", false);
     </div>
 </body>
 </html>

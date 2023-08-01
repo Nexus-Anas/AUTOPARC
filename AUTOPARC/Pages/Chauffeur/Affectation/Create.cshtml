@@ -1,0 +1,74 @@
+﻿@page
+@model AUTOPARC.Pages.Chauffeur.Affectation.CreateModel
+@{
+    ViewData["Title"] = "Ajouter Historique Chauffeur - Vehicules";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Affectation Chauffeur - Vehicule</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Ajouter Affectation</h4>
+            <hr>
+            <form method="post">
+
+                <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="AffectationChauffeurVehicules.VehiculeId">Matricule <span style="color:red">*</span></label>
+                        <span asp-validation-for="AffectationChauffeurVehicules.VehiculeId" class="text-danger"></span>
+                        <select asp-for="AffectationChauffeurVehicules.VehiculeId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Vehicules)
+                            {
+                                <option value="@item.Id">@item.Matricule</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="AffectationChauffeurVehicules.ChauffeurId">Chauffeur <span style="color:red">*</span></label>
+                        <span asp-validation-for="AffectationChauffeurVehicules.ChauffeurId" class="text-danger"></span>
+                        <select asp-for="AffectationChauffeurVehicules.ChauffeurId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.Chauffeurs)
+                            {
+                                <option value="@item.Id">@item.Nom @item.Prenom</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="AffectationChauffeurVehicules.DateDebutAffectation" class="control-label mb-1 fs-4">Date Debut Affectation <span style="color:red">*</span></label>
+                        <span asp-validation-for="AffectationChauffeurVehicules.DateDebutAffectation" class="text-danger"></span>
+                        <input asp-for="AffectationChauffeurVehicules.DateDebutAffectation" type="date" class="required form-control fs-4">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="AffectationChauffeurVehicules.DateFinAffectation" class="control-label mb-1 fs-4">Date Fin Affectation <span style="color:red">*</span></label>
+                        <span asp-validation-for="AffectationChauffeurVehicules.DateFinAffectation" class="text-danger"></span>
+                        <input asp-for="AffectationChauffeurVehicules.DateFinAffectation" type="date" class="required form-control fs-4">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="AffectationChauffeurVehicules.RaisonFinAffectation" class="control-label mb-1">Raison Fin Affectation</label>
+                        <textarea asp-for="AffectationChauffeurVehicules.RaisonFinAffectation" class="form-control" rows="4" aria-required="true"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <button asp-page-handler="Create" class="btn btn-lg btn-primary btn-block mt-4 w-50 mx-auto">Ajouter</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

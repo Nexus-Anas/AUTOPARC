@@ -31,7 +31,7 @@ namespace AUTOPARC.Pages.Vehicule.Modele
                 return Page();
 
             var modele = await _db.Modeles.FindAsync(Modeles.Id);
-            modele.Modele = Modeles.Modele;
+            modele.Nom = Modeles.Nom;
             await _db.SaveChangesAsync();
             return RedirectToPage("/Vehicule/Modele/Index");
         }

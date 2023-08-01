@@ -22,12 +22,11 @@
                             <tr>
                                 <th class="text text-white bg-primary" style="font-size:18px">Nom</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Email</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Adresse</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Telephone</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Portable</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Ville</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Fonction</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">&nbsp;&nbsp;Action</th>
+                                <th class="text text-center text-white bg-primary" style="font-size:18px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,13 +35,12 @@
                                 <tr style="font-size:16px">
                                     <td class="text-dark">@item.Nom</td>
                                     <td class="text-dark">@item.Email</td>
-                                    <td class="text-dark">@item.Adresse</td>
                                     <td class="text-dark">@item.Telephone</td>
                                     <td class="text-dark">@item.Portable</td>
                                     <td class="text-dark">@item.Ville.Nom</td>
                                     <td class="text-dark">@item.TypeFrs.Type</td>
-                                    <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Fournisseur/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
+                                    <td class="text-dark d-flex justify-content-center">
+                                        <a asp-route-id="@item.Id" asp-page="/Fournisseur/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> Consulter</a>
                                     </td>
                                 </tr>
                             }

@@ -7,18 +7,16 @@ using System.Collections.Generic;
 
 namespace AUTOPARC.Models
 {
-    public partial class Marques
+    public partial class Banques
     {
-        public Marques()
+        public Banques()
         {
-            Modeles = new HashSet<Modeles>();
-            Vehicules = new HashSet<Vehicules>();
+            Cheques = new HashSet<Cheques>();
         }
 
         public int Id { get; set; }
         public string Nom { get; set; }
 
-        public virtual ICollection<Modeles> Modeles { get; set; }
-        public virtual ICollection<Vehicules> Vehicules { get; set; }
+        public virtual ICollection<Cheques> Cheques { get; set; }
     }
 }

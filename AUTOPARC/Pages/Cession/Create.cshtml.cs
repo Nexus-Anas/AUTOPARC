@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Vente
+namespace AUTOPARC.Pages.Cession
 {
     public class CreateModel : PageModel
     {
@@ -17,9 +17,9 @@ namespace AUTOPARC.Pages.Vente
 
 
         [BindProperty]
-        public Ventes Ventes { get; set; }
+        public Cessions Cessions { get; set; }
         public List<Vehicules> Vehicules { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -27,7 +27,7 @@ namespace AUTOPARC.Pages.Vente
         public async Task OnGet()
         {
             Vehicules = await _db.Vehicules.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
 
 
@@ -38,13 +38,13 @@ namespace AUTOPARC.Pages.Vente
             if (!ModelState.IsValid)
                 return Page();
 
-            var matricule = await _db.Vehicules.Where(x => x.Id == Ventes.VehiculeId).Select(x => x.Matricule).FirstOrDefaultAsync();
+            var matricule = await _db.Vehicules.Where(x => x.Id == Cessions.VehiculeId).Select(x => x.Matricule).FirstOrDefaultAsync();
             var vehicule = _db.Vehicules.Where(x => x.Matricule == matricule).FirstOrDefault();
             var etatVehicule = await _db.EtatVehicules.Where(x => x.Etat == "Vendu").Select(x => x.Id).FirstOrDefaultAsync();
             vehicule.EtatVehiculeId = etatVehicule;
-            await _db.Ventes.AddAsync(Ventes);
+            await _db.Cessions.AddAsync(Cessions);
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Vente/Index");
+            return RedirectToPage("/Cession/Index");
         }
     }
 }

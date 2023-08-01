@@ -18,7 +18,7 @@ namespace AUTOPARC.Pages.Maintenance
         public List<Maintenances> Maintenances { get; set; }
         public List<TypeMaintenances> TypeMaintenances { get; set; }
         public List<Vehicules> Vehicules { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -28,7 +28,7 @@ namespace AUTOPARC.Pages.Maintenance
             Maintenances = await _db.Maintenances.ToListAsync();
             TypeMaintenances = await _db.TypeMaintenances.ToListAsync();
             Vehicules = await _db.Vehicules.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
     }
 }

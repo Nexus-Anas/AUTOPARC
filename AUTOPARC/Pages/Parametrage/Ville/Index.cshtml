@@ -1,30 +1,30 @@
 ﻿@page
-@model AUTOPARC.Pages.Vehicule.Categorie.IndexModel
+@model AUTOPARC.Pages.Parametrage.Ville.IndexModel
 @{
-    ViewData["Title"] = "Liste des Categories";
+    ViewData["Title"] = "Liste des Villes";
 }
 
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Véhicules</h3>
+        <h3 class="mb-0 text-center text-light">Villes</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Liste des Categories de Véhicules</h4>
+            <h4 class="card-title title-2">Liste des Villes</h4>
             <hr>
             @if (Model.checkTypeID)
             {
                 <div class="alert alert-danger" role="alert">
-                    <p>Vous ne pouvez pas supprimer cette categorie de véhicule car elle existe dans la table des véhicules!</p>
+                    <p>Vous ne pouvez pas supprimer cette ville car elle existe dans la table des fournisseurs!</p>
                 </div>
             }
             <div class="mt-4">
                 <div class="d-flex justify-content-center mb-3">
                     <div class="col-xl-6 col-lg-8 col-md-6 col-sm-8 col-12">
                         <div class="input-group">
-                            <button class="btn btn-primary" style="font-size:18px" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus"></i>&nbsp; Nouvelle categorie</button>
+                            <button class="btn btn-primary" style="font-size:18px" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus"></i>&nbsp; Nouvelle Ville</button>
                         </div>
                     </div>
                 </div>
@@ -36,11 +36,11 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" style="font-size:20px">AJOUTER CATEGORIE</h5>
+                                    <h5 class="modal-title" style="font-size:20px">AJOUTER VILLE</h5>
                                     <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
                                 </div>
                                 <div class="modal-body">
-                                    <input asp-for="Categories.Nom" type="text" class="form-control"placeholder="Entrer une nouvelle categorie de vehicules" style="font-size:16px">
+                                    <input asp-for="Villes.Nom" type="text" class="form-control" style="font-size:18px" placeholder="Entrer une nouvelle marque de vehicules" style="font-size:16px">
                                 </div>
                                 <div class="modal-footer">
                                     <button asp-page-handler="Create" class="btn btn-primary" style="font-size:18px">Confirmer</button>
@@ -57,7 +57,7 @@
 
                                 <thead>
                                     <tr>
-                                        <th class="text text-white bg-primary">Categorie</th>
+                                        <th class="text text-white bg-primary">Ville</th>
                                         <th class="text-white bg-primary d-flex justify-content-end">
                                             <div class="btn-group mr-3" role="group">
                                                 Action
@@ -67,14 +67,14 @@
                                 </thead>
 
                                 <tbody>
-                                    @foreach (var item in Model.CategoriesList)
+                                    @foreach (var item in Model.VillesList)
                                     {
                                         <tr>
                                             <td class="text-dark" style="font-size:18px">@item.Nom</td>
                                             <td class="text-dark d-flex justify-content-end">
                                                 <div class="btn-group" role="group">
                                                     <a asp-route-id="@item.Id" asp-page="Update" class="text text-white btn btn-primary"><i class="bi bi-pen-fill"></i></a>
-                                                    <button asp-route-id="@item.Id" asp-page-handler="Delete" onclick="return confirm('Voulez-vous vraiment supprimer cette categorie de véhicule?')" class="text text-white btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                                    <button asp-route-id="@item.Id" asp-page-handler="Delete" onclick="return confirm('Voulez-vous vraiment supprimer cette marque de véhicule?')" class="text text-white btn btn-danger"><i class="bi bi-trash-fill"></i></button>
                                                 </div>
                                             </td>
                                         </tr>

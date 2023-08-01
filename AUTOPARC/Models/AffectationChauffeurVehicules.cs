@@ -7,13 +7,13 @@ using System.Collections.Generic;
 
 namespace AUTOPARC.Models
 {
-    public partial class HistoriqueChauffeurVehicule
+    public partial class AffectationChauffeurVehicules
     {
         public int Id { get; set; }
         public int ChauffeurId { get; set; }
         public int VehiculeId { get; set; }
-        public DateTime? DateDebutAffectation { get; set; }
-        public DateTime? DateFinAffectation { get; set; }
+        public DateTime DateDebutAffectation { get; set; }
+        public DateTime DateFinAffectation { get; set; }
         public string RaisonFinAffectation { get; set; }
 
         public virtual Chauffeurs Chauffeur { get; set; }

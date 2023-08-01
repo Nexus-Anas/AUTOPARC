@@ -1,18 +1,18 @@
 ﻿@page
-@model AUTOPARC.Pages.Vente.IndexModel
+@model AUTOPARC.Pages.Cession.IndexModel
 @{
-    ViewData["Title"] = "Liste des Ventes";
+    ViewData["Title"] = "Liste des Cessions";
 }
 
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Ventes</h3>
+        <h3 class="mb-0 text-center text-light">Cessions</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Liste des Ventes</h4>
+            <h4 class="card-title title-2">Liste des Cessions</h4>
             <hr>
 
             <div class="mt-5">
@@ -31,25 +31,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Ventes)
+                            @foreach (var item in Model.Cessions)
                             {
-                                decimal reste = item.PrixVente - item.MontantRecu;
+                                decimal reste = item.PrixCession - item.MontantRecu;
                                 string textColor = reste == 0 ? "text-success" : "text-danger";
                                 string badge = reste == 0 ? "badge badge-success" : "badge badge-danger";
                                 string state = reste == 0 ? "payé" : "impayé";
 
                                 <tr>
                                     <td class="text-dark" style="font-size:18px;">@item.Vehicule.Matricule</td>
-                                    <td class="text-dark" style="font-size:18px;">@item.DateVente?.ToShortDateString()</td>
-                                    <td class="text-dark text-center" style="font-size:18px;">@item.PrixVente</td>
+                                    <td class="text-dark" style="font-size:18px;">@item.DateCession.ToShortDateString()</td>
+                                    <td class="text-dark text-center" style="font-size:18px;">@item.DateCession</td>
                                     <td class="text-dark text-center" style="font-size:18px;">@item.MontantRecu</td>
                                     <td class="text-center" style="font-size:18px;">
                                         <span class="@textColor font-weight-bold">@reste</span>
                                     </td>
                                     <td class="text-center"><span class="@badge mt-1">@state</span></td>
-                                    <td class="text-dark text-center" style="font-size:18px;">@item.MethodePayement.Methode</td>
+                                    <td class="text-dark text-center" style="font-size:18px;">@item.ModePaiment.Mode</td>
                                     <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Vente/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        <a asp-route-id="@item.Id" asp-page="/Cession/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>
                                 </tr>
                             }

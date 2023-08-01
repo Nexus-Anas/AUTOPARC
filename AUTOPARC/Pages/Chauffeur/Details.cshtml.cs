@@ -35,6 +35,7 @@ namespace AUTOPARC.Pages.Chauffeur
             var chauffeur = await _db.Chauffeurs.FindAsync(Chauffeurs.Id);
             chauffeur.Nom = Chauffeurs.Nom;
             chauffeur.Prenom = Chauffeurs.Prenom;
+            chauffeur.Cin = Chauffeurs.Cin;
             chauffeur.DateNaissance = Chauffeurs.DateNaissance;
             chauffeur.Portable = Chauffeurs.Portable;
             chauffeur.Email = Chauffeurs.Email;

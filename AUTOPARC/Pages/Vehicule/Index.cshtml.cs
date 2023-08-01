@@ -22,7 +22,7 @@ namespace AUTOPARC.Pages.Vehicule
         public List<TypeCarburants> TypeCarburants { get; set; }
         public List<EtatVehicules> Etatvehicules { get; set; }
         public List<Fournisseurs> Fournisseurs { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
 
 
 
@@ -36,7 +36,7 @@ namespace AUTOPARC.Pages.Vehicule
             TypeCarburants = await _db.TypeCarburants.ToListAsync();
             Etatvehicules = await _db.EtatVehicules.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
         }
     }
 }

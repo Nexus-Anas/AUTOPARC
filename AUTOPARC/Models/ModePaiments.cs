@@ -7,22 +7,20 @@ using System.Collections.Generic;
 
 namespace AUTOPARC.Models
 {
-    public partial class MethodePayements
+    public partial class ModePaiments
     {
-        public MethodePayements()
+        public ModePaiments()
         {
-            Maintenances = new HashSet<Maintenances>();
+            Cessions = new HashSet<Cessions>();
             RechargeCarburants = new HashSet<RechargeCarburants>();
             Vehicules = new HashSet<Vehicules>();
-            Ventes = new HashSet<Ventes>();
         }
 
         public int Id { get; set; }
-        public string Methode { get; set; }
+        public string Mode { get; set; }
 
-        public virtual ICollection<Maintenances> Maintenances { get; set; }
+        public virtual ICollection<Cessions> Cessions { get; set; }
         public virtual ICollection<RechargeCarburants> RechargeCarburants { get; set; }
         public virtual ICollection<Vehicules> Vehicules { get; set; }
-        public virtual ICollection<Ventes> Ventes { get; set; }
     }
 }

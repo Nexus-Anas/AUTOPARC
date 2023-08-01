@@ -15,7 +15,7 @@ namespace AUTOPARC.Models
         }
 
         public int Id { get; set; }
-        public string Categorie { get; set; }
+        public string Nom { get; set; }
 
         public virtual ICollection<Vehicules> Vehicules { get; set; }
     }

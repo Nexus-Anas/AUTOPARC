@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Operation.Ville
+namespace AUTOPARC.Pages.Parametrage.Ville
 {
     public class UpdateModel : PageModel
     {
@@ -33,7 +33,7 @@ namespace AUTOPARC.Pages.Operation.Ville
             var ville = await _db.Villes.FindAsync(Villes.Id);
             ville.Nom = Villes.Nom;
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Operation/Ville/Index");
+            return RedirectToPage("/Parametrage/Ville/Index");
         }
     }
 }

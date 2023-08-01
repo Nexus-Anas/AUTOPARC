@@ -1,5 +1,5 @@
 ﻿@page
-@model AUTOPARC.Pages.Operation.Ville.UpdateModel
+@model AUTOPARC.Pages.Parametrage.Ville.UpdateModel
 @{
     ViewData["Title"] = "Modifier Ville";
 }
@@ -27,7 +27,7 @@
                                     <div class="form-group row">
                                         <div class="col">
                                             <button asp-page-handler="Update" class="btn btn-primary mt-3" style="font-size: 18px;" onclick="return confirm('Voulez-vous vraiment mettre à jour cette ville?')">Modifier</button>
-                                            <a asp-page="/Vehicule/Marque/Index" class="btn btn-secondary mt-3 ml-2" style="font-size: 18px;">Retour</a>
+                                            <a asp-page="/Parametrage/Ville/Index" class="btn btn-secondary mt-3 ml-2" style="font-size: 18px;">Retour</a>
                                         </div>
                                     </div>
 

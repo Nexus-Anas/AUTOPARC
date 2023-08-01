@@ -30,7 +30,7 @@
                             <option value="">Choisir...</option>
                             @foreach (var item in Model.Categories)
                             {
-                                <option value="@item.Id">@item.Categorie</option>
+                                <option value="@item.Id">@item.Nom</option>
                             }
                         </select>
                     </div>
@@ -42,7 +42,7 @@
                             <option value="">Choisir...</option>
                             @foreach (var item in Model.Marques)
                             {
-                                <option value="@item.Id">@item.Marque</option>
+                                <option value="@item.Id">@item.Nom</option>
                             }
                         </select>
                     </div>
@@ -54,7 +54,7 @@
                             <option value="">Choisir...</option>
                             @foreach (var item in Model.Modeles)
                             {
-                                <option value="@item.Id">@item.Modele</option>
+                                <option value="@item.Id">@item.Nom</option>
                             }
                         </select>
                     </div>
@@ -102,39 +102,45 @@
                     <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                         <label asp-for="Vehicules.PrixAchat">Prix Achat <span style="color:red">*</span></label>
                         <span asp-validation-for="Vehicules.PrixAchat" class="text-danger"></span>
-                        <input asp-for="Vehicules.PrixAchat" type="text" class="required form-control">
+                        <input asp-for="Vehicules.PrixAchat" type="text" class="required form-control" oninput="validateInput(this)">
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                         <label asp-for="Vehicules.MontantPayee">Montant Payee <span style="color:red">*</span></label>
                         <span asp-validation-for="Vehicules.MontantPayee" class="text-danger"></span>
-                        <input asp-for="Vehicules.MontantPayee" type="text" class="required form-control">
+                        <input asp-for="Vehicules.MontantPayee" type="text" class="required form-control" oninput="validateInput(this)">
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                        <label asp-for="Vehicules.MethodePayementId">Methode de Payement <span style="color:red">*</span></label>
-                        <span asp-validation-for="Vehicules.MethodePayementId" class="text-danger"></span>
-                        <select asp-for="Vehicules.MethodePayementId" class="form-control form-select">
+                        <label asp-for="Vehicules.ModePayementId">Methode de Payement <span style="color:red">*</span></label>
+                        <span asp-validation-for="Vehicules.ModePayementId" class="text-danger"></span>
+                        <select asp-for="Vehicules.ModePayementId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.MethodePayements)
+                            @foreach (var item in Model.ModePaiments)
                             {
-                                <option value="@item.Id">@item.Methode</option>
+                                <option value="@item.Id">@item.Mode</option>
                             }
                         </select>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                         <label asp-for="Vehicules.DateAchat">Date Achat</label>
                         <span asp-validation-for="Vehicules.DateAchat" class="text-danger"></span>
                         <input asp-for="Vehicules.DateAchat" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                         <label asp-for="Vehicules.DateMisEnCirculation">Date mis en Circulation</label>
                         <span asp-validation-for="Vehicules.DateMisEnCirculation" class="text-danger"></span>
                         <input asp-for="Vehicules.DateMisEnCirculation" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                        <label asp-for="Vehicules.Kilometrage">Kilometrage</label>
+                        <span asp-validation-for="Vehicules.Kilometrage" class="text-danger"></span>
+                        <input asp-for="Vehicules.Kilometrage" class="form-control" type="number" min="0" aria-required="true" oninput="validateNumbersOnly(this)">
                     </div>
                 </div>
 
@@ -242,3 +248,26 @@
     </form>
 
 </div>
+
+@section InputNumberPattern
+    {
+    <script>
+        function validateInput(inputElement) {
+            const regex = /^[0-9.]*$/; // Regular expression to allow only numbers and '.'
+
+            const inputValue = inputElement.value;
+            const isValid = regex.test(inputValue);
+
+            if (!isValid) {
+                inputElement.value = inputValue.replace(/[^0-9.]/g, ''); // Remove any non-numeric characters
+            }
+        }
+    </script>
+
+    <script>
+        function validateNumbersOnly(inputElement) {
+            const cleanValue = inputElement.value.replace(/\D/g, ''); // Remove any non-digit characters
+            inputElement.value = cleanValue;
+        }
+    </script>
+}

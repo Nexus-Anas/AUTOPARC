@@ -32,13 +32,13 @@
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label asp-for="Fournisseurs.Telephone" class="control-label mb-1 fs-4">Telephone </label>
-                        <input asp-for="Fournisseurs.Telephone" type="text" class="form-control fs-4">
+                        <input asp-for="Fournisseurs.Telephone" type="text" class="form-control" oninput="validateNumbersAndPlus(this)">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label asp-for="Fournisseurs.Portable" class="control-label mb-1 fs-4">Portable</label>
-                        <input asp-for="Fournisseurs.Portable" type="text" class="form-control fs-4">
+                        <input asp-for="Fournisseurs.Portable" type="text" class="form-control" oninput="validateNumbersAndPlus(this)">
                     </div>
                 </div>
 
@@ -91,3 +91,20 @@
         </div>
     </div>
 </div>
+
+
+@section InputNumberPattern
+{
+    <script>
+        function validateNumbersAndPlus(inputElement) {
+            const regex = /^[\d+]*$/; // Regular expression to allow only digits (0-9) and '+'
+
+            const inputValue = inputElement.value;
+            const isValid = regex.test(inputValue);
+
+            if (!isValid) {
+                inputElement.value = inputValue.replace(/[^\d+]/g, ''); // Remove any characters other than digits and '+'
+            }
+        }
+    </script>
+}

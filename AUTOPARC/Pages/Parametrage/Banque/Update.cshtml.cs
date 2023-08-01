@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Vehicule.Marque
+namespace AUTOPARC.Pages.Parametrage.Banque
 {
     public class UpdateModel : PageModel
     {
@@ -14,13 +14,13 @@ namespace AUTOPARC.Pages.Vehicule.Marque
 
 
         [BindProperty]
-        public Marques Marques { get; set; }
+        public Banques Banques { get; set; }
 
 
 
 
         public async Task OnGet(int id)
-            => Marques = await _db.Marques.FindAsync(id);
+            => Banques = await _db.Banques.FindAsync(id);
 
 
 
@@ -30,10 +30,10 @@ namespace AUTOPARC.Pages.Vehicule.Marque
             if (!ModelState.IsValid)
                 return Page();
 
-            var marque = await _db.Marques.FindAsync(Marques.Id);
-            marque.Nom = Marques.Nom;
+            var banque = await _db.Banques.FindAsync(Banques.Id);
+            banque.Nom = Banques.Nom;
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Vehicule/Marque/Index");
+            return RedirectToPage("/Parametrage/Banque/Index");
         }
     }
 }

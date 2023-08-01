@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AUTOPARC.Pages.Vente
+namespace AUTOPARC.Pages.Chauffeur.Affectation
 {
     public class IndexModel : PageModel
     {
@@ -15,18 +15,18 @@ namespace AUTOPARC.Pages.Vente
 
 
 
-        public List<Ventes> Ventes { get; set; }
+        public List<AffectationChauffeurVehicules> AffectationChauffeurVehicules { get; set; }
         public List<Vehicules> Vehicules { get; set; }
-        public List<MethodePayements> MethodePayements { get; set; }
+        public List<Chauffeurs> Chauffeurs { get; set; }
 
 
 
 
         public async Task OnGet()
         {
-            Ventes = await _db.Ventes.ToListAsync();
+            AffectationChauffeurVehicules = await _db.AffectationChauffeurVehicules.ToListAsync();
             Vehicules = await _db.Vehicules.ToListAsync();
-            MethodePayements = await _db.MethodePayements.ToListAsync();
+            Chauffeurs = await _db.Chauffeurs.ToListAsync();
         }
     }
 }
