@@ -15,7 +15,12 @@
         <div class="card-body">
             <h4 class="card-title title-2 text-dark">Modifier État Véhicule</h4>
             <hr>
-
+            @if (!ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p><span asp-validation-for="EtatVehicules.Etat"></span></p>
+                </div>
+            }
             @if (Model.check_presence_etat)
             {
                 <div class="alert alert-danger" role="alert">
@@ -90,3 +95,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

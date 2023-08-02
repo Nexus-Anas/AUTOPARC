@@ -249,8 +249,15 @@
 
 </div>
 
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
 @section InputNumberPattern
-    {
+{
     <script>
         function validateInput(inputElement) {
             const regex = /^[0-9.]*$/; // Regular expression to allow only numbers and '.'

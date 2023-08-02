@@ -36,8 +36,12 @@ namespace AUTOPARC.Pages.Vehicule.Modele
 
         public async Task<IActionResult> OnPostCreate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(Modeles.Nom) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("Modeles.Nom", "Le champ Modele est requis.");
+                await OnGet();
                 return Page();
+            }
 
             await _db.Modeles.AddAsync(Modeles);
             await _db.SaveChangesAsync();

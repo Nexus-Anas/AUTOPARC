@@ -31,8 +31,11 @@ namespace AUTOPARC.Pages.Vehicule.Modele
 
         public async Task<IActionResult> OnPostUpdate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(Modeles.Nom) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("Modeles.Nom", "Le champ Modele est requis.");
                 return Page();
+            }
 
             var modele = await _db.Modeles.FindAsync(Modeles.Id);
             modele.Nom = Modeles.Nom;
@@ -54,7 +57,6 @@ namespace AUTOPARC.Pages.Vehicule.Modele
             if (vehicule != 0)
             {
                 check_presence_modele = true;
-                await OnGet(Modeles.Id);
                 return Page();
             }
 

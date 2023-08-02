@@ -31,8 +31,11 @@ namespace AUTOPARC.Pages.Vehicule.EtatVehicule
 
         public async Task<IActionResult> OnPostUpdate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(EtatVehicules.Etat) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("EtatVehicules.Etat", "Le champ État est requis.");
                 return Page();
+            }
 
             var etat = await _db.EtatVehicules.FindAsync(EtatVehicules.Id);
             etat.Etat = EtatVehicules.Etat;
@@ -52,7 +55,6 @@ namespace AUTOPARC.Pages.Vehicule.EtatVehicule
             if (vehicule != 0)
             {
                 check_presence_etat = true;
-                await OnGet(EtatVehicules.Id);
                 return Page();
             }
 

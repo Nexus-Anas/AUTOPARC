@@ -31,8 +31,11 @@ namespace AUTOPARC.Pages.Vehicule.Categorie
 
         public async Task<IActionResult> OnPostUpdate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(Categories.Nom) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("Categories.Nom", "Le champ Categories est requis.");
                 return Page();
+            }
 
             var categorie = await _db.Categories.FindAsync(Categories.Id);
             categorie.Nom = Categories.Nom;
@@ -54,7 +57,6 @@ namespace AUTOPARC.Pages.Vehicule.Categorie
             if (vehicule != 0)
             {
                 check_presence_categorie = true;
-                await OnGet(Categories.Id);
                 return Page();
             }
 

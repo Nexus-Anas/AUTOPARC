@@ -30,8 +30,12 @@ namespace AUTOPARC.Pages.Vehicule.Marque
 
         public async Task<IActionResult> OnPostCreate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(Marques.Nom) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("Marques.Nom", "Le champ Marque est requis.");
+                await OnGet();
                 return Page();
+            }
 
             await _db.Marques.AddAsync(Marques);
             await _db.SaveChangesAsync();

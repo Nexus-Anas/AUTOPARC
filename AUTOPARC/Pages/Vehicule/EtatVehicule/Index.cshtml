@@ -15,7 +15,12 @@
         <div class="card-body">
             <h4 class="card-title title-2 text-dark">Liste des États des Véhicules</h4>
             <hr>
-
+            @if (!ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p><span asp-validation-for="EtatVehicules.Etat"></span></p>
+                </div>
+            }
             <!-- Add Modal Button -->
             <div class="d-flex justify-content-center my-3">
                 <div class="col-xl-5 col-lg-8 col-md-6 col-sm-8 col-12">
@@ -81,3 +86,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

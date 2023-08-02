@@ -15,7 +15,12 @@
         <div class="card-body">
             <h4 class="card-title title-2 text-dark">Modifier Marque Véhicule</h4>
             <hr>
-
+            @if (!ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p><span asp-validation-for="Marques.Nom"></span></p>
+                </div>
+            }
             @if (Model.check_presence_marque)
             {
                 <div class="alert alert-danger" role="alert">
@@ -90,3 +95,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

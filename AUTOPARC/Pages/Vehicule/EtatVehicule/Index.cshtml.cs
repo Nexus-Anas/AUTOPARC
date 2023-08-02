@@ -32,8 +32,11 @@ namespace AUTOPARC.Pages.Vehicule.EtatVehicule
 
         public async Task<IActionResult> OnPostCreate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(EtatVehicules.Etat) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("EtatVehicules.Etat", "Le champ État est requis.");
                 return Page();
+            }
 
             await _db.EtatVehicules.AddAsync(EtatVehicules);
             await _db.SaveChangesAsync();

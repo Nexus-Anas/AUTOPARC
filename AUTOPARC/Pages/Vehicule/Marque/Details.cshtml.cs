@@ -31,8 +31,11 @@ namespace AUTOPARC.Pages.Vehicule.Marque
 
         public async Task<IActionResult> OnPostUpdate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(Marques.Nom) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("Marques.Nom", "Le champ Marque est requis.");
                 return Page();
+            }
 
             var marque = await _db.Marques.FindAsync(Marques.Id);
             marque.Nom = Marques.Nom;
@@ -54,7 +57,6 @@ namespace AUTOPARC.Pages.Vehicule.Marque
             if (vehicule != 0)
             {
                 check_presence_marque = true;
-                await OnGet(Marques.Id);
                 return Page();
             }
 

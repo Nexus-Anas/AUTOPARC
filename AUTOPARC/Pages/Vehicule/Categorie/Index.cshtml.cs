@@ -30,8 +30,12 @@ namespace AUTOPARC.Pages.Vehicule.Categorie
 
         public async Task<IActionResult> OnPostCreate()
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(Categories.Nom) || !ModelState.IsValid)
+            {
+                ModelState.AddModelError("Categories.Nom", "Le champ Categories est requis.");
+                await OnGet();
                 return Page();
+            }
 
             await _db.Categories.AddAsync(Categories);
             await _db.SaveChangesAsync();
