@@ -39,28 +39,5 @@ namespace AUTOPARC.Pages.Vehicule.EtatVehicule
             await _db.SaveChangesAsync();
             return RedirectToPage("/Vehicule/EtatVehicule/Index");
         }
-
-
-
-
-        public async Task<IActionResult> OnPostDelete(int id)
-        {
-            var etat = await _db.EtatVehicules.FindAsync(id);
-
-            if (etat is null)
-                return NotFound();
-
-            var vehicule = await _db.Vehicules.Where(x => x.EtatVehiculeId == etat.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            if (vehicule != 0)
-            {
-                checkTypeID = true;
-                await OnGet();
-                return Page();
-            }
-
-            _db.EtatVehicules.Remove(etat);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Vehicule/EtatVehicule/Index");
-        }
     }
 }
