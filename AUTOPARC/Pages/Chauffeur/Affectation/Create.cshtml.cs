@@ -2,6 +2,8 @@ using AUTOPARC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,6 +22,8 @@ namespace AUTOPARC.Pages.Chauffeur.Affectation
         public List<Vehicules> Vehicules { get; set; }
         public List<Chauffeurs> Chauffeurs { get; set; }
 
+        public bool check_exception, check_date;
+
 
 
 
@@ -35,14 +39,26 @@ namespace AUTOPARC.Pages.Chauffeur.Affectation
         public async Task<IActionResult> OnPostCreate()
         {
             if (!ModelState.IsValid)
+                return Page();
+
+            if (AffectationChauffeurVehicules.DateDebutAffectation >= AffectationChauffeurVehicules.DateFinAffectation)
             {
+                check_date = true;
                 await OnGet();
                 return Page();
             }
 
-            await _db.AffectationChauffeurVehicules.AddAsync(AffectationChauffeurVehicules);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Chauffeur/Affectation/Index");
+            try
+            {
+                await _db.AffectationChauffeurVehicules.AddAsync(AffectationChauffeurVehicules);
+                await _db.SaveChangesAsync();
+                return RedirectToPage("/Chauffeur/Affectation/Index");
+            }
+            catch (Exception)
+            {
+                check_exception = true;
+                return Page();
+            }
         }
     }
 }

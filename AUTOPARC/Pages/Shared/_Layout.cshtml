@@ -224,13 +224,13 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-page="/Chauffeur/Historique/Create" style="font-size:15px">
-                                        <i class="fas fa-list"></i>Affecter Historique
+                                    <a asp-page="/Chauffeur/Affectation/Create" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Affecter Véhicule
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-page="/Chauffeur/Historique/Index" style="font-size:15px">
-                                        <i class="fas fa-list"></i>Liste Historique
+                                    <a asp-page="/Chauffeur/Affectation/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Historique Affectation
                                     </a>
                                 </li>
                             </ul>
@@ -583,7 +583,7 @@
 
         @RenderSection("Scripts", required: false)
         @RenderSection("DocUploadJS", false);
-        @RenderSection("InputNumberPattern", false);
+        @RenderSection("InputsPattern", false);
     </div>
 </body>
 </html>

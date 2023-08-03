@@ -1,7 +1,9 @@
 using AUTOPARC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using System;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Chauffeur
@@ -17,6 +19,8 @@ namespace AUTOPARC.Pages.Chauffeur
         [BindProperty]
         public Chauffeurs Chauffeurs { get; set; }
 
+        public bool check_exception;
+
 
 
 
@@ -25,9 +29,28 @@ namespace AUTOPARC.Pages.Chauffeur
             if (!ModelState.IsValid)
                 return Page();
 
-            await _db.Chauffeurs.AddAsync(Chauffeurs);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Chauffeur/Index");
+            try
+            {
+                await _db.Chauffeurs.AddAsync(Chauffeurs);
+                await _db.SaveChangesAsync();
+                return RedirectToPage("/Chauffeur/Index");
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mySqlEx)
+            {
+                if (mySqlEx.Message.Contains("CIN"))
+                    ModelState.AddModelError("Chauffeurs.Cin", "Ce CIN existe déjà.");
+                else if (mySqlEx.Message.Contains("Portable"))
+                    ModelState.AddModelError("Chauffeurs.Portable", "Ce numéro de Portable existe déjà.");
+                else if (mySqlEx.Message.Contains("Email"))
+                    ModelState.AddModelError("Chauffeurs.Email", "Cet adresse mail existe déjà.");
+
+                return Page();
+            }
+            catch (Exception)
+            {
+                check_exception = true;
+                return Page();
+            }
         }
     }
 }

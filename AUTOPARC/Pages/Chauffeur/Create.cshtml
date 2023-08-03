@@ -14,31 +14,37 @@
         <div class="card-body wizard-content">
             <h4 class="card-title title-2">Ajouter Chauffeur</h4>
             <hr>
+            @if (Model.check_exception)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
             <form method="post">
 
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.Nom">Nom <span style="color:red">*</span></label>
+                        <label asp-for="Chauffeurs.Nom">Nom <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Nom" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Nom" type="text" class="required form-control fs-4">
+                        <input asp-for="Chauffeurs.Nom" type="text" class="form-control required trim capitalize" oninput="validateLettersOnly(this)">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.Prenom">Prenom <span style="color:red">*</span></label>
+                        <label asp-for="Chauffeurs.Prenom">Prenom <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Prenom" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Prenom" type="text" class="form-control fs-4">
+                        <input asp-for="Chauffeurs.Prenom" type="text" class="form-control required trim uppercase" oninput="validateLettersOnly(this)">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.Cin">CIN <span style="color:red">*</span></label>
+                        <label asp-for="Chauffeurs.Cin">CIN <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Cin" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Cin" type="text" class="form-control fs-4">
+                        <input asp-for="Chauffeurs.Cin" type="text" class="form-control required trim uppercase">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.Portable">Portable <span style="color:red">*</span></label>
+                        <label asp-for="Chauffeurs.Portable">Portable <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Portable" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Portable" type="text" class="form-control fs-4">
+                        <input asp-for="Chauffeurs.Portable" type="text" class="form-control required trim" oninput="validateNumbersAndPlus(this)">
                     </div>
                 </div>
 
@@ -46,53 +52,53 @@
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
                         <label asp-for="Chauffeurs.Email">Email</label>
                         <span asp-validation-for="Chauffeurs.Email" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Email" type="email" class="form-control fs-4">
+                        <input asp-for="Chauffeurs.Email" type="email" class="form-control trim">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.DateNaissance">Date de Naissance</label>
+                        <label asp-for="Chauffeurs.DateNaissance">Date de Naissance <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.DateNaissance" class="text text-danger"></span>
-                        <input asp-for="Chauffeurs.DateNaissance" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                        <input asp-for="Chauffeurs.DateNaissance" type="date" class="form-control required" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.NumeroPermisConduire">Numero Permis de Conduire</label>
+                        <label asp-for="Chauffeurs.NumeroPermisConduire">Numero Permis de Conduire <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.NumeroPermisConduire" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.NumeroPermisConduire" type="text" class="required form-control fs-4">
+                        <input asp-for="Chauffeurs.NumeroPermisConduire" type="text" class="form-control required trim" oninput="validateNumbersOnly(this)">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.DateExpirationPermis">Date Expiration Permis</label>
+                        <label asp-for="Chauffeurs.DateExpirationPermis">Date Expiration Permis <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.DateExpirationPermis" class="text text-danger"></span>
-                        <input asp-for="Chauffeurs.DateExpirationPermis" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                        <input asp-for="Chauffeurs.DateExpirationPermis" type="date" class="form-control required" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.Disponibilite">Disponibilite</label>
+                        <label asp-for="Chauffeurs.DateEmbauche">Date Embauche <span class="text-danger">*</span></label>
+                        <span asp-validation-for="Chauffeurs.DateEmbauche" class="text text-danger"></span>
+                        <input asp-for="Chauffeurs.DateEmbauche" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Chauffeurs.Disponibilite">Disponibilite <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Disponibilite" class="text-danger"></span>
-                        <select asp-for="Chauffeurs.Disponibilite" class="form-control form-select">
+                        <select asp-for="Chauffeurs.Disponibilite" class="form-control form-select required">
                             <option value="oui">Oui</option>
                             <option value="non">Non</option>
                         </select>
-                    </div>
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Chauffeurs.DateEmbauche">Date Embauche <span style="color:red">*</span></label>
-                        <span asp-validation-for="Chauffeurs.DateEmbauche" class="text text-danger"></span>
-                        <input asp-for="Chauffeurs.DateEmbauche" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
                         <label asp-for="Chauffeurs.Adresse">Adresse</label>
-                        <textarea asp-for="Chauffeurs.Adresse" class="form-control fs-5" rows="4" aria-required="true"></textarea>
+                        <textarea asp-for="Chauffeurs.Adresse" class="form-control" rows="4" aria-required="true"></textarea>
                     </div>
 
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
                         <label asp-for="Chauffeurs.Remarques">Remarques</label>
-                        <textarea asp-for="Chauffeurs.Remarques" class="form-control fs-5" rows="4" aria-required="true"></textarea>
+                        <textarea asp-for="Chauffeurs.Remarques" class="form-control" rows="4" aria-required="true"></textarea>
                     </div>
                 </div>
 
@@ -110,4 +116,54 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function applyTransformations(inputElement) {
+            if (inputElement.classList.contains('trim')) {
+                inputElement.value = inputElement.value.trim();
+            }
+            if (inputElement.classList.contains('uppercase')) {
+                inputElement.value = inputElement.value.toUpperCase();
+            }
+            if (inputElement.classList.contains('capitalize')) {
+                inputElement.value = inputElement.value.charAt(0).toUpperCase() + inputElement.value.slice(1).toLowerCase();
+            }
+        }
+
+        // Attach the event handler to all inputs with the relevant classes
+        const inputsWithTransform = document.querySelectorAll('.trim, .uppercase, .capitalize');
+        inputsWithTransform.forEach(input => {
+            input.addEventListener('input', () => applyTransformations(input));
+        });
+    </script>
+}
+
+
+@section InputsPattern {
+    <script>
+        function validateNumbersAndPlus(inputElement) {
+            const regex = /^[\d+]*$/; // Regular expression to allow only digits (0-9) and '+'
+
+            const inputValue = inputElement.value;
+            const isValid = regex.test(inputValue);
+
+            if (!isValid) {
+                inputElement.value = inputValue.replace(/[^\d+]/g, ''); // Remove any characters other than digits and '+'
+            }
+        }
+    </script>
+
+    <script>
+        function validateNumbersOnly(inputElement) {
+            const cleanValue = inputElement.value.replace(/\D/g, ''); // Remove any non-digit characters
+            inputElement.value = cleanValue;
+        }
+    </script>
+
+    <script>
+        function validateLettersOnly(inputElement) {
+            const cleanValue = inputElement.value.replace(/[^a-zA-Z]/g, ''); // Remove any non-letter characters
+            inputElement.value = cleanValue;
+        }
+    </script>
 }

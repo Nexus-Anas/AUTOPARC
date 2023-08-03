@@ -1,18 +1,18 @@
 ﻿@page
 @model AUTOPARC.Pages.Chauffeur.Affectation.IndexModel
 @{
-    ViewData["Title"] = "Liste d'Historique Chauffeur - Vehicule";
+    ViewData["Title"] = "Historique des Affectations";
 }
 
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Historique Chauffeur - Vehicule</h3>
+        <h3 class="mb-0 text-center text-light">Historique Affectation Chauffeur - Véhicule</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Listes des Historique</h4>
+            <h4 class="card-title title-2">Historique des Affectations</h4>
             <hr>
 
             <div class="mt-5">
@@ -22,9 +22,9 @@
                             <tr>
                                 <th class="text text-white bg-primary" style="font-size:18px">Matricule</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Chauffeur</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Date Debut Affectation</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Date Début Affectation</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Date Fin Affectation</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Action</th>
+                                <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,7 +36,7 @@
                                     <td class="text-dark">@item.DateDebutAffectation.ToShortDateString()</td>
                                     <td class="text-dark">@item.DateFinAffectation.ToShortDateString()</td>
                                     <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Fournisseur/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        <a asp-route-id="@item.Id" asp-page="/Chauffeur/Affectation/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> consulter</a>
                                     </td>
                                 </tr>
                             }

@@ -236,6 +236,7 @@ namespace AUTOPARC.Models
                     .HasColumnType("date");
 
                 entity.Property(e => e.Disponibilite)
+                    .IsRequired()
                     .HasColumnType("varchar(3)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
@@ -252,6 +253,7 @@ namespace AUTOPARC.Models
                     .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.NumeroPermisConduire)
+                    .IsRequired()
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");

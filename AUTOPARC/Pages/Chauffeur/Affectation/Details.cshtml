@@ -1,18 +1,18 @@
 ﻿@page
-@model AUTOPARC.Pages.Chauffeur.Affectation.CreateModel
+@model AUTOPARC.Pages.Chauffeur.Affectation.DetailsModel
 @{
-    ViewData["Title"] = "Form d'Affectation Chauffeur - Véhicule";
+    ViewData["Title"] = "Form de Modification d'Affectation Chauffeur - Véhicule";
 }
 
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Form d'Affectation Chauffeur - Véhicule</h3>
+        <h3 class="mb-0 text-center text-light">Form de Modification d'Affectation Chauffeur - Véhicule</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Ajouter Affectation</h4>
+            <h4 class="card-title title-2">Modifier Affectation</h4>
             <hr>
             @if (Model.check_date)
             {
@@ -27,7 +27,7 @@
                 </div>
             }
             <form method="post">
-
+                <input asp-for="AffectationChauffeurVehicules.Id" type="hidden"/>
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
                         <label asp-for="AffectationChauffeurVehicules.VehiculeId">Matricule <span class="text-danger">*</span></label>
@@ -73,9 +73,50 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group col-12">
-                        <button asp-page-handler="Create" class="btn btn-lg btn-primary btn-block mt-4 w-50 mx-auto">Ajouter</button>
+                <div class="form-group row text-white">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-primary btn-lg btn-block">Modifier</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
+                        <a asp-page="/Chauffeur/Affectation/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                    </div>
+                </div>
+
+
+
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment cet historique d'affectation?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Delete" class="btn btn-danger btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Modal -->
+                <div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment modifier cet historique d'affectation?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
