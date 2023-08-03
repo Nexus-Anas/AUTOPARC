@@ -55,98 +55,202 @@
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
                         <li>
-                            <a href="chart.html">
+                            <a asp-page="/Dashboard/Index">
                                 <i class="fas fa-chart-bar"></i>Dashboard
                             </a>
                         </li>
-                        <li class="has-sub">
+                        <li class=" has-sub">
                             <a class="js-arrow" href="#">
-                                <i class="fas fa-car"></i>Véhicules
+                                <i class="bi bi-car-front"></i>Véhicules
                             </a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                 <li>
-                                    <a href="index.html">Ajouter Véhicule</a>
+                                    <a asp-page="/Vehicule/SelectionMarque" style="font-size:15px">
+                                        <i class="fas fa-plus"></i>Ajouter Véhicule
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="index2.html">Listes Véhicules</a>
-                                </li>
-
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="table.html">
-                                <i class="fas fa-table"></i>Tables
-                            </a>
-                        </li>
-                        <li>
-                            <a href="form.html">
-                                <i class="far fa-check-square"></i>Forms
-                            </a>
-                        </li>
-                        <li>
-                            <a href="calendar.html">
-                                <i class="fas fa-calendar-alt"></i>Calendar
-                            </a>
-                        </li>
-                        <li>
-                            <a href="map.html">
-                                <i class="fas fa-map-marker-alt"></i>Maps
-                            </a>
-                        </li>
-                        <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-copy"></i>Pages
-                            </a>
-                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="login.html">Login</a>
+                                    <a asp-page="/Vehicule/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Listes Véhicules
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="register.html">Register</a>
+                                    <a asp-page="/Vehicule/Categorie/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Categorie Véhicules
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="forget-pass.html">Forget Password</a>
+                                    <a asp-page="/Vehicule/Marque/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Marques Véhicules
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/Vehicule/Modele/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Modele Véhicules
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/Vehicule/EtatVehicule/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Etat Véhicules
+                                    </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="has-sub">
+                        <li class=" has-sub">
                             <a class="js-arrow" href="#">
-                                <i class="fas fa-desktop"></i>UI Elements
+                                <i class="bi bi-truck"></i>Chauffeurs
                             </a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                 <li>
-                                    <a href="button.html">Button</a>
+                                    <a asp-page="/Chauffeur/Create" style="font-size:15px">
+                                        <i class="fas fa-plus"></i>Ajouter Chauffeur
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="badge.html">Badges</a>
+                                    <a asp-page="/Chauffeur/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Listes Chauffeurs
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="tab.html">Tabs</a>
+                                    <a asp-page="/Chauffeur/Affectation/Create" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Affecter Véhicule
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="card.html">Cards</a>
+                                    <a asp-page="/Chauffeur/Affectation/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Historique Affectation
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class=" has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="bi bi-truck"></i>Fournisseurs
+                            </a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a asp-page="/Fournisseur/Create" style="font-size:15px">
+                                        <i class="fas fa-plus"></i>Ajouter Fournisseur
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="alert.html">Alerts</a>
+                                    <a asp-page="/Fournisseur/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Listes Fournisseurs
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="progress-bar.html">Progress Bars</a>
+                                    <a asp-page="/Fournisseur/TypeFournisseur/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Types Fournisseurs
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class=" has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="bi bi-file-earmark"></i>Documents
+                            </a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a asp-page="/Document/Create" style="font-size:15px">
+                                        <i class="bi bi-file-earmark-plus-fill"></i>Ajouter Document
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="modal.html">Modals</a>
+                                    <a asp-page="/Document/Index" style="font-size:15px">
+                                        <i class="bi bi-file-text-fill"></i>Listes Documents
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="switch.html">Switchs</a>
+                                    <a asp-page="/Document/TypeDocument/Index" style="font-size:15px">
+                                        <i class="bi bi-file-text-fill"></i>Types Documents
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="bi bi-tools"></i>Maintenances
+                            </a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a asp-page="/Maintenance/Create" style="font-size:15px">
+                                        <i class="fas fa-plus"></i>Ajouter Maintenance
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="grid.html">Grids</a>
+                                    <a asp-page="/Maintenance/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Liste Maintenances
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="fontawesome.html">Fontawesome Icon</a>
+                                    <a asp-page="/Maintenance/TypeMaintenance/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Types Maintenances
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="js-arrow" href="#">
+                                <i class="bi bi-ev-station-fill"></i>Carburants
+                            </a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+
+                                <li>
+                                    <a asp-page="/RechargeCarburant/Create" style="font-size:15px">
+                                        <i class="bi bi-tools"></i>Recharger Carburant
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="typo.html">Typography</a>
+                                    <a asp-page="/RechargeCarburant/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Historique Recharges
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/RechargeCarburant/TypeCarburant/Index" style="font-size:15px">
+                                        <i class="fas fa-list"></i>Types Carburants
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class=" has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="bi bi-cart3"></i>Cessions
+                            </a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a asp-page="/Cession/Create" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Ajouter Cession
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/Cession/Index" style="font-size:15px">
+                                        <i class="bi bi-bag-fill"></i>Listes Cession
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class=" has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="bi bi-cart3"></i>Parametrage
+                            </a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a asp-page="/Parametrage/ModePaiment/Index" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Mode Paiement
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/Parametrage/Ville/Index" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Liste des Villes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-page="/Parametrage/Banque/Index" style="font-size:15px">
+                                        <i class="bi bi-cart-plus-fill"></i>Liste des Banques
+                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -176,7 +280,7 @@
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a asp-page="/Vehicule/Create" style="font-size:15px">
+                                    <a asp-page="/Vehicule/SelectionMarque" style="font-size:15px">
                                         <i class="fas fa-plus"></i>Ajouter Véhicule
                                     </a>
                                 </li>

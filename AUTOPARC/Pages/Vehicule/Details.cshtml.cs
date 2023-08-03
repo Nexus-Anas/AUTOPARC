@@ -19,7 +19,6 @@ namespace AUTOPARC.Pages.Vehicule
         [BindProperty]
         public Vehicules Vehicules { get; set; }
         public List<Categories> Categories { get; set; }
-        public List<Marques> Marques { get; set; }
         public List<Modeles> Modeles { get; set; }
         public List<TypeCarburants> TypeCarburants { get; set; }
         public List<EtatVehicules> Etatvehicules { get; set; }
@@ -33,8 +32,7 @@ namespace AUTOPARC.Pages.Vehicule
         {
             Vehicules = await _db.Vehicules.FindAsync(id);
             Categories = await _db.Categories.ToListAsync();
-            Marques = await _db.Marques.ToListAsync();
-            Modeles = await _db.Modeles.ToListAsync();
+            Modeles = await _db.Modeles.Where(x => x.MarqueId == Vehicules.MarqueId).ToListAsync();
             TypeCarburants = await _db.TypeCarburants.ToListAsync();
             Etatvehicules = await _db.EtatVehicules.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();

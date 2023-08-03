@@ -489,6 +489,7 @@ namespace AUTOPARC.Models
                 entity.HasOne(d => d.Ville)
                     .WithMany(p => p.Fournisseurs)
                     .HasForeignKey(d => d.VilleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FRS_VILLE");
             });
 

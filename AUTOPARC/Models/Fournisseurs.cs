@@ -22,7 +22,7 @@ namespace AUTOPARC.Models
         public string Portable { get; set; }
         public string Adresse { get; set; }
         public int TypeFrsId { get; set; }
-        public int? VilleId { get; set; }
+        public int VilleId { get; set; }
 
         public virtual TypeFournisseurs TypeFrs { get; set; }
         public virtual Villes Ville { get; set; }

@@ -32,7 +32,7 @@
                             @foreach (var item in Model.Vehicules)
                             {
                                 string state = item.EtatVehicule.Etat;
-                                string badge = state == "Active" ? "badge-success" : state == "En panne" ? "badge-danger" : state == "Vendu" ? "badge-secondary" : "badge-warning";
+                                string badge = state == "Actif" ? "badge-success" : state == "En panne" ? "badge-danger" : state == "Vendu" ? "badge-secondary" : "badge-warning";
 
                                 <tr style="font-size:18px">
                                     <td class="text-dark">@item.Matricule</td>

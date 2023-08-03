@@ -1,36 +1,36 @@
 ﻿@page
-@model AUTOPARC.Pages.Vehicule.Modele.DetailsModel
+@model AUTOPARC.Pages.Maintenance.TypeMaintenance.DetailsModel
 @{
-    ViewData["Title"] = "Modifier Modele Véhicule";
+    ViewData["Title"] = "Modifier Type de Document";
 }
 
 
 <div class="container-fluid">
 
     <div class="container-fluid bg-dark py-1 mb-2">
-        <h3 class="text-center text-light">Véhicules</h3>
+        <h3 class="text-center text-light">Maintenances</h3>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title title-2 text-dark">Modifier Modele Véhicule</h4>
+            <h4 class="card-title title-2 text-dark">Modifier Type de Maintenance</h4>
             <hr>
             @if (!ModelState.IsValid)
             {
                 <div class="d-flex justify-content-center">
                     <div class="col-12">
                         <div class="alert alert-danger" role="alert">
-                            <p><span asp-validation-for="Modeles.Nom"></span></p>
+                            <p><span asp-validation-for="TypeMaintenances.Type"></span></p>
                         </div>
                     </div>
                 </div>
             }
-            @if (Model.check_presence_modele)
+            @if (Model.check_presence_typeMaintenance)
             {
                 <div class="d-flex justify-content-center">
                     <div class="col-12">
                         <div class="alert alert-danger" role="alert">
-                            <p>Suppression non autorisé! Modele déjà utilisé.</p>
+                            <p>Suppression non autorisé! Type maintenance déjà utilisé.</p>
                         </div>
                     </div>
                 </div>
@@ -43,8 +43,8 @@
                         <div class="card" style=" background-color:#DFDDDE">
                             <div class="card-body">
                                 <h4 class="card-title">Modifier</h4>
-                                <input type="hidden" asp-for="Modeles.Id" />
-                                <input asp-for="Modeles.Nom" type="text" class="form-control h4">
+                                <input type="hidden" asp-for="TypeMaintenances.Id" />
+                                <input asp-for="TypeMaintenances.Type" type="text" class="form-control h4">
 
                                 <div class="form-group row text-white">
                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
@@ -54,7 +54,7 @@
                                         <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
                                     </div>
                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
-                                        <a asp-page="/Vehicule/Modele/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                                        <a asp-page="/Maintenance/TypeMaintenance/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
                                     </div>
                                 </div>
 
@@ -70,7 +70,7 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Voulez-vous vraiment supprimer ce modele de véhicule?</h4>
+                                        <h4 class="modal-title">Voulez-vous vraiment supprimer ce type de maintenance?</h4>
                                         <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
                                     </div>
                                     <div class="modal-footer">
@@ -86,7 +86,7 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Voulez-vous vraiment modifier ce modele de véhicule?</h4>
+                                        <h4 class="modal-title">Voulez-vous vraiment modifier ce type de maintenance?</h4>
                                         <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
                                     </div>
                                     <div class="modal-footer">
@@ -106,4 +106,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
+}}

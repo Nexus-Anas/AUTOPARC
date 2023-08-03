@@ -2,6 +2,7 @@ using AUTOPARC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@ namespace AUTOPARC.Pages.Fournisseur
         public Fournisseurs Fournisseurs { get; set; }
         public List<TypeFournisseurs> TypeFournisseurs { get; set; }
         public List<Villes> Villes { get; set; }
+
+        public bool check_exception, check_phoneNumber;
 
 
 
@@ -39,17 +42,31 @@ namespace AUTOPARC.Pages.Fournisseur
             if (!ModelState.IsValid)
                 return Page();
 
-            var frs = await _db.Fournisseurs.FindAsync(Fournisseurs.Id);
-            frs.Nom = Fournisseurs.Nom;
-            frs.Email = Fournisseurs.Email;
-            frs.Adresse = Fournisseurs.Adresse;
-            frs.VilleId = Fournisseurs.VilleId;
-            frs.Telephone = Fournisseurs.Telephone;
-            frs.Portable = Fournisseurs.Portable;
-            frs.TypeFrsId = Fournisseurs.TypeFrsId;
+            if (string.IsNullOrEmpty(Fournisseurs.Telephone) && string.IsNullOrEmpty(Fournisseurs.Portable))
+            {
+                check_phoneNumber = true;
+                await OnGet(Fournisseurs.Id);
+                return Page();
+            }
+            try
+            {
+                var frs = await _db.Fournisseurs.FindAsync(Fournisseurs.Id);
+                frs.Nom = Fournisseurs.Nom;
+                frs.Email = Fournisseurs.Email;
+                frs.Adresse = Fournisseurs.Adresse;
+                frs.VilleId = Fournisseurs.VilleId;
+                frs.Telephone = Fournisseurs.Telephone;
+                frs.Portable = Fournisseurs.Portable;
+                frs.TypeFrsId = Fournisseurs.TypeFrsId;
 
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Fournisseur/Index");
+                await _db.SaveChangesAsync();
+                return RedirectToPage("/Fournisseur/Index");
+            }
+            catch (Exception)
+            {
+                check_exception = true;
+                return Page();
+            }
         }
 
 

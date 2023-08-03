@@ -2,44 +2,43 @@ using AUTOPARC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Document.TypeDocument
 {
-    public class IndexModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly DBC _db;
-        public IndexModel(DBC db) => _db = db;
+        public DetailsModel(DBC db) => _db = db;
 
 
 
 
         [BindProperty]
         public TypeDocs TypeDocs { get; set; }
-        public List<TypeDocs> TypeDocsList { get; set; }
 
-        public bool checkTypeID;
-
-
-
-        public async Task OnGet()
-            => TypeDocsList = await _db.TypeDocs.ToListAsync();
+        public bool check_presence_typeDoc;
 
 
 
 
-        public async Task<IActionResult> OnPostCreate()
+        public async Task OnGet(int id)
+            => TypeDocs = await _db.TypeDocs.FindAsync(id);
+
+
+
+
+        public async Task<IActionResult> OnPostUpdate()
         {
             if (string.IsNullOrEmpty(TypeDocs.Type) || !ModelState.IsValid)
             {
                 ModelState.AddModelError("TypeDocs.Type", "Le champ \"Type Document\" est requis.");
-                await OnGet();
                 return Page();
             }
 
-            await _db.TypeDocs.AddAsync(TypeDocs);
+            var typeDoc = await _db.TypeDocs.FindAsync(TypeDocs.Id);
+            typeDoc.Type = TypeDocs.Type;
             await _db.SaveChangesAsync();
             return RedirectToPage("/Document/TypeDocument/Index");
         }
@@ -47,22 +46,21 @@ namespace AUTOPARC.Pages.Document.TypeDocument
 
 
 
-        public async Task<IActionResult> OnPostDelete(int id)
+        public async Task<IActionResult> OnPostDelete()
         {
-            var type = await _db.TypeDocs.FindAsync(id);
+            var typeDoc = await _db.TypeDocs.FindAsync(TypeDocs.Id);
 
-            if (type is null)
+            if (typeDoc is null)
                 return NotFound();
 
-            var doc = await _db.Docs.Where(x => x.TypeId == type.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            var doc = await _db.Docs.Where(x => x.TypeId == typeDoc.Id).Select(x => x.Id).FirstOrDefaultAsync();
             if (doc != 0)
             {
-                checkTypeID = true;
-                await OnGet();
+                check_presence_typeDoc = true;
                 return Page();
             }
 
-            _db.TypeDocs.Remove(type);
+            _db.TypeDocs.Remove(typeDoc);
             await _db.SaveChangesAsync();
             return RedirectToPage("/Document/TypeDocument/Index");
         }

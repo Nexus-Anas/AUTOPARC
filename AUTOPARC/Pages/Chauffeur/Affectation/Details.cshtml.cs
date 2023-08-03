@@ -38,22 +38,6 @@ namespace AUTOPARC.Pages.Chauffeur.Affectation
 
 
 
-        public async Task<IActionResult> OnPostCreate()
-        {
-
-            try
-            {
-                await _db.AffectationChauffeurVehicules.AddAsync(AffectationChauffeurVehicules);
-                await _db.SaveChangesAsync();
-                return RedirectToPage("/Chauffeur/Affectation/Index");
-            }
-            catch (Exception)
-            {
-                check_exception = true;
-                return Page();
-            }
-        }
-
         public async Task<IActionResult> OnPostUpdate()
         {
             if (!ModelState.IsValid)

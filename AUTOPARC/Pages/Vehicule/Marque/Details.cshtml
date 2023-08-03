@@ -17,14 +17,22 @@
             <hr>
             @if (!ModelState.IsValid)
             {
-                <div class="alert alert-danger" role="alert">
-                    <p><span asp-validation-for="Marques.Nom"></span></p>
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p><span asp-validation-for="Marques.Nom"></span></p>
+                        </div>
+                    </div>
                 </div>
             }
             @if (Model.check_presence_marque)
             {
-                <div class="alert alert-danger" role="alert">
-                    <p>Suppression non autorisé! Marque déjà utilisée.</p>
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p>Suppression non autorisé! Marque déjà utilisée.</p>
+                        </div>
+                    </div>
                 </div>
             }
 

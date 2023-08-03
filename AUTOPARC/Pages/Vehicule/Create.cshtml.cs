@@ -19,7 +19,6 @@ namespace AUTOPARC.Pages.Vehicule
         [BindProperty]
         public Vehicules Vehicules { get; set; }
         public List<Categories> Categories { get; set; }
-        public List<Marques> Marques { get; set; }
         public List<Modeles> Modeles { get; set; }
         public List<TypeCarburants> TypeCarburants { get; set; }
         public List<EtatVehicules> Etatvehicules { get; set; }
@@ -27,15 +26,16 @@ namespace AUTOPARC.Pages.Vehicule
         public List<ModePaiments> ModePaiments { get; set; }
 
         public bool check_Prix_MontantPayee;
+        public int marqueID;
 
 
 
 
-        public async Task OnGet()
+        public async Task OnGet(int id)
         {
+            marqueID = id;
             Categories = await _db.Categories.ToListAsync();
-            Marques = await _db.Marques.ToListAsync();
-            Modeles = await _db.Modeles.ToListAsync();
+            Modeles = await _db.Modeles.Where(x => x.MarqueId == id).ToListAsync();
             TypeCarburants = await _db.TypeCarburants.ToListAsync();
             Etatvehicules = await _db.EtatVehicules.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
@@ -49,7 +49,7 @@ namespace AUTOPARC.Pages.Vehicule
         {
             if (!ModelState.IsValid)
             {
-                await OnGet();
+                await OnGet(marqueID);
                 return Page();
             }
 
@@ -57,7 +57,7 @@ namespace AUTOPARC.Pages.Vehicule
             if (condition)
             {
                 check_Prix_MontantPayee = true;
-                await OnGet();
+                await OnGet(marqueID);
                 return Page();
             }
 

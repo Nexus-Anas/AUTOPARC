@@ -14,59 +14,63 @@
         <div class="card-body wizard-content">
             <h4 class="card-title title-2">Modifier Fournisseur</h4>
             <hr>
+            @if (Model.check_phoneNumber)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Au moins un numéro de téléphone doit être saisi!</p>
+                </div>
+            }
+            @if (Model.check_exception)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
             <form method="post">
-                <input type="hidden" asp-for="Fournisseurs.Id" />
+                <input asp-for="Fournisseurs.Id" type="hidden"/>
                 <div class="form-row">
-                    <div class="form-group col-12">
-                        <label asp-for="Fournisseurs.Nom" class="control-label mb-1 fs-4">Nom <span style="color:red">*</span></label>
-                        <input asp-for="Fournisseurs.Nom" type="text" class="required form-control fs-4">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Fournisseurs.Nom" class="control-label">Nom <span class="text-danger">*</span></label>
+                        <span asp-validation-for="Fournisseurs.Nom" class="text-danger"></span>
+                        <input asp-for="Fournisseurs.Nom" type="text" class="form-control required">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Fournisseurs.Email" class="control-label">Email </label>
+                        <span asp-validation-for="Fournisseurs.Email" class="text-danger"></span>
+                        <input asp-for="Fournisseurs.Email" type="email" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-12">
-                        <label asp-for="Fournisseurs.Email" class="control-label mb-1 fs-4">Email </label>
-                        <input asp-for="Fournisseurs.Email" type="text" class="form-control fs-4">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-12">
-                        <label asp-for="Fournisseurs.Telephone" class="control-label mb-1 fs-4">Telephone </label>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Fournisseurs.Telephone" class="control-label">Telephone</label>
+                        <span asp-validation-for="Fournisseurs.Telephone" class="text-danger"></span>
                         <input asp-for="Fournisseurs.Telephone" type="text" class="form-control" oninput="validateNumbersAndPlus(this)">
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-12">
-                        <label asp-for="Fournisseurs.Portable" class="control-label mb-1 fs-4">Portable</label>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Fournisseurs.Portable" class="control-label">Portable</label>
+                        <span asp-validation-for="Fournisseurs.Portable" class="text-danger"></span>
                         <input asp-for="Fournisseurs.Portable" type="text" class="form-control" oninput="validateNumbersAndPlus(this)">
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-12">
-                        <label asp-for="Fournisseurs.Adresse" class="control-label mb-1">Adresse </label>
-                        <textarea asp-for="Fournisseurs.Adresse" class="form-control" rows="4" aria-required="true"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-12 fs-4">
-                        <label asp-for="Fournisseurs.VilleId">Ville <span style="color:red">*</span></label>
-                        <select asp-for="Fournisseurs.VilleId" class="form-control form-select fs-4">
-                            <option value="value">Choisir...</option>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Fournisseurs.VilleId">Ville <span class="text-danger">*</span></label>
+                        <span asp-validation-for="Fournisseurs.VilleId" class="text-danger"></span>
+                        <select asp-for="Fournisseurs.VilleId" class="form-control form-select required">
+                            <option value="">Choisir...</option>
                             @foreach (var item in Model.Villes)
                             {
                                 <option value="@item.Id">@item.Nom</option>
                             }
                         </select>
                     </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-12 fs-4">
-                        <label asp-for="Fournisseurs.TypeFrsId">Type Fournisseur <span style="color:red">*</span></label>
-                        <select asp-for="Fournisseurs.TypeFrsId" class="form-control form-select fs-4">
-                            <option value="value">Choisir...</option>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Fournisseurs.TypeFrsId">Type Fournisseur <span class="text-danger">*</span></label>
+                        <span asp-validation-for="Fournisseurs.TypeFrsId" class="text-danger"></span>
+                        <select asp-for="Fournisseurs.TypeFrsId" class="form-control form-select required">
+                            <option value="">Choisir...</option>
                             @foreach (var item in Model.TypeFournisseurs)
                             {
                                 <option value="@item.Id">@item.Type</option>
@@ -75,19 +79,62 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <div class="col-md-4 mt-3">
-                        <button asp-page-handler="Update" class="btn btn-lg btn-primary btn-block">Modifier</button>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Fournisseurs.Adresse" class="control-label">Adresse</label>
+                        <textarea asp-for="Fournisseurs.Adresse" class="form-control" rows="4" aria-required="true"></textarea>
                     </div>
-                    <div class="col-md-4 mt-3">
-                        <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer ce fournisseur?')">Supprimer</button>
+                </div>
+
+                <div class="form-group row text-white">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-primary btn-lg btn-block">Modifier</a>
                     </div>
-                    <div class="col-md-4 mt-3">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
                         <a asp-page="/Fournisseur/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
                     </div>
                 </div>
 
+
+
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment supprimer ce chauffeur de véhicule?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Delete" class="btn btn-danger btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Modal -->
+                <div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment modifier ce chauffeur de véhicule?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </form>
+
         </div>
     </div>
 </div>
@@ -98,8 +145,7 @@
 }
 
 
-@section InputNumberPattern
-{
+@section InputsPattern {
     <script>
         function validateNumbersAndPlus(inputElement) {
             const regex = /^[\d+]*$/; // Regular expression to allow only digits (0-9) and '+'
