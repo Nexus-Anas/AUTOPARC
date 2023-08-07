@@ -26,9 +26,7 @@ namespace AUTOPARC.Pages.Chauffeur
 
 
         public async Task OnGet(int id)
-        {
-            Chauffeurs = await _db.Chauffeurs.FindAsync(id);
-        }
+            => Chauffeurs = await _db.Chauffeurs.FindAsync(id);
 
 
 

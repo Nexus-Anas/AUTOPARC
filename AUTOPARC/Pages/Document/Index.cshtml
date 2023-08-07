@@ -19,15 +19,15 @@
                 <div class="row ml-2 mr-2">
                     @foreach (var item in Model.Docs)
                     {
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3 mb-2">
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
                             <div class="card" style="background-color:#F2F2F2">
                                 <div class="card-header text text-dark text-center font-weight-bold">Document №: @item.Numero</div>
                                 <img asp-append-version="true" src="~/images/document_vehicule.jpg" class="card-img-top" style="height:250px;width:auto" />
                                 <div class="card-body text-center">
                                     <h4 class="card-title">@item.Type.Type</h4>
                                     <p class="card-text">
-                                        <div class="h6">Date Debut: @item.DateDebut</div>
-                                        <div class="h6">Date Fin: @item.DateFin</div>
+                                        <div class="h6">Date Debut: @item.DateDebut.ToShortDateString()</div>
+                                        <div class="h6">Date Fin: @item.DateFin.ToShortDateString()</div>
                                     </p>
                                     <div class="text-white">
                                         <a asp-route-id="@item.Id" asp-page="/Document/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>

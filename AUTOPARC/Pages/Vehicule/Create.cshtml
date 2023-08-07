@@ -34,7 +34,9 @@
                             }
                         </select>
                     </div>
+
                     <input asp-for="Vehicules.MarqueId" value="@Model.marqueID" type="hidden" />
+
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                         <label asp-for="Vehicules.ModeleId">Modele <span class="text-danger">*</span></label>
                         <span asp-validation-for="Vehicules.ModeleId" class="text-danger"></span>

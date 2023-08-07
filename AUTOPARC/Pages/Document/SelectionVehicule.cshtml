@@ -1,0 +1,60 @@
+﻿@page
+@model AUTOPARC.Pages.Document.SelectionVehiculeModel
+@{
+    ViewData["Title"] = "Ajouter véhicules";
+}
+
+
+<div class="container-fluid">
+
+    <div class="container-fluid bg-dark py-1 mb-2">
+        <h3 class="text-center text-light">Documents</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title title-2 text-dark">Ajouter Document</h4>
+            <hr>
+            @if (!ModelState.IsValid)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p><span asp-validation-for="Vehicules.Matricule"></span></p>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="d-flex justify-content-center">
+                <div class="col-12">
+                    <form method="post">
+
+                        <div class="card" style=" background-color:#DFDDDE">
+                            <div class="card-body">
+                                <h4 class="card-title">Choisir une Véhicule</h4>
+
+                                <div class="form-group h6">
+                                    <select asp-for="Vehicules.Id" class="form-control form-select">
+                                        <option value="">Choisir...</option>
+                                        @foreach (var item in Model.VehiculesList)
+                                        {
+                                            <option value="@item.Id">@item.Marque.Nom @item.Modele.Nom === @item.Matricule</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="form-group row text-white">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
+                                        <button asp-page-handler="Select" class="btn btn-lg btn-primary btn-block">Suivant</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

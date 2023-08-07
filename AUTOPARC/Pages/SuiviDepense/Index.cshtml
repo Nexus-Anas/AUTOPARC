@@ -1,0 +1,52 @@
+﻿@page
+@model AUTOPARC.Pages.SuiviDepense.IndexModel
+@{
+    ViewData["Title"] = "Liste des Depenses";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Suivi Depenses</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Listes des Depenses</h4>
+            <hr>
+
+            <div class="mt-5">
+                <div class="table-responsive">
+                    <table id="zero_config" class="table table-borderless table-striped table-earning">
+                        <thead>
+                            <tr>
+                                <th class="text text-white bg-primary" style="font-size:18px">Num Depense</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Date</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Objet</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Montant</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Mode Paiment</th>
+                                <th class="text text-center text-white bg-primary" style="font-size:18px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Suividepenses)
+                            {
+                                <tr style="font-size:16px">
+                                    <td class="text-dark">@item.NumDepense</td>
+                                    <td class="text-dark">@item.DateDepense.ToShortDateString()</td>
+                                    <td class="text-dark">@item.Objet</td>
+                                    <td class="text-dark">@item.Montant</td>
+                                    <td class="text-dark">@item.ModePayement.Mode</td>
+                                    <td class="text-dark d-flex justify-content-center">
+                                        <a asp-route-id="@item.Id" asp-page="/SuiviDepense/Details" class="text text-white btn btn-primary"><i class="bi bi-info-circle-fill"></i> Consulter</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

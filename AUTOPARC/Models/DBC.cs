@@ -34,6 +34,7 @@ namespace AUTOPARC.Models
         public virtual DbSet<ModePaiments> ModePaiments { get; set; }
         public virtual DbSet<Modeles> Modeles { get; set; }
         public virtual DbSet<RechargeCarburants> RechargeCarburants { get; set; }
+        public virtual DbSet<Suividepense> Suividepense { get; set; }
         public virtual DbSet<TypeCarburants> TypeCarburants { get; set; }
         public virtual DbSet<TypeDocs> TypeDocs { get; set; }
         public virtual DbSet<TypeFournisseurs> TypeFournisseurs { get; set; }
@@ -726,6 +727,44 @@ namespace AUTOPARC.Models
                     .HasForeignKey(d => d.VehiculeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RECHARGE_VEHICULE");
+            });
+
+            modelBuilder.Entity<Suividepense>(entity =>
+            {
+                entity.ToTable("suividepense");
+
+                entity.HasIndex(e => e.ModePayementId)
+                    .HasName("FK_SUIVIDEPENSE_MODEPAIEMENT");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DateDepense)
+                    .HasColumnName("Date_Depense")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ModePayementId)
+                    .HasColumnName("Mode_Payement_ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Montant).HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.NumDepense)
+                    .HasColumnName("Num_Depense")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Objet)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.HasOne(d => d.ModePayement)
+                    .WithMany(p => p.Suividepense)
+                    .HasForeignKey(d => d.ModePayementId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SUIVIDEPENSE_MODEPAIEMENT");
             });
 
             modelBuilder.Entity<TypeCarburants>(entity =>

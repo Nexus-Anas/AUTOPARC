@@ -1,16 +1,25 @@
 using AUTOPARC.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Document
 {
     public class DetailsModel : PageModel
     {
+        private readonly IWebHostEnvironment _env;
         private readonly DBC _db;
-        public DetailsModel(DBC db) => _db = db;
+        public DetailsModel(DBC db, IWebHostEnvironment env)
+        {
+            _db = db;
+            _env = env;
+        }
 
 
 
@@ -20,6 +29,12 @@ namespace AUTOPARC.Pages.Document
         public List<TypeDocs> TypeDocs { get; set; }
         public List<Vehicules> Vehicules { get; set; }
         public List<Fournisseurs> Fournisseurs { get; set; }
+
+        public bool check_exception, check_date;
+
+        public int vehiculeID;
+
+        public string vehiculeMatricule;
 
 
 
@@ -38,18 +53,63 @@ namespace AUTOPARC.Pages.Document
         public async Task<IActionResult> OnPostUpdate()
         {
             if (!ModelState.IsValid)
+            {
+                await OnGet(Docs.VehiculeId);
                 return Page();
+            }
 
-            var doc = await _db.Docs.FindAsync(Docs.Id);
-            doc.Numero = Docs.Numero;
-            doc.TypeId = Docs.TypeId;
-            doc.VehiculeId = Docs.VehiculeId;
-            doc.FrsId = Docs.FrsId;
-            doc.DateDebut = Docs.DateDebut;
-            doc.DateFin = Docs.DateFin;
-            doc.UrlDoc = Docs.UrlDoc;
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Document/Index");
+            if (Docs.DateDebut >= Docs.DateFin)
+            {
+                check_date = true;
+                await OnGet(Docs.Id);
+                return Page();
+            }
+
+            try
+            {
+                if (Request.Form.Files.Count > 0) // Check if any files were uploaded
+                {
+                    var file = Request.Form.Files[0]; // Get the first uploaded file
+
+                    if (file.Length > 0)
+                    {
+                        string uploadsFolder = Path.Combine(_env.WebRootPath, "Document", "URL_Document");
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        Docs.UrlDoc = filePath; // Store the file path in your model if needed
+                    }
+                }
+
+                var doc = await _db.Docs.FindAsync(Docs.Id);
+                doc.Numero = Docs.Numero;
+                doc.TypeId = Docs.TypeId;
+                doc.VehiculeId = Docs.VehiculeId;
+                doc.FrsId = Docs.FrsId;
+                doc.DateDebut = Docs.DateDebut;
+                doc.DateFin = Docs.DateFin;
+                doc.UrlDoc = Docs.UrlDoc;
+                await _db.SaveChangesAsync();
+                return RedirectToPage("/Document/Index");
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mySqlEx)
+            {
+                if (mySqlEx.Message.Contains("Numero"))
+                    ModelState.AddModelError("Docs.Numero", "Ce numéro de document existe déjà.");
+
+                await OnGet(Docs.VehiculeId);
+                return Page();
+            }
+            catch (Exception)
+            {
+                check_exception = true;
+                return Page();
+            }
         }
 
 

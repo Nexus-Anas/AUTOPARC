@@ -14,6 +14,18 @@
         <div class="card-body wizard-content">
             <h4 class="card-title title-2">Form de Modification du Document</h4>
             <hr>
+            @if (Model.check_date)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>la date de début du document doit être inferieure à la date de fin.</p>
+                </div>
+            }
+            @if (Model.check_exception)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
             <div class="mt-4">
                 <div class="container-fluid">
                     <div class="row d-flex justify-content-center">
@@ -26,32 +38,12 @@
                                     </div>
                                     <hr>
                                     <form method="post">
+
                                         <input type="hidden" asp-for="Docs.Id" />
-                                        <div class="form-row">
-                                            <div class="form-group col-12">
-                                                <label asp-for="Docs.Numero" class="control-label mb-1">Numéro Document</label>
-                                                <span asp-validation-for="Docs.Numero" class="text text-danger"></span>
-                                                <input asp-for="Docs.Numero" type="text" class="form-control">
-                                            </div>
-                                        </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Docs.TypeId" class="control-label mb-1">Type Document</label>
-                                                <span asp-validation-for="Docs.TypeId" class="text text-danger"></span>
-                                                <select asp-for="Docs.TypeId" class="form-control form-select">
-                                                    <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.TypeDocs)
-                                                    {
-                                                        <option value="@item.Id">@item.Type</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row">
-                                            <div class="form-group col-12">
-                                                <label asp-for="Docs.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
+                                                <label asp-for="Docs.VehiculeId" class="control-label">Matricule Véhicule</label>
                                                 <span asp-validation-for="Docs.VehiculeId" class="text text-danger"></span>
                                                 <select asp-for="Docs.VehiculeId" class="form-control form-select">
                                                     <option value="value">Choisir...</option>
@@ -65,10 +57,32 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Docs.FrsId" class="control-label mb-1">Fournisseur</label>
+                                                <label asp-for="Docs.Numero" class="control-label">Numéro Document</label>
+                                                <span asp-validation-for="Docs.Numero" class="text text-danger"></span>
+                                                <input asp-for="Docs.Numero" type="text" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.TypeId" class="control-label">Type Document</label>
+                                                <span asp-validation-for="Docs.TypeId" class="text text-danger"></span>
+                                                <select asp-for="Docs.TypeId" class="form-control form-select">
+                                                    <option value="">Choisir...</option>
+                                                    @foreach (var item in Model.TypeDocs)
+                                                    {
+                                                        <option value="@item.Id">@item.Type</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Docs.FrsId" class="control-label">Fournisseur</label>
                                                 <span asp-validation-for="Docs.FrsId" class="text text-danger"></span>
-                                                <select asp-for="Docs.FrsId" class="form-control form-select fs-5">
-                                                    <option value="value">Choisir...</option>
+                                                <select asp-for="Docs.FrsId" class="form-control form-select">
+                                                    <option value="">Choisir...</option>
                                                     @foreach (var item in Model.Fournisseurs)
                                                     {
                                                         <option value="@item.Id">@item.Nom</option>
@@ -79,13 +93,13 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-6">
-                                                <label asp-for="Docs.DateDebut" class="control-label mb-1">Date Début</label>
+                                                <label asp-for="Docs.DateDebut" class="control-label">Date Début</label>
                                                 <span asp-validation-for="Docs.DateDebut" class="text text-danger"></span>
                                                 <input asp-for="Docs.DateDebut" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
                                             </div>
 
                                             <div class="form-group col-6">
-                                                <label asp-for="Docs.DateFin" class="control-label mb-1">Date Fin</label>
+                                                <label asp-for="Docs.DateFin" class="control-label">Date Fin</label>
                                                 <span asp-validation-for="Docs.DateFin" class="text text-danger"></span>
                                                 <input asp-for="Docs.DateFin" type="date" class="form-control" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
                                             </div>
@@ -93,14 +107,17 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Docs.UrlDoc" class="control-label mb-1 fs-5">URL Document</label>
+                                                @{
+                                                    string url = Model?.Docs?.UrlDoc != null ? (" : " + Model.Docs.UrlDoc) : string.Empty;
+                                                }
+                                                <label asp-for="Docs.UrlDoc" class="control-label">URL Document <span class="text-primary h6">@url</span></label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputFileAdd">URL</span>
                                                     </div>
                                                     <div class="custom-file">
                                                         <input asp-for="Docs.UrlDoc" type="file" class="custom-file-input" id="inputFile">
-                                                        <label class="custom-file-label fs-5" for="inputFile">Choisir un fichier...</label>
+                                                        <label class="custom-file-label" for="inputFile">Choisir un fichier...</label>
                                                     </div>
                                                 </div>
                                             </div>
