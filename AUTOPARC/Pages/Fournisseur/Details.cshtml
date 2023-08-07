@@ -79,9 +79,37 @@
                     <div class="col-md-4 mt-3">
                         <button asp-page-handler="Update" class="btn btn-lg btn-primary btn-block">Modifier</button>
                     </div>
+
+
                     <div class="col-md-4 mt-3">
-                        <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer ce fournisseur?')">Supprimer</button>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-lg btn-danger btn-block" data-toggle="modal" data-target="#exampleModalCenter">
+                            Supprimer
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Suppression</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Voulez-vous supprimer!
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+                                        <button type="button" asp-page-handler="Delete" class="btn btn-outline-danger">Supprimer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+
                     <div class="col-md-4 mt-3">
                         <a asp-page="/Fournisseur/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
                     </div>

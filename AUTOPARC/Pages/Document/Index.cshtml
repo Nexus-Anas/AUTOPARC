@@ -26,8 +26,8 @@
                                 <div class="card-body text-center">
                                     <h4 class="card-title">@item.Type.Type</h4>
                                     <p class="card-text">
-                                        <div class="h6">Date Debut: @item.DateDebut</div>
-                                        <div class="h6">Date Fin: @item.DateFin</div>
+                                        <div class="h6">Date Debut: @item.DateDebut.ToShortDateString()</div>
+                                        <div class="h6">Date Fin: @item.DateFin.ToShortDateString()</div>
                                     </p>
                                     <div class="text-white">
                                         <a asp-route-id="@item.Id" asp-page="/Document/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>

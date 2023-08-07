@@ -55,12 +55,14 @@ namespace AUTOPARC.Pages.Fournisseur
 
 
 
-        public async Task<IActionResult> OnPostDelete()
+        public async Task<IActionResult> OnPostDelete( int id)
         {
-            if (!ModelState.IsValid)
-                return Page();
-
-            _db.Fournisseurs.Remove(Fournisseurs);
+            var fournisseur = await _db.Fournisseurs.FindAsync(id);
+            if(fournisseur == null)
+            {
+                return NotFound(); 
+            }
+            _db.Fournisseurs.Remove(fournisseur);
             await _db.SaveChangesAsync();
             return RedirectToPage("/Fournisseur/Index");
         }

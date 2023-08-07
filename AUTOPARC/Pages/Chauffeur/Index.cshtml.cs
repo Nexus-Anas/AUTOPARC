@@ -12,15 +12,11 @@ namespace AUTOPARC.Pages.Chauffeur
         private readonly DBC _db;
         public IndexModel(DBC db) => _db = db;
 
-
-
-
         public List<Chauffeurs> Chauffeurs { get; set; }
-
-
-
+        public Chauffeurs Chauffeur { get; set; }
 
         public async Task OnGet()
             => Chauffeurs = await _db.Chauffeurs.ToListAsync();
     }
+
 }
