@@ -32,10 +32,6 @@ namespace AUTOPARC.Pages.Document
 
         public bool check_exception, check_date;
 
-        public int vehiculeID;
-
-        public string vehiculeMatricule;
-
 
 
 
@@ -54,7 +50,7 @@ namespace AUTOPARC.Pages.Document
         {
             if (!ModelState.IsValid)
             {
-                await OnGet(Docs.VehiculeId);
+                await OnGet(Docs.Id);
                 return Page();
             }
 
@@ -118,7 +114,10 @@ namespace AUTOPARC.Pages.Document
         public async Task<IActionResult> OnPostDelete()
         {
             if (!ModelState.IsValid)
+            {
+                await OnGet(Docs.Id);
                 return Page();
+            }
 
             _db.Docs.Remove(Docs);
             await _db.SaveChangesAsync();

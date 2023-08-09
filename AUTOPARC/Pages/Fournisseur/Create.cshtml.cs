@@ -22,7 +22,7 @@ namespace AUTOPARC.Pages.Fournisseur
         public List<TypeFournisseurs> TypeFournisseurs { get; set; }
         public List<Villes> Villes { get; set; }
 
-        public bool check_exception, check_phoneNumber;
+        public bool check_exception;
 
 
 
@@ -40,13 +40,6 @@ namespace AUTOPARC.Pages.Fournisseur
         {
             if (!ModelState.IsValid)
                 return Page();
-
-            if (string.IsNullOrEmpty(Fournisseurs.Telephone) && string.IsNullOrEmpty(Fournisseurs.Portable))
-            {
-                check_phoneNumber = true;
-                await OnGet();
-                return Page();
-            }
 
             try
             {

@@ -29,8 +29,8 @@ namespace AUTOPARC.Pages.SuiviDepense
 
         public async Task OnGet()
         {
-            var num = await _db.Suividepense.OrderByDescending(s => s.NumDepense).FirstOrDefaultAsync();
-            NumDp = num != null ? num.NumDepense + 1 : 1;
+            var num = await _db.Suividepense.OrderByDescending(s => s.NumDepense).Select(x => x.NumDepense).FirstOrDefaultAsync();
+            NumDp = num + 1;
             ModePaiments = await _db.ModePaiments.ToListAsync();
         }
 

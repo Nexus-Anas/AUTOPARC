@@ -530,6 +530,9 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.ChauffeurId)
                     .HasName("FK_MAINTENANCE_CHAUFFEUR");
 
+                entity.HasIndex(e => e.ModePaiementId)
+                    .HasName("FK_MAINTENANCE");
+
                 entity.HasIndex(e => e.TypeId)
                     .HasName("FK_MAINTENANCE_TYPE");
 
@@ -555,8 +558,8 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.MethodePayementId)
-                    .HasColumnName("Methode_Payement_ID")
+                entity.Property(e => e.ModePaiementId)
+                    .HasColumnName("Mode_Paiement_ID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.MontantPayee)
@@ -582,6 +585,12 @@ namespace AUTOPARC.Models
                     .HasForeignKey(d => d.ChauffeurId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MAINTENANCE_CHAUFFEUR");
+
+                entity.HasOne(d => d.ModePaiement)
+                    .WithMany(p => p.Maintenances)
+                    .HasForeignKey(d => d.ModePaiementId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MAINTENANCE");
 
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Maintenances)

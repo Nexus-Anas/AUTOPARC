@@ -12,6 +12,7 @@ namespace AUTOPARC.Models
         public ModePaiments()
         {
             Cessions = new HashSet<Cessions>();
+            Maintenances = new HashSet<Maintenances>();
             RechargeCarburants = new HashSet<RechargeCarburants>();
             Suividepense = new HashSet<Suividepense>();
             Vehicules = new HashSet<Vehicules>();
@@ -21,6 +22,7 @@ namespace AUTOPARC.Models
         public string Mode { get; set; }
 
         public virtual ICollection<Cessions> Cessions { get; set; }
+        public virtual ICollection<Maintenances> Maintenances { get; set; }
         public virtual ICollection<RechargeCarburants> RechargeCarburants { get; set; }
         public virtual ICollection<Suividepense> Suividepense { get; set; }
         public virtual ICollection<Vehicules> Vehicules { get; set; }

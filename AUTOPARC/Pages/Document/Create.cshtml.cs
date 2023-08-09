@@ -1,14 +1,10 @@
 using AUTOPARC.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,10 +13,7 @@ namespace AUTOPARC.Pages.Document
     public class CreateModel : PageModel
     {
         private readonly DBC _db;
-        public CreateModel(DBC db, IWebHostEnvironment env)
-        {
-            _db = db;
-        }
+        public CreateModel(DBC db) => _db = db;
 
 
 

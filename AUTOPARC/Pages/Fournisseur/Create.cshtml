@@ -14,12 +14,6 @@
         <div class="card-body wizard-content">
             <h4 class="card-title title-2">Ajouter Fournisseur</h4>
             <hr>
-            @if (Model.check_phoneNumber)
-            {
-                <div asp-validation-summary=All class="alert alert-danger" role="alert">
-                    <p>Au moins un numéro de téléphone doit être saisi!</p>
-                </div>
-            }
             @if (Model.check_exception)
             {
                 <div asp-validation-summary=All class="alert alert-danger" role="alert">

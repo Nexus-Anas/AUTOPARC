@@ -53,7 +53,7 @@ namespace AUTOPARC.Pages.Parametrage.ModePaiment
             var vehicule = await _db.Vehicules.Where(x => x.ModePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var recharge_carburon = await _db.RechargeCarburants.Where(x => x.ModePaimentId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var vente = await _db.Cessions.Where(x => x.ModePaimentId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            var maintenance = await _db.Maintenances.Where(x => x.MethodePayementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            var maintenance = await _db.Maintenances.Where(x => x.ModePaiementId == methode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             if (vehicule != 0 && recharge_carburon != 0 && vehicule != 0 && maintenance != 0)
             {
                 checkTypeID = true;

@@ -17,39 +17,35 @@
 
             <div class="mt-5">
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-borderless table-striped table-earning">
+                    <table class="table table-earning table-borderless table-hover">
                         <thead>
                             <tr>
                                 <th class="text text-white bg-info">Type Maintenance</th>
                                 <th class="text text-white bg-info">Matricule</th>
                                 <th class="text text-white bg-info">Date</th>
-                                <th class="text text-white bg-info">Cout (DH)</th>
-                                <th class="text text-white bg-info">Montant Payee (DH)</th>
+                                <th class="text text-white bg-info">Coût (DH)</th>
+                                <th class="text text-white bg-info">Montant Payé (DH)</th>
                                 <th class="text text-white bg-info">Reste (DH)</th>
-                                <th class="text text-white bg-info">Etat</th>
-                                <th class="text text-white bg-info">Methode Payement</th>
-                                <th class="text text-white bg-info">&nbsp;&nbsp;Action</th>
+                                <th class="text text-white text-center bg-info">État</th>
+                                <th class="text text-white text-center bg-info">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Maintenances)
                             {
                                 decimal reste = item.Cout - item.MontantPayee;
-                                string textColor = reste == 0 ? "text-success" : "text-danger";
+                                string txtColor = reste == 0 ? "text-success" : "text-danger";
                                 string badge = reste == 0 ? "badge badge-success" : "badge badge-danger";
                                 string state = reste == 0 ? "payé" : "impayé";
 
                                 <tr>
-                                    <td class="text-dark" style="font-size:18px;">@item.Type.Type</td>
-                                    <td class="text-dark" style="font-size:18px;">@item.Vehicule.Matricule</td>
-                                    <td class="text-dark" style="font-size:18px;">@item.DateMaintenance.ToShortDateString()</td>
-                                    <td class="text-dark text-center" style="font-size:18px;">@item.Cout</td>
-                                    <td class="text-dark text-center" style="font-size:18px;">@item.MontantPayee</td>
-                                    <td class="text-center" style="font-size:18px;">
-                                        <span class="@textColor font-weight-bold">@reste</span>
-                                    </td>
-                                    <td class="text-center"><span class="@badge mt-1">@state</span></td>
-                                    <td class="text-dark text-center" style="font-size:18px;">@item.MethodePayementId</td>
+                                    <td class="text-dark h6">@item.Type.Type</td>
+                                    <td class="text-dark h6">@item.Vehicule.Matricule</td>
+                                    <td class="text-dark h6">@item.DateMaintenance.ToShortDateString()</td>
+                                    <td class="text-dark h6">@item.Cout</td>
+                                    <td class="text-dark h6">@item.MontantPayee</td>
+                                    <td class="font-weight-bold h6 @txtColor">@reste</td>
+                                    <td class="text-center h5"><span class="@badge">@state</span></td>
                                     <td class="text-dark">
                                         <a asp-route-id="@item.Id" asp-page="/Maintenance/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>
@@ -59,7 +55,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

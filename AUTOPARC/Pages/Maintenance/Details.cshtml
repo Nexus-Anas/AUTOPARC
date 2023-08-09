@@ -12,40 +12,42 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Form de Maintenance</h4>
+            <h4 class="card-title title-2">Form de Modification de Maintenance</h4>
             <hr>
+            @if (Model.check_cout_montantPayee)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>le montant payé doit être inférieure ou égale au coût de la maintenance.</p>
+                </div>
+            }
+            @if (Model.check_exception)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
             <div class="mt-4">
                 <div class="container-fluid">
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-6">
                             <div class="card" style="background-color:#F2F2F2">
-                                <div class="card-header fs-4 font-weight-bold">Maintenance</div>
+                                <div class="card-header font-weight-bold">Maintenance</div>
                                 <div class="card-body">
                                     <div class="card-title">
-                                        <h3 class="text-center title-1 font-weight-bold">Modifier Maintenance</h3>
+                                        <h3 class="text-center title-1 font-weight-bold">Nouvelle Maintenance</h3>
                                     </div>
                                     <hr>
                                     <form method="post">
-                                        <input type="hidden" asp-for="Maintenances.Id" />
-                                        <div class="form-row">
-                                            <div class="form-group col-12">
-                                                <label asp-for="Maintenances.TypeId" class="control-label mb-1">Type Maintenance</label>
-                                                <select asp-for="Maintenances.TypeId" class="form-control form-select">
-                                                    <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.TypeMaintenances)
-                                                    {
-                                                        <option value="@item.Id">@item.Type</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
+
+                                        <input asp-for="Maintenances.Id" type="hidden" />
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Maintenances.VehiculeId" class="control-label mb-1">Matricule Véhicule</label>
-                                                <select asp-for="Maintenances.VehiculeId" class="form-control form-select">
-                                                    <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.Vehicules)
+                                                <label asp-for="Maintenances.VehiculeId" class="control-label">Type Maintenance <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.VehiculeId" class="text text-danger"></span>
+                                                <select asp-for="Maintenances.VehiculeId" class="form-control form-select required">
+                                                    <option value="">Choisir...</option>
+                                                    @foreach (var item in Model.VehiculesList)
                                                     {
                                                         <option value="@item.Id">@item.Matricule</option>
                                                     }
@@ -55,29 +57,13 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Maintenances.DateMaintenance" class="control-label mb-1">Date Maintenance</label>
-                                                <input asp-for="Maintenances.DateMaintenance" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row">
-                                            <div class="form-group col-4">
-                                                <label asp-for="Maintenances.Cout" class="control-label mb-1">Coût (DH)</label>
-                                                <input asp-for="Maintenances.Cout" class="form-control" type="text" aria-required="true">
-                                            </div>
-
-                                            <div class="form-group col-4">
-                                                <label asp-for="Maintenances.MontantPayee" class="control-label mb-1">Montant Payé (DH)</label>
-                                                <input asp-for="Maintenances.MontantPayee" class="form-control fs-5" type="text" aria-required="true">
-                                            </div>
-
-                                            <div class="form-group col-4">
-                                                <label asp-for="Maintenances.MethodePayementId" class="control-label mb-1">Methode de Payement</label>
-                                                <select asp-for="Maintenances.MethodePayementId" class="form-control form-select">
-                                                    <option value="value">Choisir...</option>
-                                                    @foreach (var item in Model.ModePaiments)
+                                                <label asp-for="Maintenances.TypeId" class="control-label">Type Maintenance <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.TypeId" class="text text-danger"></span>
+                                                <select asp-for="Maintenances.TypeId" class="form-control form-select required">
+                                                    <option value="">Choisir...</option>
+                                                    @foreach (var item in Model.TypeMaintenancesList)
                                                     {
-                                                        <option value="@item.Id">@item.Mode</option>
+                                                        <option value="@item.Id">@item.Type</option>
                                                     }
                                                 </select>
                                             </div>
@@ -85,23 +71,76 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Maintenances.Description" class="control-label mb-1">Description</label>
-                                                <textarea asp-for="Maintenances.Description" class="form-control" rows="4" aria-required="true"></textarea>
+                                                <label asp-for="Maintenances.ChauffeurId" class="control-label">Chauffeur <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.ChauffeurId" class="text text-danger"></span>
+                                                <select asp-for="Maintenances.ChauffeurId" class="form-control form-select required">
+                                                    <option value="">Choisir...</option>
+                                                    @foreach (var item in Model.ChauffeursList)
+                                                    {
+                                                        <option value="@item.Id">@item.Nom @item.Prenom</option>
+                                                    }
+                                                </select>
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label asp-for="Maintenances.UrlDoc" class="control-label mb-1">URL Document</label>
+                                                <label asp-for="Maintenances.DateMaintenance" class="control-label">Date Maintenance <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.DateMaintenance" class="text text-danger"></span>
+                                                <input asp-for="Maintenances.DateMaintenance" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Maintenances.Cout" class="control-label">Coût (DH) <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.Cout" class="text text-danger"></span>
+                                                <input asp-for="Maintenances.Cout" type="text" class="form-control required">
+                                            </div>
+
+                                            <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Maintenances.MontantPayee" class="control-label">Montant payé (DH) <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.MontantPayee" class="text text-danger"></span>
+                                                <input asp-for="Maintenances.MontantPayee" type="text" class="form-control required">
+                                            </div>
+
+                                            <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Maintenances.ModePaiementId" class="control-label">Mode de Paiement <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.ModePaiementId" class="text text-danger"></span>
+                                                <select asp-for="Maintenances.ModePaiementId" class="form-control form-select required">
+                                                    <option value="">Choisir...</option>
+                                                    @foreach (var item in Model.ModePaimentsList)
+                                                    {
+                                                        <option value="@item.Id">@item.Mode</option>
+                                                    }
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                @{
+                                                    string url = Model?.Maintenances?.UrlDoc != null ? (" : " + Model.Maintenances.UrlDoc) : string.Empty;
+                                                }
+                                                <label asp-for="Maintenances.UrlDoc" class="control-label">URL Document <span class="text-primary h6">@url</span></label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputFileAdd">URL</span>
                                                     </div>
                                                     <div class="custom-file">
                                                         <input asp-for="Maintenances.UrlDoc" type="file" class="custom-file-input" id="inputFile">
-                                                        <label class="custom-file-label fs-5" for="inputFile">Choisir un fichier...</label>
+                                                        <label class="custom-file-label" for="inputFile">Choisir un fichier...</label>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-12">
+                                                <label asp-for="Maintenances.Description">Description</label>
+                                                <textarea asp-for="Maintenances.Description" class="form-control" rows="4" aria-required="true"></textarea>
                                             </div>
                                         </div>
 

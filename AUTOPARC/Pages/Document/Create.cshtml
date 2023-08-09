@@ -31,7 +31,7 @@
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-6">
                             <div class="card" style="background-color:#F2F2F2">
-                                <div class="card-header fs-4 font-weight-bold">Document</div>
+                                <div class="card-header font-weight-bold">Document</div>
                                 <div class="card-body">
                                     <div class="card-title">
                                         <h3 class="text-center title-1 font-weight-bold">Nouveau Document</h3>
@@ -61,7 +61,7 @@
                                                 <label asp-for="Docs.TypeId" class="control-label">Type Document <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Docs.TypeId" class="text text-danger"></span>
                                                 <select asp-for="Docs.TypeId" class="form-control form-select required">
-                                                    <option value="value">Choisir...</option>
+                                                    <option value="">Choisir...</option>
                                                     @foreach (var item in Model.TypeDocs)
                                                     {
                                                         <option value="@item.Id">@item.Type</option>
@@ -75,7 +75,7 @@
                                                 <label asp-for="Docs.FrsId" class="control-label">Fournisseur <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Docs.FrsId" class="text text-danger"></span>
                                                 <select asp-for="Docs.FrsId" class="form-control form-select required">
-                                                    <option value="value">Choisir...</option>
+                                                    <option value="">Choisir...</option>
                                                     @foreach (var item in Model.Fournisseurs)
                                                     {
                                                         <option value="@item.Id">@item.Nom</option>
@@ -114,7 +114,7 @@
                                         </div>
 
                                         <div>
-                                            <button asp-page-handler="Create" class="btn btn-lg btn-info btn-block fs-4 mt-4">Valider</button>
+                                            <button asp-page-handler="Create" class="btn btn-lg btn-info btn-block mt-4">Valider</button>
                                         </div>
 
                                     </form>
