@@ -1,0 +1,53 @@
+﻿@page
+@model AUTOPARC.Pages.Parametrage.Cheque.IndexModel
+@{
+    ViewData["Title"] = "Parametrage";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Parametrage</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Listes des Cheques</h4>
+            <hr>
+
+            <div class="mt-5">
+                <div class="table-responsive">
+                    <table class="table table-earning table-borderless table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text text-white bg-info">Numero</th>
+                                <th class="text text-white bg-info">Banque</th>
+                                <th class="text text-white bg-info">Date Echeance</th>
+                                <th class="text text-white bg-info">Montant (DH)</th>
+                                <th class="text text-white text-center bg-info">État</th>
+                                <th class="text text-white text-center bg-info">Consulter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChequesList)
+                            {
+                                string badge = item.Etat == "payé" ? "badge badge-success" : "badge badge-danger";
+
+                                <tr>
+                                    <td class="text-dark h6">@item.Numero</td>
+                                    <td class="text-dark h6">@item.Banque.Nom</td>
+                                    <td class="text-dark h6">@item.DateEcheance.ToShortDateString()</td>
+                                    <td class="text-dark h6">@item.Montant</td>
+                                    <td class="text-center h5"><span class="@badge">@item.Etat</span></td>
+                                    <td class="text-dark">
+                                        <a asp-route-id="@item.Id" asp-page="/Parametrage/Cheque/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

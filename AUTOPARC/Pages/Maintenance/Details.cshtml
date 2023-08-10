@@ -1,7 +1,7 @@
 ﻿@page
 @model AUTOPARC.Pages.Maintenance.DetailsModel
 @{
-    ViewData["Title"] = "Details Maintenance";
+    ViewData["Title"] = "Ajouter Maintenance";
 }
 
 
@@ -16,34 +16,47 @@
             <hr>
             @if (Model.check_cout_montantPayee)
             {
-                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <p>le montant payé doit être inférieure ou égale au coût de la maintenance.</p>
                 </div>
             }
             @if (Model.check_exception)
             {
-                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <p>Veuillez vérifier vos entrées.</p>
                 </div>
             }
+            @if (Model.check_cheque_exception)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées dans la phase du cheque.</p>
+                </div>
+            }
+            @if (Model.cheque_numero_cheque_existance)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>Le numéro du cheque est déjà utilisé.</p>
+                </div>
+            }
             <div class="mt-4">
-                <div class="container-fluid">
+                <div class="container">
                     <div class="row d-flex justify-content-center">
-                        <div class="col-lg-6">
+                        <div class="col-12">
                             <div class="card" style="background-color:#F2F2F2">
                                 <div class="card-header font-weight-bold">Maintenance</div>
                                 <div class="card-body">
                                     <div class="card-title">
-                                        <h3 class="text-center title-1 font-weight-bold">Nouvelle Maintenance</h3>
+                                        <h3 class="text-center title-1 font-weight-bold">Modifier Maintenance</h3>
                                     </div>
                                     <hr>
-                                    <form method="post">
+                                    <form method="post" enctype="multipart/form-data">
 
                                         <input asp-for="Maintenances.Id" type="hidden" />
+                                        <input asp-for="Maintenances.Num" type="hidden" />
 
                                         <div class="form-row">
-                                            <div class="form-group col-12">
-                                                <label asp-for="Maintenances.VehiculeId" class="control-label">Type Maintenance <span class="text-danger">*</span></label>
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Maintenances.VehiculeId" class="control-label">Matricule <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Maintenances.VehiculeId" class="text text-danger"></span>
                                                 <select asp-for="Maintenances.VehiculeId" class="form-control form-select required">
                                                     <option value="">Choisir...</option>
@@ -53,10 +66,8 @@
                                                     }
                                                 </select>
                                             </div>
-                                        </div>
 
-                                        <div class="form-row">
-                                            <div class="form-group col-12">
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Maintenances.TypeId" class="control-label">Type Maintenance <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Maintenances.TypeId" class="text text-danger"></span>
                                                 <select asp-for="Maintenances.TypeId" class="form-control form-select required">
@@ -70,45 +81,24 @@
                                         </div>
 
                                         <div class="form-row">
-                                            <div class="form-group col-12">
-                                                <label asp-for="Maintenances.ChauffeurId" class="control-label">Chauffeur <span class="text-danger">*</span></label>
-                                                <span asp-validation-for="Maintenances.ChauffeurId" class="text text-danger"></span>
-                                                <select asp-for="Maintenances.ChauffeurId" class="form-control form-select required">
-                                                    <option value="">Choisir...</option>
-                                                    @foreach (var item in Model.ChauffeursList)
-                                                    {
-                                                        <option value="@item.Id">@item.Nom @item.Prenom</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row">
-                                            <div class="form-group col-12">
-                                                <label asp-for="Maintenances.DateMaintenance" class="control-label">Date Maintenance <span class="text-danger">*</span></label>
-                                                <span asp-validation-for="Maintenances.DateMaintenance" class="text text-danger"></span>
-                                                <input asp-for="Maintenances.DateMaintenance" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row">
-
-                                            <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Maintenances.Cout" class="control-label">Coût (DH) <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Maintenances.Cout" class="text text-danger"></span>
                                                 <input asp-for="Maintenances.Cout" type="text" class="form-control required">
                                             </div>
 
-                                            <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Maintenances.MontantPayee" class="control-label">Montant payé (DH) <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Maintenances.MontantPayee" class="text text-danger"></span>
                                                 <input asp-for="Maintenances.MontantPayee" type="text" class="form-control required">
                                             </div>
+                                        </div>
 
-                                            <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <div class="form-row">
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Maintenances.ModePaiementId" class="control-label">Mode de Paiement <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Maintenances.ModePaiementId" class="text text-danger"></span>
-                                                <select asp-for="Maintenances.ModePaiementId" class="form-control form-select required">
+                                                <select id="paymentMode" asp-for="Maintenances.ModePaiementId" class="form-control form-select required">
                                                     <option value="">Choisir...</option>
                                                     @foreach (var item in Model.ModePaimentsList)
                                                     {
@@ -117,14 +107,87 @@
                                                 </select>
                                             </div>
 
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Maintenances.DateMaintenance" class="control-label">Date Maintenance <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Maintenances.DateMaintenance" class="text text-danger"></span>
+                                                <input asp-for="Maintenances.DateMaintenance" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                            </div>
                                         </div>
+
+
+
+
+                                        <!-- Form de Cheque -->
+
+                                        <div class="collapse border border-secondary border-3 mb-1" id="chequeForm">
+                                            <div class="container-fluid mb-2 bg-dark">
+                                                <h3 class="mb-0 text-center text-light">Form de Cheque</h3>
+                                            </div>
+                                            <div class="p-1">
+                                                <input asp-for="Cheques.Action" value="Maintenance" type="hidden" />
+                                                <input asp-for="Cheques.Etat" value="impayé" type="hidden" />
+                                                <input asp-for="Cheques.ActionNum" value="@Model.Maintenances.Num" type="hidden" />
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-12">
+                                                        <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque <span class="text-danger">*</span></label>
+                                                        <input asp-for="Cheques.Numero" type="text" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-12">
+                                                        <label asp-for="Cheques.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
+                                                        <select asp-for="Cheques.BanqueId" class="form-control form-select">
+                                                            <option value="">Choisir...</option>
+                                                            @foreach (var item in Model.BanquesList)
+                                                            {
+                                                                <option value="@item.Id">@item.Nom</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-12">
+                                                        <label asp-for="Cheques.Montant" class="control-label">Montant (DH) <span class="text-danger">*</span></label>
+                                                        <input asp-for="Cheques.Montant" type="text" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-12">
+                                                        <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de: <span class="text-danger">*</span></label>
+                                                        <input asp-for="Cheques.AuNomDe" type="text" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement <span class="text-danger">*</span></label>
+                                                        <input asp-for="Cheques.DateReglement" type="date" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance <span class="text-danger">*</span></label>
+                                                        <input asp-for="Cheques.DateEcheance" type="date" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                        <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
+                                                        <input asp-for="Cheques.DateValeur" type="date" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- Fin Form de Cheque -->
+                                        <!------------------------>
+
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                @{
-                                                    string url = Model?.Maintenances?.UrlDoc != null ? (" : " + Model.Maintenances.UrlDoc) : string.Empty;
-                                                }
-                                                <label asp-for="Maintenances.UrlDoc" class="control-label">URL Document <span class="text-primary h6">@url</span></label>
+                                                <label asp-for="Maintenances.UrlDoc" class="control-label">URL Document</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputFileAdd">URL</span>
@@ -144,15 +207,50 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group row">
-                                            <div class="col-md-4 mt-3">
-                                                <button asp-page-handler="Update" class="btn btn-lg btn-info btn-block">Modifier</button>
+                                        <div class="form-group row text-white">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                                                <a data-toggle="modal" data-target="#updatemodal" class="btn btn-primary btn-lg btn-block">Modifier</a>
                                             </div>
-                                            <div class="col-md-4 mt-3">
-                                                <button asp-page-handler="Delete" class="btn btn-lg btn-danger btn-block" onclick="return confirm('Voulez-vous vraiment supprimer ce document?')" style="background-color:crimson">Supprimer</button>
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                                                <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
                                             </div>
-                                            <div class="col-md-4 mt-3">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
                                                 <a asp-page="/Maintenance/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Voulez-vous vraiment supprimer cette maintenance de véhicule?</h4>
+                                                        <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button asp-page-handler="Delete" class="btn btn-danger btn-lg">Confirmer</button>
+                                                        <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Update Modal -->
+                                        <div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Voulez-vous vraiment modifier cette maintenance de véhicule?</h4>
+                                                        <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                                        <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -170,6 +268,19 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#paymentMode').on("change", function () {
+                var selectedText = $(this).find("option:selected").text();
+                if (selectedText !== "Espece" && selectedText !== "Choisir...") {
+                    $('#chequeForm').collapse('show');
+                } else {
+                    $('#chequeForm').collapse('hide');
+                }
+            });
+        });
+    </script>
 }
 
 

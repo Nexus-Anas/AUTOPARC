@@ -17,6 +17,9 @@ namespace AUTOPARC.Models
         public DateTime DateReglement { get; set; }
         public DateTime DateEcheance { get; set; }
         public DateTime? DateValeur { get; set; }
+        public string Etat { get; set; }
+        public string Action { get; set; }
+        public int ActionNum { get; set; }
 
         public virtual Banques Banque { get; set; }
     }

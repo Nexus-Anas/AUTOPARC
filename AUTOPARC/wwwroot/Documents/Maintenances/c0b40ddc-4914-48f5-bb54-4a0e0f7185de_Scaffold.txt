@@ -1,0 +1,6 @@
+dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=auto_parc_db;Uid=root;Pwd=;" Pomelo.EntityFrameworkCore.MySql -o Models -c DBC --force
+
+
+
+NUGET:
+Scaffold-DbContext "Server=localhost;Port=3306;Database=auto_parc_db;Uid=root;Pwd=;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Context DBC -Force

@@ -292,6 +292,16 @@ namespace AUTOPARC.Models
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Action)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.ActionNum)
+                    .HasColumnName("Action_Num")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.AuNomDe)
                     .IsRequired()
                     .HasColumnName("Au_Nom_De")
@@ -314,6 +324,12 @@ namespace AUTOPARC.Models
                 entity.Property(e => e.DateValeur)
                     .HasColumnName("Date_Valeur")
                     .HasColumnType("date");
+
+                entity.Property(e => e.Etat)
+                    .IsRequired()
+                    .HasColumnType("varchar(10)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.Montant).HasColumnType("decimal(9,2)");
 
@@ -566,13 +582,15 @@ namespace AUTOPARC.Models
                     .HasColumnName("Montant_Payee")
                     .HasColumnType("decimal(9,2)");
 
+                entity.Property(e => e.Num).HasColumnType("int(11)");
+
                 entity.Property(e => e.TypeId)
                     .HasColumnName("Type_ID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.UrlDoc)
                     .HasColumnName("Url_Doc")
-                    .HasColumnType("varchar(50)")
+                    .HasColumnType("varchar(150)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 

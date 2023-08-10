@@ -1,0 +1,145 @@
+﻿@page
+@model AUTOPARC.Pages.Parametrage.Cheque.DetailsModel
+@{
+    ViewData["Title"] = "Details Cheque";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Parametrage</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Payé Cheque</h4>
+            <hr>
+            <form method="post">
+                <input asp-for="Cheques.Id" type="hidden"/>
+                <input asp-for="Cheques.Action" type="hidden"/>
+                <input asp-for="Cheques.ActionNum" type="hidden"/>
+                <input asp-for="Cheques.Etat" type="hidden"/>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque</label>
+                        <input asp-for="Cheques.Numero" type="text" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.Banque.Nom" class="control-label">Banque</label>
+                        <input asp-for="Cheques.Banque.Nom" type="text" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.Montant" class="control-label">Montant (DH)</label>
+                        <input asp-for="Cheques.Montant" type="text" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de:</label>
+                        <input asp-for="Cheques.AuNomDe" type="text" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement</label>
+                        <input asp-for="Cheques.DateReglement" type="date" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance</label>
+                        <input asp-for="Cheques.DateEcheance" type="date" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
+                        <input asp-for="Cheques.DateValeur" type="date" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group row text-white">
+                    <div class="col-12 mt-3">
+                        <a data-toggle="modal" data-target="#payeemodal" class="btn btn-primary btn-lg btn-block">Payé</a>
+                    </div>
+                </div>
+
+
+
+                <!-- Payée Modal -->
+                <div class="modal fade" id="payeemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment payé ce cheque?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Payee" class="btn btn-primary btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function applyTransformations(inputElement) {
+            if (inputElement.classList.contains('trim')) {
+                inputElement.value = inputElement.value.trim();
+            }
+            if (inputElement.classList.contains('uppercase')) {
+                inputElement.value = inputElement.value.toUpperCase();
+            }
+            if (inputElement.classList.contains('capitalize')) {
+                inputElement.value = inputElement.value.charAt(0).toUpperCase() + inputElement.value.slice(1).toLowerCase();
+            }
+        }
+
+        // Attach the event handler to all inputs with the relevant classes
+        const inputsWithTransform = document.querySelectorAll('.trim, .uppercase, .capitalize');
+        inputsWithTransform.forEach(input => {
+            input.addEventListener('input', () => applyTransformations(input));
+        });
+    </script>
+}
+
+
+@section InputsPattern {
+    <script>
+        function validateNumbersAndPlus(inputElement) {
+            const regex = /^[\d+]*$/; // Regular expression to allow only digits (0-9) and '+'
+
+            const inputValue = inputElement.value;
+            const isValid = regex.test(inputValue);
+
+            if (!isValid) {
+                inputElement.value = inputValue.replace(/[^\d+]/g, ''); // Remove any characters other than digits and '+'
+            }
+        }
+    </script>
+
+    <script>
+        function validateNumbersOnly(inputElement) {
+            const cleanValue = inputElement.value.replace(/\D/g, ''); // Remove any non-digit characters
+            inputElement.value = cleanValue;
+        }
+    </script>
+
+    <script>
+        function validateLettersOnly(inputElement) {
+            const cleanValue = inputElement.value.replace(/[^a-zA-Z]/g, ''); // Remove any non-letter characters
+            inputElement.value = cleanValue;
+        }
+    </script>
+}

@@ -10,6 +10,7 @@ namespace AUTOPARC.Models
     public partial class Maintenances
     {
         public int Id { get; set; }
+        public int Num { get; set; }
         public int TypeId { get; set; }
         public int VehiculeId { get; set; }
         public int ChauffeurId { get; set; }

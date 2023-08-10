@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Pages\Document\URL_Document\" />
+    <Folder Include="wwwroot\Documents\Maintenances\" />
   </ItemGroup>
 
 </Project>
