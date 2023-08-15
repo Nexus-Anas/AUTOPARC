@@ -7,14 +7,15 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Document
 {
     public class DetailsModel : PageModel
     {
-        private readonly IWebHostEnvironment _env;
         private readonly DBC _db;
+        private readonly IWebHostEnvironment _env;
         public DetailsModel(DBC db, IWebHostEnvironment env)
         {
             _db = db;
@@ -54,6 +55,7 @@ namespace AUTOPARC.Pages.Document
                 return Page();
             }
 
+
             if (Docs.DateDebut >= Docs.DateFin)
             {
                 check_date = true;
@@ -61,27 +63,13 @@ namespace AUTOPARC.Pages.Document
                 return Page();
             }
 
+
+            if (!await InsertDocumentAsync())
+                return Page();
+
+
             try
             {
-                if (Request.Form.Files.Count > 0) // Check if any files were uploaded
-                {
-                    var file = Request.Form.Files[0]; // Get the first uploaded file
-
-                    if (file.Length > 0)
-                    {
-                        string uploadsFolder = Path.Combine(_env.WebRootPath, "Document", "URL_Document");
-                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-                        }
-
-                        Docs.UrlDoc = filePath; // Store the file path in your model if needed
-                    }
-                }
-
                 var doc = await _db.Docs.FindAsync(Docs.Id);
                 doc.Numero = Docs.Numero;
                 doc.TypeId = Docs.TypeId;
@@ -122,6 +110,64 @@ namespace AUTOPARC.Pages.Document
             _db.Docs.Remove(Docs);
             await _db.SaveChangesAsync();
             return RedirectToPage("/Document/Index");
+        }
+
+
+
+
+
+
+        private async Task<bool> InsertDocumentAsync()
+        {
+            try
+            {
+                if (HttpContext.Request.Form.Files.Count > 0)
+                {
+                    var file = HttpContext.Request.Form.Files[0];
+                    if (file != null && file.Length > 0)
+                    {
+                        var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                        var filePath = Path.Combine(_env.WebRootPath, "Documents", "Docs", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                            await file.CopyToAsync(stream);
+
+                        Docs.UrlDoc = fileName;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                check_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+            return true;
+        }
+
+
+
+
+
+
+        public async Task<IActionResult> OnPostDownloadFile()
+        {
+            var url = await _db.Docs.Where(m => m.Id == Docs.Id).Select(m => m.UrlDoc).SingleOrDefaultAsync();
+            if (!string.IsNullOrEmpty(url))
+            {
+                var fileName = url[(url.IndexOf("_") + 1)..]; // same as url.Substring(url.IndexOf("_") + 1);
+                var filePath = Path.Combine(_env.WebRootPath, "Documents", "Docs", url);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    var contentType = "application/octet-stream"; // You may need to set the appropriate content type
+
+                    return File(fileStream, contentType, fileName);
+                }
+            }
+
+            return NotFound(); // Document not found
         }
     }
 }

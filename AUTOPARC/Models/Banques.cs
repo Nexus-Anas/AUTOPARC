@@ -12,11 +12,13 @@ namespace AUTOPARC.Models
         public Banques()
         {
             Cheques = new HashSet<Cheques>();
+            Virements = new HashSet<Virements>();
         }
 
         public int Id { get; set; }
         public string Nom { get; set; }
 
         public virtual ICollection<Cheques> Cheques { get; set; }
+        public virtual ICollection<Virements> Virements { get; set; }
     }
 }

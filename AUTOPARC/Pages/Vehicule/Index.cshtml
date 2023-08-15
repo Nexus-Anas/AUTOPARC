@@ -20,6 +20,7 @@
                     <table id="zero_config" class="table table-borderless table-striped table-earning">
                         <thead>
                             <tr>
+                                <th class="text text-white bg-primary" style="font-size:18px">Num</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Matricule</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Categorie</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Marque</th>
@@ -35,6 +36,7 @@
                                 string badge = state == "Actif" ? "badge-success" : state == "En panne" ? "badge-danger" : state == "Vendu" ? "badge-secondary" : "badge-warning";
 
                                 <tr style="font-size:18px">
+                                    <td class="text-dark">@item.Num</td>
                                     <td class="text-dark">@item.Matricule</td>
                                     <td class="text-dark">@item.Categorie.Nom</td>
                                     <td class="text-dark">@item.Marque.Nom</td>

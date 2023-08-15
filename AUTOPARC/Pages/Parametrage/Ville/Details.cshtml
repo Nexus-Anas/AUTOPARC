@@ -1,0 +1,109 @@
+﻿@page
+@model AUTOPARC.Pages.Parametrage.Ville.DetailsModel
+@{
+    ViewData["Title"] = "Modifier Ville";
+}
+
+
+<div class="container-fluid">
+
+    <div class="container-fluid bg-dark py-1 mb-2">
+        <h3 class="text-center text-light">Parametrage</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title title-2 text-dark">Modifier Nom de Ville</h4>
+            <hr>
+            @if (!ModelState.IsValid)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p><span asp-validation-for="Villes.Nom"></span></p>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.check_presence_ville)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p>Suppression non autorisé! Ville déjà utilisé.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="d-flex justify-content-center">
+                <div class="col-12">
+                    <form method="post">
+
+                        <div class="card" style=" background-color:#DFDDDE">
+                            <div class="card-body">
+                                <h4 class="card-title">Modifier</h4>
+                                <input type="hidden" asp-for="Villes.Id" />
+                                <input asp-for="Villes.Nom" type="text" class="form-control h4">
+
+                                <div class="form-group row text-white">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-primary btn-lg btn-block">Modifier</a>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                                        <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
+                                        <a asp-page="/Parametrage/Ville/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Voulez-vous vraiment supprimer cette ville?</h4>
+                                        <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button asp-page-handler="Delete" class="btn btn-danger btn-lg">Confirmer</button>
+                                        <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Update Modal -->
+                        <div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Voulez-vous vraiment modifier cette ville?</h4>
+                                        <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                        <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

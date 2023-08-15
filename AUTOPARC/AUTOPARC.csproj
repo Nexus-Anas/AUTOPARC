@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Document\URL_Document\" />
     <Folder Include="wwwroot\Documents\Maintenances\" />
+    <Folder Include="wwwroot\Documents\Docs\" />
   </ItemGroup>
 
 </Project>

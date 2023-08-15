@@ -1,0 +1,28 @@
+Vehicule:
+-Limite de saisie (nums only)
+-Prix >= Montant payee
+-Cheque (Num, banque, date reglement...)
+-Date.Now() par default
+-Add Km vehicule
+
+
+Paye, Impaye -> Solde, reliquant
+Infos -> Consuler
+
+Message Erreur : Suppression non autorise! Type de maintenance deja utilise.
+
+Controle matricule vehicule : A ne pas afficher les vehicules vendu
+
+Indicateur:
+-Vidange => Km (3 mois)
+-Assurance => (1, 3, 6, 12) mois
+-Vignette => jour
+
+Notification: en jour
+
+Vente: session
+
+URL Doc: multiple selection
+
+Operations -> Parametrage: Ajouter Banque
+Chauffeur: ajouter CIN

@@ -10,6 +10,7 @@ namespace AUTOPARC.Models
     public partial class Docs
     {
         public int Id { get; set; }
+        public int Num { get; set; }
         public string Numero { get; set; }
         public int TypeId { get; set; }
         public int VehiculeId { get; set; }

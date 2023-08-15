@@ -34,6 +34,7 @@ namespace AUTOPARC.Pages.Parametrage.Cheque
         public async Task<IActionResult> OnPostPayee()
         {
             Maintenances maintenance;
+            Vehicules vehicules;
 
 
             try
@@ -41,13 +42,27 @@ namespace AUTOPARC.Pages.Parametrage.Cheque
                 if (Cheques.Action == "Maintenance")
                 {
                     maintenance = await _db.Maintenances.Where(m => m.Num == Cheques.ActionNum).SingleOrDefaultAsync();
-                    maintenance.MontantPayee = maintenance.Cout;
+                    maintenance.MontantPayeeEspece = maintenance.Cout;
 
                     var cheque = await _db.Cheques.Where(chq => chq.Id == Cheques.Id).SingleOrDefaultAsync();
                     cheque.Etat = "payé";
                     await _db.SaveChangesAsync();
                     return RedirectToPage("/Parametrage/Cheque/Index");
                 }
+
+
+                if (Cheques.Action == "Vehicule")
+                {
+                    vehicules = await _db.Vehicules.Where(v => v.Num == Cheques.ActionNum).SingleOrDefaultAsync();
+                    vehicules.MontantPayee = vehicules.PrixAchat;
+
+                    var cheque = await _db.Cheques.Where(chq => chq.Id == Cheques.Id).SingleOrDefaultAsync();
+                    cheque.Etat = "payé";
+                    await _db.SaveChangesAsync();
+                    return RedirectToPage("/Parametrage/Cheque/Index");
+                }
+
+
                 await OnGet(Cheques.Id);
                 return Page();
             }

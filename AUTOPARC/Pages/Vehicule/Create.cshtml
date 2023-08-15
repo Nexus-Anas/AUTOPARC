@@ -16,6 +16,42 @@
             <div class="card-body wizard-content">
                 <h4 class="card-title title-2">Ajouter Véhicule</h4>
                 <hr>
+                @if (Model.check_Prix_MontantPayee)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>le montant payé doit être inférieure ou égale au prix d'achat de la véhicule.</p>
+                    </div>
+                }
+                @if (Model.check_exception)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>Veuillez vérifier vos entrées.</p>
+                    </div>
+                }
+                @if (Model.check_cheque_exception)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>Veuillez vérifier vos entrées dans la phase du cheque.</p>
+                    </div>
+                }
+                @if (Model.check_numero_cheque_existance)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>Le numéro du cheque est déjà utilisé.</p>
+                    </div>
+                }
+                @if (Model.check_montant)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>le prix d'achat de la véhicule doit être égale au montant payé de la véhicule plus le montant du cheque.</p>
+                    </div>
+                }
+                @if (Model.check_date)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>la date de reglement du cheque doit être inférieure ou égale a la date d'echeance.</p>
+                    </div>
+                }
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                         <label asp-for="Vehicules.Matricule">Matricule <span class="text-danger">*</span></label>
@@ -28,7 +64,7 @@
                         <span asp-validation-for="Vehicules.CategorieId" class="text-danger"></span>
                         <select asp-for="Vehicules.CategorieId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.Categories)
+                            @foreach (var item in Model.CategoriesList)
                             {
                                 <option value="@item.Id">@item.Nom</option>
                             }
@@ -42,7 +78,7 @@
                         <span asp-validation-for="Vehicules.ModeleId" class="text-danger"></span>
                         <select asp-for="Vehicules.ModeleId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.Modeles)
+                            @foreach (var item in Model.ModelesList)
                             {
                                 <option value="@item.Id">@item.Nom</option>
                             }
@@ -56,7 +92,7 @@
                         <span asp-validation-for="Vehicules.CarburantId" class="text-danger"></span>
                         <select asp-for="Vehicules.CarburantId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.TypeCarburants)
+                            @foreach (var item in Model.TypeCarburantsList)
                             {
                                 <option value="@item.Id">@item.Type</option>
                             }
@@ -68,7 +104,7 @@
                         <span asp-validation-for="Vehicules.EtatVehiculeId" class="text-danger"></span>
                         <select asp-for="Vehicules.EtatVehiculeId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.Etatvehicules)
+                            @foreach (var item in Model.EtatVehiculesList)
                             {
                                 <option value="@item.Id">@item.Etat</option>
                             }
@@ -80,7 +116,7 @@
                         <span asp-validation-for="Vehicules.FrsId" class="text-danger"></span>
                         <select asp-for="Vehicules.FrsId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.Fournisseurs)
+                            @foreach (var item in Model.FournisseursList)
                             {
                                 <option value="@item.Id">@item.Nom</option>
                             }
@@ -109,15 +145,88 @@
                     <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                         <label asp-for="Vehicules.ModePayementId">Methode de Payement <span class="text-danger">*</span></label>
                         <span asp-validation-for="Vehicules.ModePayementId" class="text-danger"></span>
-                        <select asp-for="Vehicules.ModePayementId" class="form-control form-select">
+                        <select id="paymentMode" asp-for="Vehicules.ModePayementId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.ModePaiments)
+                            @foreach (var item in Model.ModePaimentsList)
                             {
                                 <option value="@item.Id">@item.Mode</option>
                             }
                         </select>
                     </div>
                 </div>
+
+
+
+
+                <!-- Form de Cheque -->
+
+                <div class="collapse border border-secondary border-3 mb-1" id="chequeForm">
+                    <div class="container-fluid mb-2 bg-dark">
+                        <h3 class="mb-0 text-center text-light">Form de Cheque</h3>
+                    </div>
+                    <div class="p-1">
+                        <input asp-for="Cheques.Action" value="Vehicule" type="hidden" />
+                        <input asp-for="Cheques.Etat" value="impayé" type="hidden" />
+
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque <span class="text-danger">*</span></label>
+                                <input asp-for="Cheques.Numero" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label asp-for="Cheques.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
+                                <select asp-for="Cheques.BanqueId" class="form-control form-select">
+                                    <option value="">Choisir...</option>
+                                    @foreach (var item in Model.BanquesList)
+                                    {
+                                        <option value="@item.Id">@item.Nom</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label asp-for="Cheques.Montant" class="control-label">Montant (DH) <span class="text-danger">*</span></label>
+                                <input asp-for="Cheques.Montant" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de: <span class="text-danger">*</span></label>
+                                <input asp-for="Cheques.AuNomDe" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement <span class="text-danger">*</span></label>
+                                <input asp-for="Cheques.DateReglement" type="date" class="form-control">
+                            </div>
+
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance <span class="text-danger">*</span></label>
+                                <input asp-for="Cheques.DateEcheance" type="date" class="form-control">
+                            </div>
+
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
+                                <input asp-for="Cheques.DateValeur" type="date" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Fin Form de Cheque -->
+                <!------------------------>
+
+
+
+
 
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -241,6 +350,19 @@
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#paymentMode').on("change", function () {
+                var selectedText = $(this).find("option:selected").text();
+                if (selectedText !== "Espece" && selectedText !== "Choisir...") {
+                    $('#chequeForm').collapse('show');
+                } else {
+                    $('#chequeForm').collapse('hide');
+                }
+            });
+        });
+    </script>
 }
 
 @section InputsPattern

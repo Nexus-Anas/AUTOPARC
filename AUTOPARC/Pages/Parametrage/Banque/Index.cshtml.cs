@@ -20,8 +20,6 @@ namespace AUTOPARC.Pages.Parametrage.Banque
         public Banques Banques { get; set; }
         public List<Banques> BanquesList { get; set; }
 
-        public bool checkTypeID;
-
 
 
 
@@ -33,33 +31,14 @@ namespace AUTOPARC.Pages.Parametrage.Banque
 
         public async Task<IActionResult> OnPostCreate()
         {
-            if (!ModelState.IsValid)
-                return Page();
-
-            await _db.Banques.AddAsync(Banques);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Parametrage/Banque/Index");
-        }
-
-
-
-
-        public async Task<IActionResult> OnPostDelete(int id)
-        {
-            var banque = await _db.Banques.FindAsync(id);
-
-            if (banque is null)
-                return NotFound();
-
-            var check = await _db.Cheques.Where(x => x.BanqueId == banque.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            if (check != 0)
+            if (string.IsNullOrEmpty(Banques.Nom) || !ModelState.IsValid)
             {
-                checkTypeID = true;
+                ModelState.AddModelError("Banques.Nom", "Le champ \"Nom Banque\" est requis.");
                 await OnGet();
                 return Page();
             }
 
-            _db.Banques.Remove(banque);
+            await _db.Banques.AddAsync(Banques);
             await _db.SaveChangesAsync();
             return RedirectToPage("/Parametrage/Banque/Index");
         }

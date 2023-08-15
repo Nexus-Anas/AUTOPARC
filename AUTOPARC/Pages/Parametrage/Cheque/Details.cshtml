@@ -16,9 +16,19 @@
             <hr>
             <form method="post">
                 <input asp-for="Cheques.Id" type="hidden"/>
-                <input asp-for="Cheques.Action" type="hidden"/>
-                <input asp-for="Cheques.ActionNum" type="hidden"/>
                 <input asp-for="Cheques.Etat" type="hidden"/>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.Action" class="control-label">Action</label>
+                        <input asp-for="Cheques.Action" type="text" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.ActionNum" class="control-label">Numéro d'Action</label>
+                        <input asp-for="Cheques.ActionNum" type="text" class="form-control" readonly>
+                    </div>
+                </div>
 
                 <div class="form-row">
                     <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -61,6 +71,15 @@
                     </div>
                 </div>
 
+                @if (Model.Cheques.Etat == "payé")
+                {
+                    <div class="form-group row text-white">
+                        <div class="col-12 mt-3">
+                            <a asp-page="/Parametrage/Cheque/Index" class="btn btn-secondary btn-lg btn-block">Retour</a>
+                        </div>
+                    </div>
+                    return;
+                }
                 <div class="form-group row text-white">
                     <div class="col-12 mt-3">
                         <a data-toggle="modal" data-target="#payeemodal" class="btn btn-primary btn-lg btn-block">Payé</a>
@@ -89,57 +108,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-
-    <script>
-        function applyTransformations(inputElement) {
-            if (inputElement.classList.contains('trim')) {
-                inputElement.value = inputElement.value.trim();
-            }
-            if (inputElement.classList.contains('uppercase')) {
-                inputElement.value = inputElement.value.toUpperCase();
-            }
-            if (inputElement.classList.contains('capitalize')) {
-                inputElement.value = inputElement.value.charAt(0).toUpperCase() + inputElement.value.slice(1).toLowerCase();
-            }
-        }
-
-        // Attach the event handler to all inputs with the relevant classes
-        const inputsWithTransform = document.querySelectorAll('.trim, .uppercase, .capitalize');
-        inputsWithTransform.forEach(input => {
-            input.addEventListener('input', () => applyTransformations(input));
-        });
-    </script>
-}
-
-
-@section InputsPattern {
-    <script>
-        function validateNumbersAndPlus(inputElement) {
-            const regex = /^[\d+]*$/; // Regular expression to allow only digits (0-9) and '+'
-
-            const inputValue = inputElement.value;
-            const isValid = regex.test(inputValue);
-
-            if (!isValid) {
-                inputElement.value = inputValue.replace(/[^\d+]/g, ''); // Remove any characters other than digits and '+'
-            }
-        }
-    </script>
-
-    <script>
-        function validateNumbersOnly(inputElement) {
-            const cleanValue = inputElement.value.replace(/\D/g, ''); // Remove any non-digit characters
-            inputElement.value = cleanValue;
-        }
-    </script>
-
-    <script>
-        function validateLettersOnly(inputElement) {
-            const cleanValue = inputElement.value.replace(/[^a-zA-Z]/g, ''); // Remove any non-letter characters
-            inputElement.value = cleanValue;
-        }
-    </script>
-}

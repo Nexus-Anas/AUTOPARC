@@ -43,28 +43,5 @@ namespace AUTOPARC.Pages.Document.TypeDocument
             await _db.SaveChangesAsync();
             return RedirectToPage("/Document/TypeDocument/Index");
         }
-
-
-
-
-        public async Task<IActionResult> OnPostDelete(int id)
-        {
-            var type = await _db.TypeDocs.FindAsync(id);
-
-            if (type is null)
-                return NotFound();
-
-            var doc = await _db.Docs.Where(x => x.TypeId == type.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            if (doc != 0)
-            {
-                checkTypeID = true;
-                await OnGet();
-                return Page();
-            }
-
-            _db.TypeDocs.Remove(type);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Document/TypeDocument/Index");
-        }
     }
 }

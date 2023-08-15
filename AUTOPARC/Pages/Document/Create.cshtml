@@ -37,14 +37,14 @@
                                         <h3 class="text-center title-1 font-weight-bold">Nouveau Document</h3>
                                     </div>
                                     <hr>
-                                    <form method="post">
+                                    <form method="post" enctype="multipart/form-data">
 
-                                        <input asp-for="Docs.VehiculeId" value="@Model.vehiculeID" type="hidden" />
+                                        <input asp-for="Docs.VehiculeId" value="@Model.Vehicules.Id" type="hidden" />
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
                                                 <label class="control-label">Matricule véhicule <span class="text-danger">*</span></label>
-                                                <input type="text" value="@Model.vehiculeMatricule" class="form-control" readonly>
+                                                <input type="text" value="@Model.Vehicules.Matricule" class="form-control" readonly>
                                             </div>
                                         </div>
 
@@ -62,7 +62,7 @@
                                                 <span asp-validation-for="Docs.TypeId" class="text text-danger"></span>
                                                 <select asp-for="Docs.TypeId" class="form-control form-select required">
                                                     <option value="">Choisir...</option>
-                                                    @foreach (var item in Model.TypeDocs)
+                                                    @foreach (var item in Model.TypeDocsList)
                                                     {
                                                         <option value="@item.Id">@item.Type</option>
                                                     }
@@ -76,7 +76,7 @@
                                                 <span asp-validation-for="Docs.FrsId" class="text text-danger"></span>
                                                 <select asp-for="Docs.FrsId" class="form-control form-select required">
                                                     <option value="">Choisir...</option>
-                                                    @foreach (var item in Model.Fournisseurs)
+                                                    @foreach (var item in Model.FournisseursList)
                                                     {
                                                         <option value="@item.Id">@item.Nom</option>
                                                     }

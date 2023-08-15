@@ -1,0 +1,28 @@
+Can you tell me about yourself?
+Answer: Sure! My name is Anas AREJDAL and I am a C# developer. I am currently studying a Bachelor's Degree in Computer Science and software engineering at ALX. I am passionate about programming and creating applications that solve real-world problems. In my free time, I enjoy playing video games and exploring new technologies.
+
+What are your strengths and weaknesses?
+Answer: My strengths include my ability to work well under pressure, and my ability to work collaboratively with team members. As for my weakness, I am a lil bit weak in French, but I am working on improving myself on it.
+
+Why are you interested in this position?
+I believe that this position is a great fit for my skills and interests. I love working with C# because it's a versatile language that allows me to work in many fields such as web, desktop, mobile, and game development.
+
+What experience do you have that qualifies you for this job?
+Although I don't have much professional experience, but I've gained programming skills through my studies and personal projects. During a two-month internship at a car rental agency, I developed two personal projects, MEGA ENCRYPTION and GOLDEN FLOW, while working with a team. Through these experiences, I've developed a strong understanding of software development concepts and principles, and I'm eager to learn and work collaboratively with the team to contribute to the success of the organization.
+
+How do you handle stress and pressure at work?
+Answer: I handle stress and pressure by prioritizing my tasks, breaking down large projects into smaller manageable tasks, and setting realistic goals for myself. I also make sure to take breaks throughout the day to clear my mind and avoid burnout.
+
+How do you debug C# code?
+Answer: When debugging C# code, I first try to reproduce the issue or error. Then, I use Visual Studio's debugging tools to step through the code, check variable values, and identify the source of the problem. I also use logging to track the flow of the application and identify any issues that may arise.
+
+What is the difference between an interface and an abstract class in C#?
+Answer: An interface is a contract that defines a set of methods and properties that a class must implement. An abstract class is a class that cannot be instantiated and contains one or more abstract methods that must be implemented by its derived classes. The main difference between an interface and an abstract class is that a class can implement multiple interfaces, but can only inherit from one abstract class.
+
+How do you handle errors and exceptions in your C# code?
+Answer: I handle errors and exceptions by using try-catch blocks to catch exceptions and handle errors gracefully. I also use logging and tracing tools to track errors and identify issues that may arise. I make sure to provide clear error messages to users and handle unexpected errors in a way that does not cause the application to crash.
+
+What is your experience with using C# in object-oriented programming?
+Answer: C# is a powerful object-oriented programming language, and I have extensive experience using it to develop object-oriented applications. I have experience using inheritance, polymorphism, encapsulation, and other object-oriented concepts to design and develop software solutions.
+
+Dependency injection is a design pattern commonly used in software development that allows objects to be created and configured in a loosely coupled way. It is a technique where one object supplies the dependencies of another object rather than the object itself creating those dependencies.

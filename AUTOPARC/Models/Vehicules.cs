@@ -19,6 +19,7 @@ namespace AUTOPARC.Models
         }
 
         public int Id { get; set; }
+        public int Num { get; set; }
         public string Matricule { get; set; }
         public int CategorieId { get; set; }
         public int MarqueId { get; set; }
