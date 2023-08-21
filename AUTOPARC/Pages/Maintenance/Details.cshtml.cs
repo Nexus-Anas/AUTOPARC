@@ -30,16 +30,20 @@ namespace AUTOPARC.Pages.Maintenance
         public List<Vehicules> VehiculesList { get; set; }
         public List<TypeMaintenances> TypeMaintenancesList { get; set; }
         public List<ModePaiments> ModePaimentsList { get; set; }
+        public List<Banques> BanquesList { get; set; }
 
 
         [BindProperty]
         public Cheques Cheques { get; set; }
-        public List<Banques> BanquesList { get; set; }
 
 
-        public bool check_exception, check_cout_montantPayee;
-        public bool check_cheque_exception, check_numero_cheque_existance, check_montant, check_date, check_etat_paye;
+        [BindProperty]
+        public Virements Virements { get; set; }
 
+
+        public bool check_exception, check_cout_montantPayee, check_all_checkboxes, check_etat_paye;
+        public bool check_cheque_exception, check_numero_cheque_existance, check_montant_cheque, check_date_cheque;
+        public bool check_virement_exception, check_montant_virement;
 
 
 
@@ -50,8 +54,9 @@ namespace AUTOPARC.Pages.Maintenance
             VehiculesList = await _db.Vehicules.Where(v => ids.Contains(v.Id)).ToListAsync();
             TypeMaintenancesList = await _db.TypeMaintenances.ToListAsync();
             ModePaimentsList = await _db.ModePaiments.ToListAsync();
-            Cheques = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
             BanquesList = await _db.Banques.ToListAsync();
+            Cheques = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
+            Virements = await _db.Virements.Where(v => v.Action == "Maintenance" && v.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
         }
 
 
@@ -59,24 +64,52 @@ namespace AUTOPARC.Pages.Maintenance
 
         public async Task<IActionResult> OnPostUpdate()
         {
+            bool isEspece = Request.Form.TryGetValue("Espece", out var especeValue);
+            bool isCheque = Request.Form.TryGetValue("Cheque", out var chequeValue);
+            bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
+
+            if (!isEspece && !isCheque && !isVirement)
+            {
+                check_all_checkboxes = true;
+                await OnGet(Maintenances.Id);
+                return Page();
+            }
+
+
             if (await Check_ChequePayee())
                 return Page();
 
-            if (Maintenances.MontantPayeeEspece > Maintenances.Cout)
+            if (await Check_VirementPayee())
+                return Page();
+
+            if (!isCheque)
+                await RemoveChequeModelStateEntriesAsync();
+
+            if (!isVirement)
+                await RemoveVirementModelStateEntriesAsync();
+
+            if (isCheque && !await TryUpdateCheque())
+                return Page();
+
+            if (isVirement && !await TryUpdateVirement())
+                return Page();
+
+
+            if (!ModelState.IsValid)
+            {
+                await OnGet(Maintenances.Id);
+                return Page();
+            }
+
+
+
+            if (Maintenances.Cout < Maintenances.MontantPayeeEspece)
             {
                 check_cout_montantPayee = true;
                 await OnGet(Maintenances.Id);
                 return Page();
             }
 
-            if (!await InsertDocumentAsync())
-                return Page();
-
-            //var modePaiement = await _db.ModePaiments.Where(m => m.Id == Maintenances.ModePaiementId).Select(m => m.Mode).SingleOrDefaultAsync();
-            //if (modePaiement == "Espece")
-            //    await RemoveChequeModelStateEntriesAsync();
-            //else if (!await TryUpdateCheque())
-            //    return Page();
 
             try
             {
@@ -87,9 +120,14 @@ namespace AUTOPARC.Pages.Maintenance
                 maintenance.DateMaintenance = Maintenances.DateMaintenance;
                 maintenance.Cout = Maintenances.Cout;
                 maintenance.MontantPayeeEspece = Maintenances.MontantPayeeEspece;
-                //maintenance.ModePaiementId = Maintenances.ModePaiementId;
+                maintenance.MontantPayeeCheque = Maintenances.MontantPayeeCheque;
+                maintenance.MontantPayeeVirement = Maintenances.MontantPayeeVirement;
                 maintenance.Description = Maintenances.Description;
                 maintenance.UrlDoc = Maintenances.UrlDoc ?? maintenance.UrlDoc;
+
+                if (!await InsertDocumentAsync())
+                    return Page();
+
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Maintenance/Index");
             }
@@ -112,6 +150,7 @@ namespace AUTOPARC.Pages.Maintenance
                 return Page();
 
             await TryDeleteCheck();
+            await TryDeleteVirement();
 
             _db.Maintenances.Remove(Maintenances);
             await _db.SaveChangesAsync();
@@ -134,23 +173,23 @@ namespace AUTOPARC.Pages.Maintenance
                 return false;
             }
 
-            if (Maintenances.Cout != (Maintenances.MontantPayeeEspece + Cheques.Montant))
+            if (Maintenances.Cout != (Maintenances.MontantPayeeEspece + Cheques.Montant + Virements.Montant))
             {
-                check_montant = true;
-                await OnGet(Maintenances.Id);
+                check_montant_cheque = true;
+                await OnGet(Maintenances.VehiculeId);
                 return false;
             }
 
             if (Cheques.DateReglement > Cheques.DateEcheance)
             {
-                check_date = true;
-                await OnGet(Maintenances.Id);
+                check_date_cheque = true;
+                await OnGet(Maintenances.VehiculeId);
                 return false;
             }
 
             try
             {
-                var cheque = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).FirstOrDefaultAsync();
+                var cheque = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
                 if (cheque != null)
                 {
                     cheque.BanqueId = Cheques.BanqueId;
@@ -166,6 +205,7 @@ namespace AUTOPARC.Pages.Maintenance
                 }
                 else
                 {
+                    Maintenances.MontantPayeeCheque = Cheques.Montant;
                     Cheques.ActionNum = Maintenances.Num;
                     Cheques.Etat = "impayé";
                     await _db.Cheques.AddAsync(Cheques);
@@ -186,6 +226,59 @@ namespace AUTOPARC.Pages.Maintenance
             {
                 check_cheque_exception = true;
                 await OnGet(Maintenances.Id);
+                return false;
+            }
+        }
+
+
+
+
+        private async Task<bool> TryUpdateVirement()
+        {
+            if (string.IsNullOrEmpty(Virements.Rib) || string.IsNullOrEmpty(Virements.AuNomDe) ||
+                Virements.Montant == 0 || Virements.BanqueId == 0 ||
+                 Virements.DateVirement == null)
+            {
+                check_cheque_exception = true;
+                await OnGet(Maintenances.VehiculeId);
+                return false;
+            }
+
+            if (Maintenances.Cout != (Maintenances.MontantPayeeEspece + Cheques.Montant + Virements.Montant))
+            {
+                check_montant_virement = true;
+                await OnGet(Maintenances.VehiculeId);
+                return false;
+            }
+
+            try
+            {
+                var virement = await _db.Virements.Where(v => v.Action == "Maintenance" && v.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
+                if (virement != null)
+                {
+                    virement.BanqueId = Virements.BanqueId;
+                    virement.Rib = Virements.Rib;
+                    virement.Montant = Virements.Montant;
+                    virement.AuNomDe = Virements.AuNomDe;
+                    virement.DateVirement = Virements.DateVirement;
+
+                    await _db.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    Maintenances.MontantPayeeVirement = Virements.Montant;
+                    Virements.ActionNum = Maintenances.Num;
+                    Virements.Etat = "impayé";
+                    await _db.Virements.AddAsync(Virements);
+                    await _db.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch
+            {
+                check_virement_exception = true;
+                await OnGet(Maintenances.VehiculeId);
                 return false;
             }
         }
@@ -246,6 +339,22 @@ namespace AUTOPARC.Pages.Maintenance
             }
         }
 
+        private async Task<bool> RemoveVirementModelStateEntriesAsync()
+        {
+            if (Virements.Id != 0)
+            {
+                await TryDeleteVirement();
+                return true;
+            }
+            else
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Virements."))
+                        ModelState.Remove(key);
+                return true;
+            }
+        }
+
 
 
 
@@ -253,8 +362,23 @@ namespace AUTOPARC.Pages.Maintenance
 
         private async Task<bool> Check_ChequePayee()
         {
-            var cheque = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).FirstOrDefaultAsync();
+            var cheque = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
             if (cheque != null && cheque.Etat == "payé")
+            {
+                check_etat_paye = true;
+                await OnGet(Maintenances.Id);
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+        private async Task<bool> Check_VirementPayee()
+        {
+            var virement = await _db.Virements.Where(v => v.Action == "Maintenance" && v.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
+            if (virement != null && virement.Etat == "payé")
             {
                 check_etat_paye = true;
                 await OnGet(Maintenances.Id);
@@ -270,10 +394,23 @@ namespace AUTOPARC.Pages.Maintenance
 
         private async Task TryDeleteCheck()
         {
-            var cheque = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).FirstOrDefaultAsync();
+            var cheque = await _db.Cheques.Where(chq => chq.Action == "Maintenance" && chq.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
             if (cheque != null)
             {
                 _db.Cheques.Remove(cheque);
+                await _db.SaveChangesAsync();
+            }
+        }
+
+
+
+
+        private async Task TryDeleteVirement()
+        {
+            var virement = await _db.Virements.Where(v => v.Action == "Maintenance" && v.ActionNum == Maintenances.Num).SingleOrDefaultAsync();
+            if (virement != null)
+            {
+                _db.Virements.Remove(virement);
                 await _db.SaveChangesAsync();
             }
         }

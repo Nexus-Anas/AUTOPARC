@@ -17,7 +17,7 @@
 
             <div class="mt-5">
                 <div class="table-responsive">
-                    <table class="table table-earning table-borderless table-hover">
+                    <table class="table table-earning table-borderless table-striped">
                         <thead>
                             <tr>
                                 <th class="text text-white bg-info">Num</th>
@@ -34,7 +34,7 @@
                         <tbody>
                             @foreach (var item in Model.Maintenances)
                             {
-                                decimal reste = item.Cout - item.MontantPayeeEspece;
+                                decimal reste = item.Cout - item.MontantPayeeTotal;
                                 string txtColor = reste == 0 ? "text-success" : "text-danger";
                                 string badge = reste == 0 ? "badge badge-success" : "badge badge-danger";
                                 string state = reste == 0 ? "payé" : "impayé";
@@ -46,10 +46,19 @@
                                     <td class="text-dark h6">@item.DateMaintenance.ToShortDateString()</td>
                                     <td class="text-dark h6">@item.Cout</td>
                                     <td class="text-dark h6">
-                                        Espece: @item.MontantPayeeEspece<br>
-                                        Cheque: @item.MontantPayeeCheque<br>
-                                        Virement: @item.MontantPayeeVirement
-                                        </td>
+                                        @if (item.MontantPayeeEspece != 0)
+                                        {
+                                            <p class="@txtColor">Espece: @item.MontantPayeeEspece</p>
+                                        }
+                                        @if (item.MontantPayeeCheque != 0)
+                                        {
+                                            <p class="@txtColor">Cheque: @item.MontantPayeeCheque</p>
+                                        }
+                                        @if (item.MontantPayeeVirement != 0)
+                                        {
+                                            <p class="@txtColor">Virement: @item.MontantPayeeVirement</p>
+                                        }
+                                    </td>
                                     <td class="font-weight-bold h6 @txtColor">@reste</td>
                                     <td class="text-center h5"><span class="@badge">@state</span></td>
                                     <td class="text-dark">

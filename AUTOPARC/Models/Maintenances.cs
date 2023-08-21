@@ -19,6 +19,7 @@ namespace AUTOPARC.Models
         public decimal MontantPayeeEspece { get; set; }
         public decimal MontantPayeeCheque { get; set; }
         public decimal MontantPayeeVirement { get; set; }
+        public decimal MontantPayeeTotal { get; set; }
         public string Description { get; set; }
         public string UrlDoc { get; set; }
 

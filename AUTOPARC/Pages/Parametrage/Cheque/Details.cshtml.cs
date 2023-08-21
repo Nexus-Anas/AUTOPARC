@@ -33,19 +33,16 @@ namespace AUTOPARC.Pages.Parametrage.Cheque
 
         public async Task<IActionResult> OnPostPayee()
         {
-            Maintenances maintenance;
-            Vehicules vehicules;
-
-
             try
             {
                 if (Cheques.Action == "Maintenance")
                 {
-                    maintenance = await _db.Maintenances.Where(m => m.Num == Cheques.ActionNum).SingleOrDefaultAsync();
-                    maintenance.MontantPayeeEspece = maintenance.Cout;
-
+                    var maintenance = await _db.Maintenances.Where(m => m.Num == Cheques.ActionNum).SingleOrDefaultAsync();
                     var cheque = await _db.Cheques.Where(chq => chq.Id == Cheques.Id).SingleOrDefaultAsync();
+
                     cheque.Etat = "payé";
+                    maintenance.MontantPayeeTotal += cheque.Montant;
+
                     await _db.SaveChangesAsync();
                     return RedirectToPage("/Parametrage/Cheque/Index");
                 }
@@ -53,11 +50,12 @@ namespace AUTOPARC.Pages.Parametrage.Cheque
 
                 if (Cheques.Action == "Vehicule")
                 {
-                    vehicules = await _db.Vehicules.Where(v => v.Num == Cheques.ActionNum).SingleOrDefaultAsync();
-                    vehicules.MontantPayee = vehicules.PrixAchat;
-
+                    var vehicules = await _db.Vehicules.Where(v => v.Num == Cheques.ActionNum).SingleOrDefaultAsync();
                     var cheque = await _db.Cheques.Where(chq => chq.Id == Cheques.Id).SingleOrDefaultAsync();
+
                     cheque.Etat = "payé";
+                    vehicules.MontantPayeeTotal += cheque.Montant;
+
                     await _db.SaveChangesAsync();
                     return RedirectToPage("/Parametrage/Cheque/Index");
                 }

@@ -61,7 +61,7 @@ namespace AUTOPARC.Pages.Vehicule
                 return Page();
 
 
-            if (Vehicules.PrixAchat < Vehicules.MontantPayee)
+            if (Vehicules.PrixAchat < Vehicules.MontantPayeeEspece)
             {
                 check_Prix_MontantPayee = true;
                 await OnGet(Vehicules.Id);
@@ -69,11 +69,11 @@ namespace AUTOPARC.Pages.Vehicule
             }
 
 
-            var modePaiement = await _db.ModePaiments.Where(m => m.Id == Vehicules.ModePayementId).Select(m => m.Mode).SingleOrDefaultAsync();
-            if (modePaiement == "Espece")
-                await RemoveChequeModelStateEntriesAsync();
-            else if (!await TryUpdateCheque())
-                return Page();
+            //var modePaiement = await _db.ModePaiments.Where(m => m.Id == Vehicules.ModePayementId).Select(m => m.Mode).SingleOrDefaultAsync();
+            //if (modePaiement == "Espece")
+            //    await RemoveChequeModelStateEntriesAsync();
+            //else if (!await TryUpdateCheque())
+            //    return Page();
 
 
             try
@@ -87,8 +87,8 @@ namespace AUTOPARC.Pages.Vehicule
                 vehicule.EtatVehiculeId = Vehicules.EtatVehiculeId;
                 vehicule.FrsId = Vehicules.FrsId;
                 vehicule.PrixAchat = Vehicules.PrixAchat;
-                vehicule.MontantPayee = Vehicules.MontantPayee;
-                vehicule.ModePayementId = Vehicules.ModePayementId;
+                vehicule.MontantPayeeEspece = Vehicules.MontantPayeeEspece;
+                //vehicule.ModePayementId = Vehicules.ModePayementId;
                 vehicule.DateAchat = Vehicules.DateAchat;
                 vehicule.DateMisEnCirculation = Vehicules.DateMisEnCirculation;
                 vehicule.Kilometrage = Vehicules.Kilometrage;
@@ -149,7 +149,7 @@ namespace AUTOPARC.Pages.Vehicule
                 return false;
             }
 
-            if (Vehicules.PrixAchat != (Vehicules.MontantPayee + Cheques.Montant))
+            if (Vehicules.PrixAchat != (Vehicules.MontantPayeeEspece + Cheques.Montant))
             {
                 check_montant = true;
                 await OnGet(Vehicules.Id);

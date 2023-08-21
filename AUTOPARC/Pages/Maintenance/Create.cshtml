@@ -14,6 +14,12 @@
         <div class="card-body wizard-content">
             <h4 class="card-title title-2">Form de Maintenance</h4>
             <hr>
+            @if (Model.check_exception)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
             @if (Model.Chauffeurs == null)
             {
                 <div class="alert alert-danger" role="alert">
@@ -28,12 +34,6 @@
             {
                 <div class="alert alert-danger" role="alert">
                     <p>le montant payé doit être inférieure ou égale au coût de la maintenance.</p>
-                </div>
-            }
-            @if (Model.check_exception)
-            {
-                <div class="alert alert-danger" role="alert">
-                    <p>Veuillez vérifier vos entrées.</p>
                 </div>
             }
             @if (Model.check_cheque_exception)
@@ -52,12 +52,6 @@
             {
                 <div class="alert alert-danger" role="alert">
                     <p>Le numéro du cheque est déjà utilisé.</p>
-                </div>
-            }
-            @if (Model.check_montant_cheque || Model.check_montant_virement)
-            {
-                <div class="alert alert-danger" role="alert">
-                    <p>le coût de la maintenance doit être égale au montant payé de la maintenance plus le montant du cheque plus le montant du virement.</p>
                 </div>
             }
             @if (Model.check_date_cheque)
@@ -124,6 +118,11 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                @if (Model.check_all_checkboxes)
+                                                {
+                                                    <p class="text-danger">veuillez cocher au moins 1 case.</p>
+                                                }
+                                                <label class="control-label">Mode Paiement <span class="text-danger">*</span></label>
                                                 @foreach (var item in Model.ModePaimentsList)
                                                 {
                                                     <div class="form-check">

@@ -25,6 +25,8 @@
                                 <th class="text text-white bg-primary" style="font-size:18px">Categorie</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Marque</th>
                                 <th class="text text-white bg-primary" style="font-size:18px">Modele</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Montant Payé</th>
+                                <th class="text text-white bg-primary" style="font-size:18px">Reste</th>
                                 <th class="text text-white text-center bg-primary" style="font-size:18px">Etat</th>
                                 <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
                             </tr>
@@ -32,8 +34,18 @@
                         <tbody>
                             @foreach (var item in Model.Vehicules)
                             {
-                                string state = item.EtatVehicule.Etat;
-                                string badge = state == "Actif" ? "badge-success" : state == "En panne" ? "badge-danger" : state == "Vendu" ? "badge-secondary" : "badge-warning";
+                                string etat_vehicule = item.EtatVehicule.Etat;
+                                var cheque = Model.ChequesList.Where(chq => chq.ActionNum == item.Num).SingleOrDefault();
+                                var virement = Model.VirementsList.Where(v => v.ActionNum == item.Num).SingleOrDefault();
+                                var credit = Model.CreditsList.Where(c => c.ActionNum == item.Num).SingleOrDefault();
+
+
+                                string badge_vehicule = etat_vehicule == "Actif" ? "badge-success" : etat_vehicule == "En panne" ? "badge-danger" : etat_vehicule == "Vendu" ? "badge-secondary" : "badge-warning";
+                                string badge_cheque = cheque != null ? (cheque.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                string badge_virement = virement != null ? (virement.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                string badge_credit = credit != null ? (credit.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+
+                                decimal reste = item.PrixAchat - item.MontantPayeeTotal;
 
                                 <tr style="font-size:18px">
                                     <td class="text-dark">@item.Num</td>
@@ -41,7 +53,35 @@
                                     <td class="text-dark">@item.Categorie.Nom</td>
                                     <td class="text-dark">@item.Marque.Nom</td>
                                     <td class="text-dark">@item.Modele.Nom</td>
-                                    <td class="text-center" style="font-size:20px"><span class="badge @badge">@item.EtatVehicule.Etat</span></td>
+                                    <td class="text-dark h6">
+                                        @if (item.MontantPayeeEspece != 0)
+                                        {
+                                            <p>Espece: @item.MontantPayeeEspece <span class="badge badge-success">payé</span></p>
+                                        }
+                                        @if (item.MontantPayeeCheque != 0)
+                                        {
+                                            <p>Cheque: @item.MontantPayeeCheque <span class="badge @badge_cheque">@cheque.Etat</span></p>
+                                        }
+                                        @if (item.MontantPayeeVirement != 0)
+                                        {
+                                            <p>Virement: @item.MontantPayeeVirement <span class="badge @badge_virement">@virement.Etat</span></p>
+                                        }
+                                        @if (item.MontantPayeeCredit != 0)
+                                        {
+                                            <p>Credit: @item.MontantPayeeCredit <span class="badge @badge_credit">@credit.Etat</span></p>
+                                        }
+                                    </td>
+                                    <td class="text-dark">
+                                        @if (reste == 0)
+                                        {
+                                            <span class="badge badge-success">0</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">@reste</span>
+                                        }
+                                    </td>
+                                    <td class="text-center" style="font-size:20px"><span class="badge @badge_vehicule">@item.EtatVehicule.Etat</span></td>
                                     <td class="text-dark">
                                         <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>

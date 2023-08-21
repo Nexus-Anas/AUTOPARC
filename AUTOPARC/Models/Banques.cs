@@ -12,6 +12,7 @@ namespace AUTOPARC.Models
         public Banques()
         {
             Cheques = new HashSet<Cheques>();
+            Credits = new HashSet<Credits>();
             Virements = new HashSet<Virements>();
         }
 
@@ -19,6 +20,7 @@ namespace AUTOPARC.Models
         public string Nom { get; set; }
 
         public virtual ICollection<Cheques> Cheques { get; set; }
+        public virtual ICollection<Credits> Credits { get; set; }
         public virtual ICollection<Virements> Virements { get; set; }
     }
 }

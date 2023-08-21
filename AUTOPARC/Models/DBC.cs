@@ -25,6 +25,8 @@ namespace AUTOPARC.Models
         public virtual DbSet<Cessions> Cessions { get; set; }
         public virtual DbSet<Chauffeurs> Chauffeurs { get; set; }
         public virtual DbSet<Cheques> Cheques { get; set; }
+        public virtual DbSet<Credits> Credits { get; set; }
+        public virtual DbSet<CreditsDetails> CreditsDetails { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<EtatVehicules> EtatVehicules { get; set; }
         public virtual DbSet<Fournisseurs> Fournisseurs { get; set; }
@@ -347,6 +349,82 @@ namespace AUTOPARC.Models
                     .HasConstraintName("FK_CHEQUE_BANQUE");
             });
 
+            modelBuilder.Entity<Credits>(entity =>
+            {
+                entity.ToTable("credits");
+
+                entity.HasIndex(e => e.BanqueId)
+                    .HasName("FK_CREDIT_BANQUE");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Action)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.ActionNum)
+                    .HasColumnName("Action_Num")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.BanqueId)
+                    .HasColumnName("Banque_ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DateDebut)
+                    .HasColumnName("Date_Debut")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.DateFin)
+                    .HasColumnName("Date_Fin")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Etat)
+                    .IsRequired()
+                    .HasColumnType("varchar(10)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.Mensualite).HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.Montant).HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeTotal)
+                    .HasColumnName("Montant_Payee_Total")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.HasOne(d => d.Banque)
+                    .WithMany(p => p.Credits)
+                    .HasForeignKey(d => d.BanqueId)
+                    .HasConstraintName("FK_CREDIT_BANQUE");
+            });
+
+            modelBuilder.Entity<CreditsDetails>(entity =>
+            {
+                entity.ToTable("credits_details");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CreditId)
+                    .HasColumnName("Credit_ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DateReglement)
+                    .HasColumnName("Date_Reglement")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.MensualitePayeeCheque).HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MensualitePayeeEspece).HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MensualitePayeeVirement).HasColumnType("decimal(9,2)");
+            });
+
             modelBuilder.Entity<Docs>(entity =>
             {
                 entity.ToTable("docs");
@@ -580,6 +658,10 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.MontantPayeeEspece)
                     .HasColumnName("Montant_Payee_Espece")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeTotal)
+                    .HasColumnName("Montant_Payee_Total")
                     .HasColumnType("decimal(9,2)");
 
                 entity.Property(e => e.MontantPayeeVirement)
@@ -891,9 +973,6 @@ namespace AUTOPARC.Models
                     .HasName("Matricule")
                     .IsUnique();
 
-                entity.HasIndex(e => e.ModePayementId)
-                    .HasName("FK_VEHICULE_PAIMENT");
-
                 entity.HasIndex(e => e.ModeleId)
                     .HasName("FK_VEHICULE_MODELE");
 
@@ -969,16 +1048,28 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.ModePayementId)
-                    .HasColumnName("Mode_Payement_ID")
-                    .HasColumnType("int(11)");
-
                 entity.Property(e => e.ModeleId)
                     .HasColumnName("Modele_ID")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.MontantPayee)
-                    .HasColumnName("Montant_Payee")
+                entity.Property(e => e.MontantPayeeCheque)
+                    .HasColumnName("Montant_Payee_Cheque")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeCredit)
+                    .HasColumnName("Montant_Payee_Credit")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeEspece)
+                    .HasColumnName("Montant_Payee_Espece")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeTotal)
+                    .HasColumnName("Montant_Payee_Total")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeVirement)
+                    .HasColumnName("Montant_Payee_Virement")
                     .HasColumnType("decimal(9,2)");
 
                 entity.Property(e => e.Moteur)
@@ -1061,12 +1152,6 @@ namespace AUTOPARC.Models
                     .HasForeignKey(d => d.MarqueId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VEHICULE_MARQUE");
-
-                entity.HasOne(d => d.ModePayement)
-                    .WithMany(p => p.Vehicules)
-                    .HasForeignKey(d => d.ModePayementId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VEHICULE_PAIMENT");
 
                 entity.HasOne(d => d.Modele)
                     .WithMany(p => p.Vehicules)

@@ -53,7 +53,7 @@ namespace AUTOPARC.Pages.Parametrage.ModePaiment
             if (mode is null)
                 return NotFound();
 
-            var vehicule = await _db.Vehicules.Where(x => x.ModePayementId == mode.Id).Select(x => x.Id).FirstOrDefaultAsync();
+            var vehicule = await _db.Vehicules.Where(x => x.Id == mode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var recharge_carburon = await _db.RechargeCarburants.Where(x => x.ModePaimentId == mode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var vente = await _db.Cessions.Where(x => x.ModePaimentId == mode.Id).Select(x => x.Id).FirstOrDefaultAsync();
             //var maintenance = await _db.Maintenances.Where(x => x.ModePaiementId == mode.Id).Select(x => x.Id).FirstOrDefaultAsync();

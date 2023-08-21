@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Vehicule
@@ -23,6 +24,9 @@ namespace AUTOPARC.Pages.Vehicule
         public List<EtatVehicules> Etatvehicules { get; set; }
         public List<Fournisseurs> Fournisseurs { get; set; }
         public List<ModePaiments> ModePaiments { get; set; }
+        public List<Cheques> ChequesList { get; set; }
+        public List<Virements> VirementsList { get; set; }
+        public List<Credits> CreditsList { get; set; }
 
 
 
@@ -37,6 +41,9 @@ namespace AUTOPARC.Pages.Vehicule
             Etatvehicules = await _db.EtatVehicules.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
             ModePaiments = await _db.ModePaiments.ToListAsync();
+            ChequesList = await _db.Cheques.Where(chq => chq.Action == "Vehicule").ToListAsync();
+            VirementsList = await _db.Virements.Where(v => v.Action == "Vehicule").ToListAsync();
+            CreditsList = await _db.Credits.Where(v => v.Action == "Vehicule").ToListAsync();
         }
     }
 }

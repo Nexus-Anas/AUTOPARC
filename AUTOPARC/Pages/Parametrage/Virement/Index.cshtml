@@ -1,5 +1,5 @@
 ﻿@page
-@model AUTOPARC.Pages.Parametrage.Cheque.IndexModel
+@model AUTOPARC.Pages.Parametrage.Virement.IndexModel
 @{
     ViewData["Title"] = "Parametrage";
 }
@@ -12,7 +12,7 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Listes des Cheques</h4>
+            <h4 class="card-title title-2">Listes des Virements</h4>
             <hr>
 
             <div class="mt-5">
@@ -20,27 +20,27 @@
                     <table class="table table-earning table-borderless table-hover">
                         <thead>
                             <tr>
-                                <th class="text text-white bg-info">Numero</th>
+                                <th class="text text-white bg-info">R.I.B</th>
                                 <th class="text text-white bg-info">Banque</th>
-                                <th class="text text-white bg-info">Date Echeance</th>
+                                <th class="text text-white bg-info">Date Virement</th>
                                 <th class="text text-white bg-info">Montant (DH)</th>
                                 <th class="text text-white text-center bg-info">État</th>
                                 <th class="text text-white text-center bg-info">Consulter</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.ChequesList)
+                            @foreach (var item in Model.VirementsList)
                             {
                                 string badge = item.Etat == "payé" ? "badge badge-success" : "badge badge-danger";
 
                                 <tr>
-                                    <td class="text-dark h6">@item.Numero</td>
+                                    <td class="text-dark h6">@item.Rib</td>
                                     <td class="text-dark h6">@item.Banque.Nom</td>
-                                    <td class="text-dark h6">@item.DateEcheance.ToShortDateString()</td>
+                                    <td class="text-dark h6">@item.DateVirement.ToShortDateString()</td>
                                     <td class="text-dark h6">@item.Montant</td>
                                     <td class="text-center h5"><span class="@badge">@item.Etat</span></td>
                                     <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Parametrage/Cheque/Details" class="text text-white btn btn-info btn-block font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        <a asp-route-id="@item.Id" asp-page="/Parametrage/Virement/Details" class="text text-white btn btn-info btn-block font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>
                                 </tr>
                             }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -45,9 +44,9 @@ namespace AUTOPARC.Pages.Maintenance
         public Virements Virements { get; set; }
 
 
-        public bool check_exception, check_cout_montantPayee;
-        public bool check_cheque_exception, check_numero_cheque_existance, check_montant_cheque, check_date_cheque;
-        public bool check_virement_exception, check_montant_virement;
+        public bool check_exception, check_cout_montantPayee, check_all_checkboxes;
+        public bool check_cheque_exception, check_numero_cheque_existance, check_date_cheque;
+        public bool check_virement_exception;
 
 
 
@@ -66,24 +65,33 @@ namespace AUTOPARC.Pages.Maintenance
 
         public async Task<IActionResult> OnPostCreate()
         {
-            bool check_Espece = Request.Form["payment-checkbox-1"] == "on";
-            bool check_Cheque = Request.Form["payment-checkbox-2"] == "on";
-            bool check_Virement = Request.Form["payment-checkbox-3"] == "on";
+            var num = await _db.Maintenances.OrderByDescending(m => m.Num).Select(m => m.Num).FirstOrDefaultAsync();
+            Maintenances.Num = num != 0 ? num + 1 : 1;
 
-            Debug.WriteLine($"Checkbox values: Espece: {check_Espece}, Cheque: {check_Cheque}, Virement: {check_Virement}");
+            bool isEspece = Request.Form.TryGetValue("Espece", out var especeValue);
+            bool isCheque = Request.Form.TryGetValue("Cheque", out var chequeValue);
+            bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
 
+            if (!isEspece && !isCheque && !isVirement)
+            {
+                check_all_checkboxes = true;
+                await OnGet(Maintenances.VehiculeId);
+                return Page();
+            }
 
-            if (!check_Cheque)
+            if (!isCheque)
                 await RemoveChequeModelStateEntriesAsync();
 
-            if (!check_Virement)
+            if (!isVirement)
                 await RemoveVirementModelStateEntriesAsync();
 
-            if (check_Cheque && !await InsertChequeAsync())
+            if (isCheque && !await InsertChequeAsync())
                 return Page();
 
-            if (check_Virement && !await InsertVirementAsync())
+            if (isVirement && !await InsertVirementAsync())
                 return Page();
+
+
 
 
             if (!ModelState.IsValid)
@@ -92,7 +100,6 @@ namespace AUTOPARC.Pages.Maintenance
                 return Page();
             }
 
-
             if (Maintenances.Cout < Maintenances.MontantPayeeEspece)
             {
                 check_cout_montantPayee = true;
@@ -100,14 +107,14 @@ namespace AUTOPARC.Pages.Maintenance
                 return Page();
             }
 
-
-            if (!await InsertDocumentAsync())
-                return Page();
-
-
             try
             {
+                Maintenances.MontantPayeeTotal += Maintenances.MontantPayeeEspece;
                 await _db.Maintenances.AddAsync(Maintenances);
+
+                if (!await InsertDocumentAsync())
+                    return Page();
+
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Maintenance/Index");
             }
@@ -133,13 +140,6 @@ namespace AUTOPARC.Pages.Maintenance
                 Cheques.Montant == 0 || Cheques.BanqueId == 0)
             {
                 check_cheque_exception = true;
-                await OnGet(Maintenances.VehiculeId);
-                return false;
-            }
-
-            if (Maintenances.Cout != (Maintenances.MontantPayeeEspece + Cheques.Montant + Virements.Montant))
-            {
-                check_montant_cheque = true;
                 await OnGet(Maintenances.VehiculeId);
                 return false;
             }
@@ -186,13 +186,6 @@ namespace AUTOPARC.Pages.Maintenance
                  Virements.DateVirement == null)
             {
                 check_cheque_exception = true;
-                await OnGet(Maintenances.VehiculeId);
-                return false;
-            }
-
-            if (Maintenances.Cout != (Maintenances.MontantPayeeEspece + Cheques.Montant + Virements.Montant))
-            {
-                check_montant_virement = true;
                 await OnGet(Maintenances.VehiculeId);
                 return false;
             }

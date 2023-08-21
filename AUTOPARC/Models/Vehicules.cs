@@ -28,8 +28,11 @@ namespace AUTOPARC.Models
         public int EtatVehiculeId { get; set; }
         public int FrsId { get; set; }
         public decimal PrixAchat { get; set; }
-        public decimal MontantPayee { get; set; }
-        public int ModePayementId { get; set; }
+        public decimal MontantPayeeEspece { get; set; }
+        public decimal MontantPayeeCheque { get; set; }
+        public decimal MontantPayeeVirement { get; set; }
+        public decimal MontantPayeeCredit { get; set; }
+        public decimal MontantPayeeTotal { get; set; }
         public DateTime DateAchat { get; set; }
         public DateTime? DateMisEnCirculation { get; set; }
         public int Kilometrage { get; set; }
@@ -53,7 +56,6 @@ namespace AUTOPARC.Models
         public virtual EtatVehicules EtatVehicule { get; set; }
         public virtual Fournisseurs Frs { get; set; }
         public virtual Marques Marque { get; set; }
-        public virtual ModePaiments ModePayement { get; set; }
         public virtual Modeles Modele { get; set; }
         public virtual AffectationChauffeurVehicules AffectationChauffeurVehicules { get; set; }
         public virtual ICollection<Cessions> Cessions { get; set; }
