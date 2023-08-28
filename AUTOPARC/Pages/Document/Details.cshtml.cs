@@ -77,7 +77,7 @@ namespace AUTOPARC.Pages.Document
                 doc.FrsId = Docs.FrsId;
                 doc.DateDebut = Docs.DateDebut;
                 doc.DateFin = Docs.DateFin;
-                doc.UrlDoc = Docs.UrlDoc;
+                //doc.UrlDoc = Docs.UrlDoc;
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Document/Index");
             }
@@ -132,7 +132,7 @@ namespace AUTOPARC.Pages.Document
                         using (var stream = new FileStream(filePath, FileMode.Create))
                             await file.CopyToAsync(stream);
 
-                        Docs.UrlDoc = fileName;
+                        //Docs.UrlDoc = fileName;
                     }
                 }
             }
@@ -152,7 +152,7 @@ namespace AUTOPARC.Pages.Document
 
         public async Task<IActionResult> OnPostDownloadFile()
         {
-            var url = await _db.Docs.Where(m => m.Id == Docs.Id).Select(m => m.UrlDoc).SingleOrDefaultAsync();
+            var url = await _db.Docs.Where(m => m.Id == Docs.Id).Select(m => m.Numero).SingleOrDefaultAsync();
             if (!string.IsNullOrEmpty(url))
             {
                 var fileName = url[(url.IndexOf("_") + 1)..]; // same as url.Substring(url.IndexOf("_") + 1);

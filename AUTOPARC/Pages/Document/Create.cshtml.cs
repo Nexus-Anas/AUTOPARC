@@ -30,8 +30,24 @@ namespace AUTOPARC.Pages.Document
         public Vehicules Vehicules { get; set; }
         public List<TypeDocs> TypeDocsList { get; set; }
         public List<Fournisseurs> FournisseursList { get; set; }
+        public List<ModePaiments> ModePaimentsList { get; set; }
+        public List<Banques> BanquesList { get; set; }
 
-        public bool check_exception, check_date;
+
+        [BindProperty]
+        public Cheques Cheques { get; set; }
+
+        [BindProperty]
+        public Virements Virements { get; set; }
+
+        [BindProperty]
+        public Credits Credits { get; set; }
+
+
+        public bool check_doc_exception, check_doc_numero, check_doc_date, check_all_checkboxes;
+        public bool check_cheque_exception, check_numero_cheque_existance, check_cheque_date;
+        public bool check_virement_exception;
+        public bool check_credit_exception, check_credit_montantParMoi, check_credit_date;
 
 
 
@@ -41,6 +57,8 @@ namespace AUTOPARC.Pages.Document
             Vehicules = await _db.Vehicules.Where(v => v.Id == id).SingleOrDefaultAsync();
             TypeDocsList = await _db.TypeDocs.ToListAsync();
             FournisseursList = await _db.Fournisseurs.ToListAsync();
+            ModePaimentsList = await _db.ModePaiments.ToListAsync();
+            BanquesList = await _db.Banques.ToListAsync();
         }
 
 
@@ -48,6 +66,30 @@ namespace AUTOPARC.Pages.Document
 
         public async Task<IActionResult> OnPostCreate()
         {
+            var num = await _db.Docs.OrderByDescending(n => n.Num).FirstOrDefaultAsync();
+            Docs.Num = num != null ? num.Num + 1 : 1;
+
+            bool isEspece = Request.Form.TryGetValue("Espece", out var especeValue);
+            bool isCheque = Request.Form.TryGetValue("Cheque", out var chequeValue);
+            bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
+            bool isCredit = Request.Form.TryGetValue("Credit", out var creditValue);
+
+            if (!isEspece && !isCheque && !isVirement && !isCredit)
+            {
+                check_all_checkboxes = true;
+                await OnGet(Docs.VehiculeId);
+                return Page();
+            }
+
+            if (!isCheque)
+                await RemoveChequeModelStateEntriesAsync();
+
+            if (!isVirement)
+                await RemoveVirementModelStateEntriesAsync();
+
+            if (!isCredit)
+                await RemoveCreditModelStateEntriesAsync();
+
             if (!ModelState.IsValid)
             {
                 await OnGet(Docs.VehiculeId);
@@ -57,19 +99,29 @@ namespace AUTOPARC.Pages.Document
 
             if (Docs.DateDebut >= Docs.DateFin)
             {
-                check_date = true;
+                check_doc_date = true;
                 await OnGet(Docs.VehiculeId);
                 return Page();
             }
 
 
-            if (!await InsertDocumentAsync())
-                return Page();
-
-
             try
             {
+                Docs.MontantPayeeTotal += Docs.MontantPayeeEspece;
                 await _db.Docs.AddAsync(Docs);
+
+                if (isCheque && !await InsertChequeAsync())
+                    return Page();
+
+                if (isVirement && !await InsertVirementAsync())
+                    return Page();
+
+                if (isCredit && !await InsertCreditAsync())
+                    return Page();
+
+                if (!await InsertDocumentsAsync())
+                    return Page();
+
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Document/Index");
             }
@@ -83,7 +135,7 @@ namespace AUTOPARC.Pages.Document
             }
             catch (Exception)
             {
-                check_exception = true;
+                check_doc_exception = true;
                 await OnGet(Docs.VehiculeId);
                 return Page();
             }
@@ -94,32 +146,187 @@ namespace AUTOPARC.Pages.Document
 
 
 
-        private async Task<bool> InsertDocumentAsync()
+        private async Task<bool> InsertDocumentsAsync()
         {
             try
             {
-                if (HttpContext.Request.Form.Files.Count > 0)
+                var files = HttpContext.Request.Form.Files;
+
+                if (files.Count > 0)
                 {
-                    var file = HttpContext.Request.Form.Files[0];
-                    if (file != null && file.Length > 0)
+                    foreach (var file in files)
                     {
-                        var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-                        var filePath = Path.Combine(_env.WebRootPath, "Documents", "Docs", fileName);
+                        if (file != null && file.Length > 0)
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            var filePath = Path.Combine(_env.WebRootPath, "Docs", "Documents", fileName);
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                            await file.CopyToAsync(stream);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                                await file.CopyToAsync(stream);
 
-                        Docs.UrlDoc = fileName;
+                            var urlDoc = new UrlDocs
+                            {
+                                Url = fileName,
+                                Action = "Document",
+                                ActionNum = Docs.Num
+                            };
+                            _db.UrlDocs.Add(urlDoc);
+                        }
                     }
                 }
             }
             catch (Exception)
             {
-                check_exception = true;
+                check_doc_exception = true;
                 await OnGet(Docs.VehiculeId);
                 return false;
             }
             return true;
+        }
+
+
+
+
+
+
+        private async Task<bool> InsertChequeAsync()
+        {
+            if (string.IsNullOrEmpty(Cheques.Numero) || string.IsNullOrEmpty(Cheques.AuNomDe) ||
+                Cheques.DateReglement == null || Cheques.DateEcheance == null ||
+                Cheques.Montant == 0 || Cheques.BanqueId == 0)
+            {
+                check_cheque_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+
+            if (Cheques.DateReglement > Cheques.DateEcheance)
+            {
+                check_cheque_date = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+
+            try
+            {
+                Docs.MontantPayeeCheque = Cheques.Montant;
+                Cheques.ActionNum = Docs.Num;
+                await _db.Cheques.AddAsync(Cheques);
+                return true;
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mySqlEx)
+            {
+                if (mySqlEx.Message.Contains("Numero"))
+                {
+                    check_numero_cheque_existance = true;
+                    await OnGet(Docs.VehiculeId);
+                }
+                return false;
+            }
+            catch
+            {
+                check_cheque_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+        }
+
+
+
+
+        private async Task<bool> InsertVirementAsync()
+        {
+            if (string.IsNullOrEmpty(Virements.Rib) || string.IsNullOrEmpty(Virements.AuNomDe) ||
+                Virements.Montant == 0 || Virements.BanqueId == 0 ||
+                 Virements.DateVirement == null)
+            {
+                check_cheque_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+
+            try
+            {
+                Docs.MontantPayeeVirement = Virements.Montant;
+                Virements.ActionNum = Docs.Num;
+                await _db.Virements.AddAsync(Virements);
+                return true;
+            }
+            catch
+            {
+                check_virement_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+        }
+
+
+
+
+        private async Task<bool> InsertCreditAsync()
+        {
+            if (Credits.Montant == 0 || Credits.Mensualite == 0 || Credits.BanqueId == 0 ||
+                Credits.DateDebut == null || Credits.DateFin == null)
+            {
+                check_credit_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+
+            if (Credits.Montant < Credits.Mensualite)
+            {
+                check_credit_montantParMoi = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+
+            if (Credits.DateDebut > Credits.DateFin)
+            {
+                check_credit_date = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+
+            try
+            {
+                var num = await _db.Credits.OrderByDescending(n => n.Num).FirstOrDefaultAsync();
+                Credits.Num = num != null ? num.Num + 1 : 1;
+
+                Docs.MontantPayeeCredit = Credits.Montant;
+                Credits.ActionNum = Vehicules.Num;
+                await _db.Credits.AddAsync(Credits);
+                return true;
+            }
+            catch
+            {
+                check_virement_exception = true;
+                await OnGet(Docs.VehiculeId);
+                return false;
+            }
+        }
+
+
+
+
+
+
+        private async Task RemoveChequeModelStateEntriesAsync()
+        {
+            foreach (var key in ModelState.Keys.ToList())
+                if (key.StartsWith("Cheques."))
+                    ModelState.Remove(key);
+        }
+        private async Task RemoveVirementModelStateEntriesAsync()
+        {
+            foreach (var key in ModelState.Keys.ToList())
+                if (key.StartsWith("Virements."))
+                    ModelState.Remove(key);
+        }
+        private async Task RemoveCreditModelStateEntriesAsync()
+        {
+            foreach (var key in ModelState.Keys.ToList())
+                if (key.StartsWith("Credits."))
+                    ModelState.Remove(key);
         }
     }
 }

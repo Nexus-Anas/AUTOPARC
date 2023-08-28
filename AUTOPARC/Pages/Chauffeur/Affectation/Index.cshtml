@@ -20,23 +20,23 @@
                     <table id="zero_config" class="table table-borderless table-striped table-earning">
                         <thead>
                             <tr>
-                                <th class="text text-white bg-primary" style="font-size:18px">Matricule</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Chauffeur</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Date Début Affectation</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Date Fin Affectation</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
+                                <th class="text-white bg-primary"><span class="h5">Matricule</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Chauffeur</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Date Début Affectation</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Date Fin Affectation</span></th>
+                                <th class="text-white bg-primary text-center"><span class="h5">Consulter</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.AffectationChauffeurVehicules)
                             {
-                                <tr style="font-size:16px">
+                                <tr class="h5">
                                     <td class="text-dark">@item.Vehicule.Matricule</td>
                                     <td class="text-dark">@item.Chauffeur.Nom @item.Chauffeur.Prenom</td>
                                     <td class="text-dark">@item.DateDebutAffectation.ToShortDateString()</td>
-                                    <td class="text-dark">@item.DateFinAffectation.ToShortDateString()</td>
-                                    <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Chauffeur/Affectation/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> consulter</a>
+                                    <td class="text-dark">@item.DateFinAffectation?.ToShortDateString()</td>
+                                    <td class="text-dark text-center">
+                                        <a asp-route-id="@item.Id" asp-page="/Chauffeur/Affectation/Details" class="text text-white btn btn-primary"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>
                                 </tr>
                             }

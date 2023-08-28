@@ -38,6 +38,10 @@ namespace AUTOPARC.Pages.Chauffeur.Affectation
 
         public async Task<IActionResult> OnPostCreate()
         {
+            bool checkbox = Request.Form.TryGetValue("datefinaffectation", out var checkboxValue);
+            if (!checkbox)
+                AffectationChauffeurVehicules.DateFinAffectation = null;
+
             if (!ModelState.IsValid)
                 return Page();
 

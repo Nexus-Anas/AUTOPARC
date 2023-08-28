@@ -20,6 +20,7 @@
                     <table class="table table-earning table-borderless table-hover">
                         <thead>
                             <tr>
+                                <th class="text text-white bg-info">Action</th>
                                 <th class="text text-white bg-info">Banque</th>
                                 <th class="text text-white bg-info">Montant (DH)</th>
                                 <th class="text text-white bg-info">Monsualite (DH)</th>
@@ -33,6 +34,7 @@
                                 string badge = item.Etat == "payé" ? "badge badge-success" : "badge badge-danger";
 
                                 <tr>
+                                    <td class="text-dark h6">@item.Action</td>
                                     <td class="text-dark h6">@item.Banque.Nom</td>
                                     <td class="text-dark h6">@item.Montant</td>
                                     <td class="text-dark h6">@item.Mensualite</td>

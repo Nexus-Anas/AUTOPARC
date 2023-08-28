@@ -61,6 +61,32 @@ namespace AUTOPARC.Pages.Parametrage.Cheque
                 }
 
 
+                if (Cheques.Action == "Document")
+                {
+                    var doc = await _db.Docs.Where(d => d.Num == Cheques.ActionNum).SingleOrDefaultAsync();
+                    var cheque = await _db.Cheques.Where(chq => chq.Id == Cheques.Id).SingleOrDefaultAsync();
+
+                    cheque.Etat = "payé";
+                    doc.MontantPayeeTotal += cheque.Montant;
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToPage("/Parametrage/Cheque/Index");
+                }
+
+
+                if (Cheques.Action == "Credit")
+                {
+                    var credit = await _db.Credits.Where(d => d.Num == Cheques.ActionNum).SingleOrDefaultAsync();
+                    var cheque = await _db.Virements.Where(chq => chq.Id == Cheques.Id).SingleOrDefaultAsync();
+
+                    cheque.Etat = "payé";
+                    credit.MontantPayeeTotal += cheque.Montant;
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToPage("/Parametrage/Cheque/Index");
+                }
+
+
                 await OnGet(Cheques.Id);
                 return Page();
             }

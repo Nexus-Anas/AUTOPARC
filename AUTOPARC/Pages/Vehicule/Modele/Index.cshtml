@@ -50,7 +50,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach (var item in Model.ModelesList)
+                                @foreach (var item in Model.ModelesList.OrderBy(m => m.Marque.Nom).ThenBy(m => m.Nom))
                                 {
                                     <tr>
                                         <td class="text-dark text-capitalize"><span class="h5">@item.Marque.Nom</span></td>

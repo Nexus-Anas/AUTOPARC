@@ -96,10 +96,21 @@ namespace AUTOPARC.Pages.Parametrage.Credit
 
                 var credit = await _db.Credits.Where(c => c.Id == CreditsDetails.CreditId).SingleOrDefaultAsync();
                 credit.MontantPayeeTotal += CreditsDetails.MensualitePayeeEspece;
-                var vehicule = await _db.Vehicules.Where(v => v.Num == credit.ActionNum).SingleOrDefaultAsync();
-                vehicule.MontantPayeeTotal += CreditsDetails.MensualitePayeeEspece;
-                
-                
+
+                if (credit.Action == "Vehicule")
+                {
+                    var vehicule = await _db.Vehicules.Where(v => v.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    vehicule.MontantPayeeTotal += CreditsDetails.MensualitePayeeEspece;
+                }
+
+
+                if (credit.Action == "Document")
+                {
+                    var doc = await _db.Docs.Where(d => d.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    doc.MontantPayeeTotal += CreditsDetails.MensualitePayeeEspece;
+                }
+
+
                 if (credit.Montant == credit.MontantPayeeTotal)
                     credit.Etat = "payé";
 
@@ -140,7 +151,24 @@ namespace AUTOPARC.Pages.Parametrage.Credit
             try
             {
                 CreditsDetails.MensualitePayeeCheque = Cheques.Montant;
-                Cheques.ActionNum = Vehicules.Num;
+
+                var credit = await _db.Credits.Where(c => c.Id == CreditsDetails.CreditId).SingleOrDefaultAsync();
+                credit.MontantPayeeTotal += CreditsDetails.MensualitePayeeCheque;
+
+                if (credit.Action == "Vehicule")
+                {
+                    var vehicule = await _db.Vehicules.Where(v => v.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    vehicule.MontantPayeeTotal += CreditsDetails.MensualitePayeeCheque;
+                }
+
+
+                if (credit.Action == "Document")
+                {
+                    var doc = await _db.Docs.Where(d => d.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    doc.MontantPayeeTotal += CreditsDetails.MensualitePayeeCheque;
+                }
+
+                Cheques.ActionNum = credit.Num;
                 await _db.Cheques.AddAsync(Cheques);
                 return true;
             }
@@ -178,7 +206,24 @@ namespace AUTOPARC.Pages.Parametrage.Credit
             try
             {
                 CreditsDetails.MensualitePayeeVirement = Virements.Montant;
-                Virements.ActionNum = Vehicules.Num;
+
+                var credit = await _db.Credits.Where(c => c.Id == CreditsDetails.CreditId).SingleOrDefaultAsync();
+                credit.MontantPayeeTotal += CreditsDetails.MensualitePayeeVirement;
+
+                if (credit.Action == "Vehicule")
+                {
+                    var vehicule = await _db.Vehicules.Where(v => v.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    vehicule.MontantPayeeTotal += CreditsDetails.MensualitePayeeVirement;
+                }
+
+
+                if (credit.Action == "Document")
+                {
+                    var doc = await _db.Docs.Where(d => d.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    doc.MontantPayeeTotal += CreditsDetails.MensualitePayeeVirement;
+                }
+
+                Virements.ActionNum = credit.Num;
                 await _db.Virements.AddAsync(Virements);
                 return true;
             }

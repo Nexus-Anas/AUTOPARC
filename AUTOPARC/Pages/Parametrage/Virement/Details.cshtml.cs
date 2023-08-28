@@ -61,6 +61,32 @@ namespace AUTOPARC.Pages.Parametrage.Virement
                 }
 
 
+                if (Virements.Action == "Document")
+                {
+                    var doc = await _db.Docs.Where(d => d.Num == Virements.ActionNum).SingleOrDefaultAsync();
+                    var virement = await _db.Virements.Where(v => v.Id == Virements.Id).SingleOrDefaultAsync();
+
+                    virement.Etat = "payé";
+                    doc.MontantPayeeTotal += virement.Montant;
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToPage("/Parametrage/Virement/Index");
+                }
+
+
+                if (Virements.Action == "Credit")
+                {
+                    var credit = await _db.Credits.Where(d => d.Num == Virements.ActionNum).SingleOrDefaultAsync();
+                    var virement = await _db.Virements.Where(v => v.Id == Virements.Id).SingleOrDefaultAsync();
+
+                    virement.Etat = "payé";
+                    credit.MontantPayeeTotal += virement.Montant;
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToPage("/Parametrage/Virement/Index");
+                }
+
+
                 await OnGet(Virements.Id);
                 return Page();
             }

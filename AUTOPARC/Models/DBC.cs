@@ -35,12 +35,15 @@ namespace AUTOPARC.Models
         public virtual DbSet<Marques> Marques { get; set; }
         public virtual DbSet<ModePaiments> ModePaiments { get; set; }
         public virtual DbSet<Modeles> Modeles { get; set; }
+        public virtual DbSet<OperationMaintenances> OperationMaintenances { get; set; }
         public virtual DbSet<RechargeCarburants> RechargeCarburants { get; set; }
         public virtual DbSet<Suividepense> Suividepense { get; set; }
         public virtual DbSet<TypeCarburants> TypeCarburants { get; set; }
         public virtual DbSet<TypeDocs> TypeDocs { get; set; }
         public virtual DbSet<TypeFournisseurs> TypeFournisseurs { get; set; }
         public virtual DbSet<TypeMaintenances> TypeMaintenances { get; set; }
+        public virtual DbSet<UrlDocs> UrlDocs { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Vehicules> Vehicules { get; set; }
         public virtual DbSet<Villes> Villes { get; set; }
         public virtual DbSet<Virements> Virements { get; set; }
@@ -396,6 +399,13 @@ namespace AUTOPARC.Models
                     .HasColumnName("Montant_Payee_Total")
                     .HasColumnType("decimal(9,2)");
 
+                entity.Property(e => e.Note)
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.Num).HasColumnType("int(11)");
+
                 entity.HasOne(d => d.Banque)
                     .WithMany(p => p.Credits)
                     .HasForeignKey(d => d.BanqueId)
@@ -458,6 +468,26 @@ namespace AUTOPARC.Models
                     .HasColumnName("Frs_ID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.MontantPayeeCheque)
+                    .HasColumnName("Montant_Payee_Cheque")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeCredit)
+                    .HasColumnName("Montant_Payee_Credit")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeEspece)
+                    .HasColumnName("Montant_Payee_Espece")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeTotal)
+                    .HasColumnName("Montant_Payee_Total")
+                    .HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.MontantPayeeVirement)
+                    .HasColumnName("Montant_Payee_Virement")
+                    .HasColumnType("decimal(9,2)");
+
                 entity.Property(e => e.Num).HasColumnType("int(11)");
 
                 entity.Property(e => e.Numero)
@@ -466,15 +496,13 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
+                entity.Property(e => e.PrixAchat)
+                    .HasColumnName("Prix_Achat")
+                    .HasColumnType("decimal(9,2)");
+
                 entity.Property(e => e.TypeId)
                     .HasColumnName("Type_ID")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.UrlDoc)
-                    .HasColumnName("Url_Doc")
-                    .HasColumnType("varchar(150)")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.VehiculeId)
                     .HasColumnName("Vehicule_ID")
@@ -595,9 +623,6 @@ namespace AUTOPARC.Models
             {
                 entity.ToTable("image_vehicule");
 
-                entity.HasIndex(e => e.VehiculeId)
-                    .HasName("FK_IMAGE_VEHICULE");
-
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
@@ -605,19 +630,13 @@ namespace AUTOPARC.Models
                 entity.Property(e => e.Url)
                     .IsRequired()
                     .HasColumnName("URL")
-                    .HasColumnType("varchar(50)")
+                    .HasColumnType("varchar(150)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
+                entity.Property(e => e.VehiculeNum)
+                    .HasColumnName("Vehicule_Num")
                     .HasColumnType("int(11)");
-
-                entity.HasOne(d => d.Vehicule)
-                    .WithMany(p => p.ImageVehicule)
-                    .HasForeignKey(d => d.VehiculeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_IMAGE_VEHICULE");
             });
 
             modelBuilder.Entity<Maintenances>(entity =>
@@ -626,6 +645,9 @@ namespace AUTOPARC.Models
 
                 entity.HasIndex(e => e.ChauffeurId)
                     .HasName("FK_MAINTENANCE_CHAUFFEUR");
+
+                entity.HasIndex(e => e.OperationId)
+                    .HasName("FK_MAINTENANCE_OPERATION");
 
                 entity.HasIndex(e => e.TypeId)
                     .HasName("FK_MAINTENANCE_TYPE");
@@ -670,6 +692,10 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.Num).HasColumnType("int(11)");
 
+                entity.Property(e => e.OperationId)
+                    .HasColumnName("Operation_ID")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.TypeId)
                     .HasColumnName("Type_ID")
                     .HasColumnType("int(11)");
@@ -689,6 +715,12 @@ namespace AUTOPARC.Models
                     .HasForeignKey(d => d.ChauffeurId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MAINTENANCE_CHAUFFEUR");
+
+                entity.HasOne(d => d.Operation)
+                    .WithMany(p => p.Maintenances)
+                    .HasForeignKey(d => d.OperationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MAINTENANCE_OPERATION");
 
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Maintenances)
@@ -771,6 +803,25 @@ namespace AUTOPARC.Models
                     .HasForeignKey(d => d.MarqueId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MODELE_MARQUE");
+            });
+
+            modelBuilder.Entity<OperationMaintenances>(entity =>
+            {
+                entity.ToTable("operation_maintenances");
+
+                entity.HasIndex(e => e.Operation)
+                    .HasName("Operation")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Operation)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
             });
 
             modelBuilder.Entity<RechargeCarburants>(entity =>
@@ -907,7 +958,7 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasColumnType("varchar(25)")
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
             });
@@ -926,7 +977,7 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasColumnType("varchar(25)")
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
             });
@@ -945,7 +996,72 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasColumnType("varchar(25)")
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+            });
+
+            modelBuilder.Entity<UrlDocs>(entity =>
+            {
+                entity.ToTable("url_docs");
+
+                entity.HasIndex(e => e.Url)
+                    .HasName("URL")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Action)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.ActionNum)
+                    .HasColumnName("Action_Num")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasColumnName("URL")
+                    .HasColumnType("varchar(150)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.HasIndex(e => e.Email)
+                    .HasName("Email")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Username)
+                    .HasName("Username")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasColumnType("varchar(150)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
             });

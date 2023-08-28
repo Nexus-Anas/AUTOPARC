@@ -17,7 +17,12 @@ namespace AUTOPARC.Models
         public int FrsId { get; set; }
         public DateTime DateDebut { get; set; }
         public DateTime DateFin { get; set; }
-        public string UrlDoc { get; set; }
+        public decimal PrixAchat { get; set; }
+        public decimal MontantPayeeEspece { get; set; }
+        public decimal MontantPayeeCheque { get; set; }
+        public decimal MontantPayeeVirement { get; set; }
+        public decimal MontantPayeeCredit { get; set; }
+        public decimal MontantPayeeTotal { get; set; }
 
         public virtual Fournisseurs Frs { get; set; }
         public virtual TypeDocs Type { get; set; }

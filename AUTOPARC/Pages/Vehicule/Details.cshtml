@@ -15,7 +15,7 @@
             <div class="card-body wizard-content">
                 <h4 class="card-title title-2">Modifier Véhicule</h4>
                 <hr>
-                @if (Model.check_Prix_MontantPayee)
+                @*@if (Model.check_Prix_MontantPayee)
                 {
                     <div class="alert alert-danger" role="alert">
                         <p>le montant payé doit être inférieure ou égale au prix d'achat de la véhicule.</p>
@@ -56,7 +56,35 @@
                     <div class="alert alert-danger" role="alert">
                         <p>vous ne pouvez pas modifier ou supprimer cette véhicule car le chèque est encaissé.</p>
                     </div>
-                }
+                }*@
+                <div id="carouselExampleIndicators" class="carousel slide mb-5" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        @for (int i = 0; i < Model.ImagesList.Count; i++)
+                        {
+                            <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@((i == 0) ? "active" : "")"></li>
+                        }
+                    </ol>
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < Model.ImagesList.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img class="d-block w-100 carousel-img" src="~/images/@Model.ImagesList[i].Url" alt="@Model.ImagesList[i].Url">
+                            </div>
+                        }
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+
+
+
                 <input asp-for="Vehicules.Id" type="hidden" />
                 <input asp-for="Vehicules.Num" type="hidden" />
                 <input asp-for="Vehicules.MarqueId" type="hidden" />
@@ -73,7 +101,7 @@
                         <span asp-validation-for="Vehicules.CategorieId" class="text-danger"></span>
                         <select asp-for="Vehicules.CategorieId" class="form-control form-select">
                             <option value="">Choisir...</option>
-                            @foreach (var item in Model.Categories)
+                            @foreach (var item in Model.CategoriesList)
                             {
                                 <option value="@item.Id">@item.Nom</option>
                             }
@@ -132,111 +160,10 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                        <label asp-for="Vehicules.PrixAchat">Prix Achat <span style="color:red">*</span></label>
-                        <span asp-validation-for="Vehicules.PrixAchat" class="text-danger"></span>
-                        <input asp-for="Vehicules.PrixAchat" type="text" class="required form-control" oninput="validateInput(this)">
-                    </div>
-
-                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                        <label asp-for="Vehicules.MontantPayeeEspece">Montant Payee <span style="color:red">*</span></label>
-                        <span asp-validation-for="Vehicules.MontantPayeeEspece" class="text-danger"></span>
-                        <input asp-for="Vehicules.MontantPayeeEspece" type="text" class="required form-control" oninput="validateInput(this)">
-                    </div>
-
-                    @*<div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                        <label asp-for="Vehicules.ModePayementId">Methode de Payement <span style="color:red">*</span></label>
-                        <span asp-validation-for="Vehicules.ModePayementId" class="text-danger"></span>
-                        <select id="paymentMode" asp-for="Vehicules.ModePayementId" class="form-control form-select">
-                            <option value="">Choisir...</option>
-                            @foreach (var item in Model.ModePaimentsList)
-                            {
-                                <option value="@item.Id">@item.Mode</option>
-                            }
-                        </select>
-                    </div>*@
-                </div>
-
-
-
-
-                <!-- Form de Cheque -->
-
-                <div class="collapse border border-secondary border-3 mb-1" id="chequeForm">
-                    <div class="container-fluid mb-2 bg-dark">
-                        <h3 class="mb-0 text-center text-light">Form de Cheque</h3>
-                    </div>
-                    <div class="p-1">
-                        <input asp-for="Cheques.Id" type="hidden" />
-                        <input asp-for="Cheques.Action" value="Vehicule" type="hidden" />
-                        <input asp-for="Cheques.Etat" type="hidden" />
-                        <input asp-for="Cheques.ActionNum" value="@Model.Vehicules.Num" type="hidden" />
-
-                        <div class="form-row">
-                            <div class="form-group col-12">
-                                <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque <span class="text-danger">*</span></label>
-                                <input asp-for="Cheques.Numero" type="text" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-12">
-                                <label asp-for="Cheques.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
-                                <select asp-for="Cheques.BanqueId" class="form-control form-select">
-                                    <option value="">Choisir...</option>
-                                    @foreach (var item in Model.BanquesList)
-                                    {
-                                        <option value="@item.Id">@item.Nom</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-12">
-                                <label asp-for="Cheques.Montant" class="control-label">Montant (DH) <span class="text-danger">*</span></label>
-                                <input asp-for="Cheques.Montant" type="text" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-12">
-                                <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de: <span class="text-danger">*</span></label>
-                                <input asp-for="Cheques.AuNomDe" type="text" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement <span class="text-danger">*</span></label>
-                                <input asp-for="Cheques.DateReglement" type="date" class="form-control">
-                            </div>
-
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance <span class="text-danger">*</span></label>
-                                <input asp-for="Cheques.DateEcheance" type="date" class="form-control">
-                            </div>
-
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
-                                <input asp-for="Cheques.DateValeur" type="date" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- Fin Form de Cheque -->
-                <!------------------------>
-
-
-
-
-
-                <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                         <label asp-for="Vehicules.DateAchat">Date Achat</label>
                         <span asp-validation-for="Vehicules.DateAchat" class="text-danger"></span>
-                        <input asp-for="Vehicules.DateAchat" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                        <input asp-for="Vehicules.DateAchat" class="form-control" type="date" aria-required="true" max="@DateTime.Now.AddYears(10).ToString("yyyy-MM-dd")" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -253,9 +180,252 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-12">
-                        <label asp-for="Vehicules.Note">Note</label>
-                        <textarea asp-for="Vehicules.Note" class="form-control" rows="4" aria-required="true"></textarea>
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                        <label asp-for="Vehicules.PrixAchat">Prix Achat <span class="text-danger">*</span></label>
+                        <span asp-validation-for="Vehicules.PrixAchat" class="text-danger"></span>
+                        <input asp-for="Vehicules.PrixAchat" type="text" class="required form-control" oninput="validateInput(this)">
+                    </div>
+
+                    <div class="form-group col-xl-8 col-lg-8 col-md-6 col-sm-6 col-12">
+                        @if (Model.check_all_checkboxes)
+                        {
+                            <p class="text-danger">veuillez cocher au moins 1 case.</p>
+                        }
+                        <label class="control-label">Mode Paiement <span class="text-danger">*</span></label>
+                        <div class="form-row">
+                            @foreach (var item in Model.ModePaimentsList)
+                            {
+                                <div class="form-check ml-2">
+                                    @if (item.Mode == "Espece")
+                                    {
+                                        <input class="form-check-input payment-checkbox" type="checkbox" id="@item.Mode" name="@item.Mode" value="@item.Mode" @(Model.Vehicules.MontantPayeeEspece != 0 ? "checked" : "")>
+                                    }
+                                    else if (item.Mode == "Cheque")
+                                    {
+                                        <input class="form-check-input payment-checkbox" type="checkbox" id="@item.Mode" name="@item.Mode" value="@item.Mode" @(Model.Vehicules.MontantPayeeCheque != 0 ? "checked" : "")>
+                                    }
+                                    else if (item.Mode == "Virement")
+                                    {
+                                        <input class="form-check-input payment-checkbox" type="checkbox" id="@item.Mode" name="@item.Mode" value="@item.Mode" @(Model.Vehicules.MontantPayeeVirement != 0 ? "checked" : "")>
+                                    }
+                                    else if (item.Mode == "Credit")
+                                    {
+                                        <input class="form-check-input payment-checkbox" type="checkbox" id="@item.Mode" name="@item.Mode" value="@item.Mode" @(Model.Vehicules.MontantPayeeCredit != 0 ? "checked" : "")>
+                                    }
+                                    <label class="form-check-label mr-2" for="@item.Mode">@item.Mode</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <!-- Form d'Espece -->
+                        <div class="collapse border border-secondary border-3 mb-1" id="especeForm">
+                            <div class="container-fluid mb-2 bg-dark">
+                                <h3 class="mb-0 text-center text-light">Form d'Espece</h3>
+                            </div>
+                            <div class="p-1">
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Vehicules.MontantPayeeEspece" class="control-label">Montant payé (DH) <span class="text-danger">*</span></label>
+                                        <input asp-for="Vehicules.MontantPayeeEspece" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin Form d'Espece -->
+                        <!------------------------>
+                    </div>
+
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <!-- Form de Cheque -->
+                        <div class="collapse border border-secondary border-3 mb-1" id="chequeForm">
+                            <div class="container-fluid mb-2 bg-dark">
+                                <h3 class="mb-0 text-center text-light">Form de Cheque</h3>
+                            </div>
+                            <div class="p-1">
+                                <input asp-for="Cheques.Id" type="hidden" />
+                                <input asp-for="Cheques.Action" value="Vehicule" type="hidden" />
+                                <input asp-for="Cheques.Etat" type="hidden" />
+                                <input asp-for="Cheques.ActionNum" value="@Model.Vehicules.Num" type="hidden" />
+
+                                <div class="form-row">
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque <span class="text-danger">*</span></label>
+                                        <input asp-for="Cheques.Numero" type="text" class="form-control">
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
+                                        <select asp-for="Cheques.BanqueId" class="form-control form-select">
+                                            <option value="">Choisir...</option>
+                                            @foreach (var item in Model.BanquesList)
+                                            {
+                                                <option value="@item.Id">@item.Nom</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.Montant" class="control-label">Montant (DH) <span class="text-danger">*</span></label>
+                                        <input asp-for="Cheques.Montant" type="text" class="form-control">
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de: <span class="text-danger">*</span></label>
+                                        <input asp-for="Cheques.AuNomDe" type="text" class="form-control">
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement <span class="text-danger">*</span></label>
+                                        <input asp-for="Cheques.DateReglement" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance <span class="text-danger">*</span></label>
+                                        <input asp-for="Cheques.DateEcheance" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
+                                        <input asp-for="Cheques.DateValeur" type="date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Fin Form de Cheque -->
+                        <!------------------------>
+                    </div>
+
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <!-- Form de Virement -->
+                        <div class="collapse border border-secondary border-3 mb-1" id="virementForm">
+                            <div class="container-fluid mb-2 bg-dark">
+                                <h3 class="mb-0 text-center text-light">Form de Virement</h3>
+                            </div>
+                            <div class="p-1">
+
+                                <input asp-for="Virements.Id" type="hidden" />
+                                <input asp-for="Virements.Action" value="Vehicule" type="hidden" />
+                                <input asp-for="Virements.Etat" value="impayé" type="hidden" />
+                                <input asp-for="Virements.ActionNum" value="@Model.Vehicules.Num" type="hidden" />
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Virements.Rib" class="control-label">R.I.B <span class="text-danger">*</span></label>
+                                        <input asp-for="Virements.Rib" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Virements.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
+                                        <select asp-for="Virements.BanqueId" class="form-control form-select">
+                                            <option value="">Choisir...</option>
+                                            @foreach (var item in Model.BanquesList)
+                                            {
+                                                <option value="@item.Id">@item.Nom</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Virements.Montant" class="control-label">Montant (DH) <span class="text-danger">*</span></label>
+                                        <input asp-for="Virements.Montant" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Virements.AuNomDe" class="control-label">Au nom de: <span class="text-danger">*</span></label>
+                                        <input asp-for="Virements.AuNomDe" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Virements.DateVirement" class="control-label">Date de Reglement <span class="text-danger">*</span></label>
+                                        <input asp-for="Virements.DateVirement" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Fin Form de Virement -->
+                        <!------------------------>
+                    </div>
+
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <!-- Form de Credit -->
+                        <div class="collapse border border-secondary border-3 mb-1" id="creditForm">
+                            <div class="container-fluid mb-2 bg-dark">
+                                <h3 class="mb-0 text-center text-light">Form de Credit</h3>
+                            </div>
+                            <div class="p-1">
+                                <input asp-for="Credits.Id" type="hidden" />
+                                <input asp-for="Credits.Action" value="Vehicule" type="hidden" />
+                                <input asp-for="Credits.Etat" value="impayé" type="hidden" />
+                                <input asp-for="Credits.ActionNum" value="@Model.Vehicules.Num" type="hidden" />
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Credits.Montant" class="control-label">Montant <span class="text-danger">*</span></label>
+                                        <input asp-for="Credits.Montant" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Credits.Mensualite" class="control-label">Mensualite <span class="text-danger">*</span></label>
+                                        <input asp-for="Credits.Mensualite" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Credits.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
+                                        <select asp-for="Credits.BanqueId" class="form-control form-select">
+                                            <option value="">Choisir...</option>
+                                            @foreach (var item in Model.BanquesList)
+                                            {
+                                                <option value="@item.Id">@item.Nom</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Credits.DateDebut" class="control-label">Date Debut <span class="text-danger">*</span></label>
+                                        <input asp-for="Credits.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label asp-for="Credits.DateFin" class="control-label">Date Fin <span class="text-danger">*</span></label>
+                                        <input asp-for="Credits.DateFin" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Fin Form de Virement -->
+                        <!------------------------>
+
                     </div>
                 </div>
 
@@ -265,6 +435,14 @@
             <div class="card-body wizard-content">
                 <h4 class="card-title title-2">Informations Optionels</h4>
                 <hr>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Vehicules.Note">Note</label>
+                        <textarea asp-for="Vehicules.Note" class="form-control" rows="4" aria-required="true"></textarea>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                         <label asp-for="Vehicules.Moteur" class="text text-dark">Moteur</label>
@@ -399,16 +577,46 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#paymentMode').on("change", function () {
-                var selectedText = $(this).find("option:selected").text();
-                if (selectedText !== "Espece" && selectedText !== "Choisir...") {
-                    $('#chequeForm').collapse('show');
+            $('.payment-checkbox').on("change", function () {
+                var isChecked = $(this).prop("checked");
+                var selectedValue = $(this).val();
+
+                if (isChecked && (selectedValue === "Cheque" || selectedValue === "Virement" || selectedValue === "Espece" || selectedValue === "Credit")) {
+                    $('#' + selectedValue.toLowerCase() + 'Form').collapse('show');
                 } else {
-                    $('#chequeForm').collapse('hide');
+                    $('#' + selectedValue.toLowerCase() + 'Form').collapse('hide');
+                }
+            });
+
+            // Show/hide div collapses based on initial checkbox state
+            $('.payment-checkbox').each(function () {
+                var isChecked = $(this).prop("checked");
+                var selectedValue = $(this).val();
+
+                if (isChecked && (selectedValue === "Cheque" || selectedValue === "Virement" || selectedValue === "Espece" || selectedValue === "Credit")) {
+                    $('#' + selectedValue.toLowerCase() + 'Form').collapse('show');
+                } else {
+                    $('#' + selectedValue.toLowerCase() + 'Form').collapse('hide');
                 }
             });
         });
+
     </script>
+
+    <script>
+        // JavaScript to enable automatic carousel sliding
+        $(document).ready(function () {
+            $('#carouselExampleIndicators').carousel({
+                interval: 3000
+            });
+        });
+    </script>
+    <style>
+        .carousel-img {
+            height: 50vh;
+            object-fit: cover;
+        }
+    </style>
 }
 
 

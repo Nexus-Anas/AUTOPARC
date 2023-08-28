@@ -13,7 +13,7 @@ namespace AUTOPARC.Models
         public int ChauffeurId { get; set; }
         public int VehiculeId { get; set; }
         public DateTime DateDebutAffectation { get; set; }
-        public DateTime DateFinAffectation { get; set; }
+        public DateTime? DateFinAffectation { get; set; }
         public string RaisonFinAffectation { get; set; }
 
         public virtual Chauffeurs Chauffeur { get; set; }

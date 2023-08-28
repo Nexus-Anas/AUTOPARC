@@ -20,25 +20,25 @@
                     <table id="zero_config" class="table table-borderless table-striped table-earning">
                         <thead>
                             <tr>
-                                <th class="text text-white bg-primary" style="font-size:18px">Nom</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Prenom</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Portable</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Email</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Disponibilite</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
+                                <th class="text-white bg-primary"><span class="h5">Nom</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Prenom</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Portable</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Email</span></th>
+                                <th class="text-white bg-primary text-center"><span class="h5">Disponibilite</span></th>
+                                <th class="text-white bg-primary text-center"><span class="h5">Consulter</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Chauffeurs)
                             {
-                                <tr style="font-size:16px">
+                                <tr class="h5">
                                     <td class="text-dark">@item.Nom</td>
                                     <td class="text-dark">@item.Prenom</td>
                                     <td class="text-dark">@item.Portable</td>
                                     <td class="text-dark">@item.Email</td>
                                     <td class="text-dark text-center">@item.Disponibilite</td>
-                                    <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Chauffeur/Details" class="text text-white btn btn-success btn-block"><i class="bi bi-info-circle-fill"></i> consulter</a>
+                                    <td class="text-dark text-center">
+                                        <a asp-route-id="@item.Id" asp-page="/Chauffeur/Details" class="text text-white btn btn-primary"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>
                                 </tr>
                             }

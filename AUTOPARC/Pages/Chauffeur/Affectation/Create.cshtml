@@ -16,13 +16,13 @@
             <hr>
             @if (Model.check_date)
             {
-                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <p>la date de début de l'affectation doit être inferieure à la date de fin de l'affectation.</p>
                 </div>
             }
             @if (Model.check_exception)
             {
-                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <p>Veuillez vérifier vos entrées.</p>
                 </div>
             }
@@ -60,9 +60,9 @@
                         <input asp-for="AffectationChauffeurVehicules.DateDebutAffectation" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="AffectationChauffeurVehicules.DateFinAffectation" class="control-label">Date Fin Affectation <span class="text-danger">*</span></label>
-                        <span asp-validation-for="AffectationChauffeurVehicules.DateFinAffectation" class="text-danger"></span>
-                        <input asp-for="AffectationChauffeurVehicules.DateFinAffectation" type="date" class="form-control required">
+                        <label asp-for="AffectationChauffeurVehicules.DateFinAffectation" class="control-label">Date Fin Affectation</label>
+                        <input class="form-check-input payment-checkbox ml-2" type="checkbox" id="datefinaffectation" name="datefinaffectation" value="datefinaffectation">
+                        <input asp-for="AffectationChauffeurVehicules.DateFinAffectation" type="date" class="form-control" id="dateFinInput" readonly>
                     </div>
                 </div>
 
@@ -87,4 +87,13 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const checkbox = document.getElementById('datefinaffectation');
+        const dateInput = document.getElementById('dateFinInput');
+
+        checkbox.addEventListener('change', function () {
+            dateInput.readOnly = !checkbox.checked;
+        });
+    </script>
 }

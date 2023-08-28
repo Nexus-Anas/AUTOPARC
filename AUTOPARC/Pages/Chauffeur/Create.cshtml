@@ -26,12 +26,12 @@
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
                         <label asp-for="Chauffeurs.Nom">Nom <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Nom" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Nom" type="text" class="form-control required trim capitalize">
+                        <input asp-for="Chauffeurs.Nom" type="text" class="form-control required trim uppercase">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
                         <label asp-for="Chauffeurs.Prenom">Prenom <span class="text-danger">*</span></label>
                         <span asp-validation-for="Chauffeurs.Prenom" class="text-danger"></span>
-                        <input asp-for="Chauffeurs.Prenom" type="text" class="form-control required trim uppercase">
+                        <input asp-for="Chauffeurs.Prenom" type="text" class="form-control required trim capitalize">
                     </div>
                 </div>
 

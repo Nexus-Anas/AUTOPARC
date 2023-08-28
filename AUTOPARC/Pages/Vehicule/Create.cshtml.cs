@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,8 +46,6 @@ namespace AUTOPARC.Pages.Vehicule
         [BindProperty]
         public Credits Credits { get; set; }
 
-        [BindProperty]
-        public ImageVehicule ImageVehicule { get; set; }
 
         public bool check_vehicule_exception, check_vehicule_matricule, check_all_checkboxes;
         public bool check_cheque_exception, check_numero_cheque_existance, check_cheque_date;
@@ -106,6 +106,9 @@ namespace AUTOPARC.Pages.Vehicule
 
             try
             {
+                if (!await InsertImagesAsync())
+                    return Page();
+
                 Vehicules.MontantPayeeTotal += Vehicules.MontantPayeeEspece;
                 await _db.Vehicules.AddAsync(Vehicules);
 
@@ -117,6 +120,8 @@ namespace AUTOPARC.Pages.Vehicule
 
                 if (isCredit && !await InsertCreditAsync())
                     return Page();
+
+                
 
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Vehicule/Index");
@@ -136,6 +141,48 @@ namespace AUTOPARC.Pages.Vehicule
                 await OnGet(Vehicules.MarqueId);
                 return Page();
             }
+        }
+
+
+
+
+
+
+        private async Task<bool> InsertImagesAsync()
+        {
+            try
+            {
+                var files = HttpContext.Request.Form.Files;
+
+                if (files.Count > 0)
+                {
+                    foreach (var file in files)
+                    {
+                        if (file != null && file.Length > 0)
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            var filePath = Path.Combine(_env.WebRootPath, "images", fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                                await file.CopyToAsync(stream);
+
+                            var image = new ImageVehicule
+                            {
+                                Url = fileName,
+                                VehiculeNum = Vehicules.Num
+                            };
+                            _db.ImageVehicule.Add(image);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                check_vehicule_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+            return true;
         }
 
 
@@ -243,6 +290,8 @@ namespace AUTOPARC.Pages.Vehicule
 
             try
             {
+                var num = await _db.Credits.OrderByDescending(n => n.Num).FirstOrDefaultAsync();
+                Credits.Num = num != null ? num.Num + 1 : 1;
                 Vehicules.MontantPayeeCredit = Credits.Montant;
                 Credits.ActionNum = Vehicules.Num;
                 await _db.Credits.AddAsync(Credits);

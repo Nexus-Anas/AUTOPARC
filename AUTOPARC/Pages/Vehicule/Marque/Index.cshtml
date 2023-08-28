@@ -46,7 +46,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach (var item in Model.MarquesList)
+                                @foreach (var item in Model.MarquesList.OrderBy(m => m.Nom))
                                 {
                                     <tr>
                                         <td class="text-dark text-capitalize"><span class="h5">@item.Nom</span></td>

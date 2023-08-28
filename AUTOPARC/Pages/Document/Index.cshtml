@@ -12,32 +12,154 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h3 class="card-title">Liste des Documents</h3>
+            <h3 class="card-title title-2">Liste des Documents</h3>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="displayOption" id="displayDoc" checked>
+                <label class="form-check-label" for="displayDoc">Listes des Documents</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="displayOption" id="displayEtat">
+                <label class="form-check-label" for="displayEtat">Liste des Etats</label>
+            </div>
+
             <hr />
 
             <div class="mt-5">
-                <div class="row ml-2 mr-2">
-                    @foreach (var item in Model.Docs)
-                    {
-                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
-                            <div class="card" style="background-color:#F2F2F2">
-                                <div class="card-header text text-dark text-center font-weight-bold">Document №: @item.Numero</div>
-                                <img asp-append-version="true" src="~/images/document_vehicule.jpg" class="card-img-top" style="height:250px;width:auto" />
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">@item.Type.Type</h4>
-                                    <p class="card-text">
-                                        <div class="h6">Date Debut: @item.DateDebut.ToShortDateString()</div>
-                                        <div class="h6">Date Fin: @item.DateFin.ToShortDateString()</div>
-                                    </p>
-                                    <div class="text-white">
-                                        <a asp-route-id="@item.Id" asp-page="/Document/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
+                <!-- Listes des Documents-->
+                <div id="DocContainer">
+                    <div class="row justify-content-center ml-2 mr-2">
+                        <!-- Center the entire row -->
+                        @foreach (var item in Model.Docs)
+                        {
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+                                <div class="card" style="background-color:#F2F2F2">
+                                    <div class="card-header text text-dark text-center font-weight-bold">Document №: @item.Numero</div>
+                                    <img asp-append-version="true" src="~/images/document_vehicule.jpg" class="card-img-top" style="height:250px;width:auto" />
+                                    <div class="card-body text-center">
+                                        <h4 class="card-title">@item.Type.Type</h4>
+                                        <p class="card-text">
+                                            <div class="h6">Date Debut: @item.DateDebut.ToShortDateString()</div>
+                                            <div class="h6">Date Fin: @item.DateFin.ToShortDateString()</div>
+                                        </p>
+                                        <div class="text-white">
+                                            <a asp-route-id="@item.Id" asp-page="/Document/Details" class="text text-white btn btn-info btn-block fs-5 font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
+                </div>
+
+                <!-- Listes des Etats-->
+                <div id="EtatContainer" style="display: none;">
+                    <div class="table-responsive">
+                        <table id="zero_config" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>
+                                    <th class="text-white bg-primary"><span class="h5">Num</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Numero</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Prix d'Achat</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Montant Payé</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Etat Paiement</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Reste</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Docs)
+                                {
+                                    var cheque = Model.ChequesList.Where(chq => chq.ActionNum == item.Num).SingleOrDefault();
+                                    var virement = Model.VirementsList.Where(v => v.ActionNum == item.Num).SingleOrDefault();
+                                    var credit = Model.CreditsList.Where(c => c.ActionNum == item.Num).SingleOrDefault();
+
+
+                                    string badge_cheque = cheque != null ? (cheque.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                    string badge_virement = virement != null ? (virement.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                    string badge_credit = credit != null ? (credit.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+
+                                    decimal reste = item.PrixAchat - item.MontantPayeeTotal;
+                                    string resteBadge = reste == 0 ? "badge-success" : "badge-danger";
+
+                                    <tr class="h5">
+                                        <td class="text-dark">@item.Num</td>
+                                        <td class="text-dark">@item.Numero</td>
+                                        <td class="text-dark">@item.PrixAchat</td>
+                                        <td class="text-dark">
+                                            @if (item.MontantPayeeEspece != 0)
+                                            {
+                                                <p>Espece: @item.MontantPayeeEspece</p>
+                                            }
+                                            @if (item.MontantPayeeCheque != 0)
+                                            {
+                                                <p>Cheque: @item.MontantPayeeCheque</p>
+                                            }
+                                            @if (item.MontantPayeeVirement != 0)
+                                            {
+                                                <p>Virement: @item.MontantPayeeVirement</p>
+                                            }
+                                            @if (item.MontantPayeeCredit != 0)
+                                            {
+                                                <p>Credit: @item.MontantPayeeCredit</p>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.MontantPayeeEspece != 0)
+                                            {
+                                                <p><span class="badge badge-success">payé</span></p>
+                                            }
+                                            @if (item.MontantPayeeCheque != 0)
+                                            {
+                                                <p><span class="badge @badge_cheque">@cheque.Etat</span></p>
+                                            }
+                                            @if (item.MontantPayeeVirement != 0)
+                                            {
+                                                <p><span class="badge @badge_virement">@virement.Etat</span></p>
+                                            }
+                                            @if (item.MontantPayeeCredit != 0)
+                                            {
+                                                <p><span class="badge @badge_credit">@credit.Etat</span></p>
+                                            }
+                                        </td>
+                                        <td class="text-center"><span class="badge @resteBadge">@reste</span></td>
+                                        <td class="text-dark">
+                                            <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
+
+
+@section Scripts {
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const docContainer = document.getElementById("DocContainer");
+            const etatContainer = document.getElementById("EtatContainer");
+
+            const displayDocRadio = document.getElementById("displayDoc");
+            const displayEtatRadio = document.getElementById("displayEtat");
+
+            displayDocRadio.addEventListener("change", function () {
+                docContainer.style.display = "block";
+                etatContainer.style.display = "none";
+            });
+
+            displayEtatRadio.addEventListener("change", function () {
+                docContainer.style.display = "none";
+                etatContainer.style.display = "block";
+            });
+        });
+    </script>
+
+}

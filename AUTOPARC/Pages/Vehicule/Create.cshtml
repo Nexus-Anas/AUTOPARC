@@ -10,7 +10,7 @@
         <h3 class="mb-0 text-center text-light">Véhicules</h3>
     </div>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
 
         <div class="card">
             <div class="card-body wizard-content">
@@ -101,7 +101,7 @@
                                 <option value="@item.Id">@item.Nom</option>
                             }
                         </select>
-                    </div>
+                    </div>  
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                         <label asp-for="Vehicules.CarburantId">Carburant <span class="text-danger">*</span></label>
@@ -137,6 +137,26 @@
                                 <option value="@item.Id">@item.Nom</option>
                             }
                         </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                        <label asp-for="Vehicules.DateAchat">Date Achat</label>
+                        <span asp-validation-for="Vehicules.DateAchat" class="text-danger"></span>
+                        <input asp-for="Vehicules.DateAchat" class="form-control" type="date" aria-required="true" max="@DateTime.Now.AddYears(10).ToString("yyyy-MM-dd")" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                        <label asp-for="Vehicules.DateMisEnCirculation">Date mis en Circulation</label>
+                        <span asp-validation-for="Vehicules.DateMisEnCirculation" class="text-danger"></span>
+                        <input asp-for="Vehicules.DateMisEnCirculation" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                        <label asp-for="Vehicules.Kilometrage">Kilometrage</label>
+                        <span asp-validation-for="Vehicules.Kilometrage" class="text-danger"></span>
+                        <input asp-for="Vehicules.Kilometrage" class="form-control" type="number" min="0" aria-required="true" oninput="validateNumbersOnly(this)">
                     </div>
                 </div>
 
@@ -370,28 +390,26 @@
                 </div>
 
 
-
-
-                
-
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body wizard-content">
+                <h4 class="card-title title-2">Informations Optionels</h4>
+                <hr>
 
                 <div class="form-row">
-                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <label asp-for="Vehicules.DateAchat">Date Achat</label>
-                        <span asp-validation-for="Vehicules.DateAchat" class="text-danger"></span>
-                        <input asp-for="Vehicules.DateAchat" class="form-control" type="date" aria-required="true" max="@DateTime.Now.AddYears(10).ToString("yyyy-MM-dd")" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-                    </div>
-
-                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <label asp-for="Vehicules.DateMisEnCirculation">Date mis en Circulation</label>
-                        <span asp-validation-for="Vehicules.DateMisEnCirculation" class="text-danger"></span>
-                        <input asp-for="Vehicules.DateMisEnCirculation" class="form-control" type="date" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")" aria-required="true">
-                    </div>
-
-                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <label asp-for="Vehicules.Kilometrage">Kilometrage</label>
-                        <span asp-validation-for="Vehicules.Kilometrage" class="text-danger"></span>
-                        <input asp-for="Vehicules.Kilometrage" class="form-control" type="number" min="0" aria-required="true" oninput="validateNumbersOnly(this)">
+                    <div class="form-group col-12">
+                        <label class="control-label">Images</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputFileAdd">URL</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputFile" name="files" multiple>
+                                <label class="custom-file-label" for="inputFile">Choisir des images...</label>
+                            </div>
+                        </div>
+                        <div id="selectedFiles" class="mt-2"></div> <!-- Container to display selected files -->
                     </div>
                 </div>
 
@@ -402,12 +420,6 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body wizard-content">
-                <h4 class="card-title title-2">Informations Optionels</h4>
-                <hr>
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                         <label asp-for="Vehicules.Moteur" class="text text-dark">Moteur</label>
@@ -534,5 +546,33 @@
             const cleanValue = inputElement.value.replace(/\D/g, ''); // Remove any non-digit characters
             inputElement.value = cleanValue;
         }
+    </script>
+}
+
+
+
+@section DocUploadJS {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inputFile').on("change", function () {
+                var inputFiles = $(this).prop("files");
+                var selectedFilesContainer = $('#selectedFiles');
+
+                // Clear previous content
+                selectedFilesContainer.empty();
+
+                // Update input label
+                if (inputFiles.length === 0) {
+                    $(this).next(".custom-file-label").html("Choisir un fichier...");
+                } else {
+                    $(this).next(".custom-file-label").html(inputFiles.length);
+                }
+
+                // Display selected files in rows
+                for (var i = 0; i < inputFiles.length; i++) {
+                    selectedFilesContainer.append('<div>' + inputFiles[i].name + '</div>');
+                }
+            });
+        });
     </script>
 }

@@ -12,6 +12,7 @@ namespace AUTOPARC.Models
         public int Id { get; set; }
         public int Num { get; set; }
         public int TypeId { get; set; }
+        public int OperationId { get; set; }
         public int VehiculeId { get; set; }
         public int ChauffeurId { get; set; }
         public DateTime DateMaintenance { get; set; }
@@ -24,6 +25,7 @@ namespace AUTOPARC.Models
         public string UrlDoc { get; set; }
 
         public virtual Chauffeurs Chauffeur { get; set; }
+        public virtual OperationMaintenances Operation { get; set; }
         public virtual TypeMaintenances Type { get; set; }
         public virtual Vehicules Vehicule { get; set; }
     }

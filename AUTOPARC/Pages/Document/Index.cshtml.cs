@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Document
@@ -18,6 +19,10 @@ namespace AUTOPARC.Pages.Document
         public List<Docs> Docs { get; set; }
         public List<TypeDocs> TypeDocs { get; set; }
         public List<Fournisseurs> Fournisseurs { get; set; }
+        public List<ModePaiments> ModePaiments { get; set; }
+        public List<Cheques> ChequesList { get; set; }
+        public List<Virements> VirementsList { get; set; }
+        public List<Credits> CreditsList { get; set; }
 
 
 
@@ -27,6 +32,10 @@ namespace AUTOPARC.Pages.Document
             Docs = await _db.Docs.ToListAsync();
             TypeDocs = await _db.TypeDocs.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
+            ModePaiments = await _db.ModePaiments.ToListAsync();
+            ChequesList = await _db.Cheques.Where(chq => chq.Action == "Document").ToListAsync();
+            VirementsList = await _db.Virements.Where(v => v.Action == "Document").ToListAsync();
+            CreditsList = await _db.Credits.Where(v => v.Action == "Document").ToListAsync();
         }
     }
 }

@@ -60,9 +60,9 @@
                         <input asp-for="AffectationChauffeurVehicules.DateDebutAffectation" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                     </div>
                     <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="AffectationChauffeurVehicules.DateFinAffectation" class="control-label">Date Fin Affectation <span class="text-danger">*</span></label>
-                        <span asp-validation-for="AffectationChauffeurVehicules.DateFinAffectation" class="text-danger"></span>
-                        <input asp-for="AffectationChauffeurVehicules.DateFinAffectation" type="date" class="form-control required">
+                        <label asp-for="AffectationChauffeurVehicules.DateFinAffectation" class="control-label">Date Fin Affectation</label>
+                        <input class="form-check-input payment-checkbox ml-2" type="checkbox" id="datefinaffectation" name="datefinaffectation" value="datefinaffectation">
+                        <input asp-for="AffectationChauffeurVehicules.DateFinAffectation" type="date" class="form-control" id="dateFinInput" readonly>
                     </div>
                 </div>
 
@@ -128,4 +128,30 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            const checkbox = $('#datefinaffectation');
+            const dateInput = $('#dateFinInput');
+
+            // On page load, set the initial state based on the input's value
+            if (dateInput.val() !== '') {
+                checkbox.prop('checked', true);
+                dateInput.prop('readonly', false);
+            } else {
+                checkbox.prop('checked', false);
+                dateInput.prop('readonly', true);
+            }
+
+            // On checkbox change, toggle the input's state
+            checkbox.on('change', function () {
+                if (checkbox.is(':checked')) {
+                    dateInput.prop('readonly', false);
+                } else {
+                    dateInput.prop('readonly', true);
+                }
+            });
+        });
+    </script>
+
 }

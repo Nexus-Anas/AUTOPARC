@@ -1,4 +1,5 @@
 using AUTOPARC.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -14,27 +15,44 @@ namespace AUTOPARC.Pages.Vehicule
     public class DetailsModel : PageModel
     {
         private readonly DBC _db;
-        public DetailsModel(DBC db) => _db = db;
+        private readonly IWebHostEnvironment _env;
+        public DetailsModel(DBC db, IWebHostEnvironment env)
+        {
+            _db = db;
+            _env = env;
+        }
 
 
 
 
         [BindProperty]
         public Vehicules Vehicules { get; set; }
-        public List<Categories> Categories { get; set; }
+        public List<Categories> CategoriesList { get; set; }
         public List<Modeles> ModelesList { get; set; }
         public List<TypeCarburants> TypeCarburantsList { get; set; }
         public List<EtatVehicules> EtatVehiculesList { get; set; }
         public List<Fournisseurs> FournisseursList { get; set; }
         public List<ModePaiments> ModePaimentsList { get; set; }
+        public List<Banques> BanquesList { get; set; }
+        public List<ImageVehicule> ImagesList { get; set; }
 
 
         [BindProperty]
         public Cheques Cheques { get; set; }
-        public List<Banques> BanquesList { get; set; }
 
-        public bool check_exception, check_Prix_MontantPayee;
-        public bool check_cheque_exception, check_numero_cheque_existance, check_montant, check_date, check_etat_paye;
+        [BindProperty]
+        public Virements Virements { get; set; }
+
+        [BindProperty]
+        public Credits Credits { get; set; }
+
+        [BindProperty]
+        public ImageVehicule ImageVehicule { get; set; }
+
+        public bool check_vehicule_exception, check_vehicule_matricule, check_all_checkboxes;
+        public bool check_cheque_exception, check_numero_cheque_existance, check_cheque_date;
+        public bool check_virement_exception;
+        public bool check_credit_exception, check_credit_montantParMoi, check_credit_date;
 
 
 
@@ -42,14 +60,18 @@ namespace AUTOPARC.Pages.Vehicule
         public async Task OnGet(int id)
         {
             Vehicules = await _db.Vehicules.FindAsync(id);
-            Categories = await _db.Categories.ToListAsync();
+            CategoriesList = await _db.Categories.ToListAsync();
             ModelesList = await _db.Modeles.Where(x => x.MarqueId == Vehicules.MarqueId).ToListAsync();
             TypeCarburantsList = await _db.TypeCarburants.ToListAsync();
             EtatVehiculesList = await _db.EtatVehicules.ToListAsync();
             FournisseursList = await _db.Fournisseurs.ToListAsync();
             ModePaimentsList = await _db.ModePaiments.ToListAsync();
-            Cheques = await _db.Cheques.Where(chq => chq.Action == "Vehicule" && chq.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
             BanquesList = await _db.Banques.ToListAsync();
+            ImagesList = await _db.ImageVehicule.Where(i => i.VehiculeNum == Vehicules.Num).ToListAsync();
+
+            Cheques = await _db.Cheques.Where(chq => chq.Action == "Vehicule" && chq.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
+            Virements = await _db.Virements.Where(v => v.Action == "Vehicule" && v.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
+            Credits = await _db.Credits.Where(c => c.Action == "Vehicule" && c.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
         }
 
 
@@ -57,16 +79,29 @@ namespace AUTOPARC.Pages.Vehicule
 
         public async Task<IActionResult> OnPostUpdate()
         {
-            if (await Check_ChequePayee())
-                return Page();
+            bool isEspece = Request.Form.TryGetValue("Espece", out var especeValue);
+            bool isCheque = Request.Form.TryGetValue("Cheque", out var chequeValue);
+            bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
+            bool isCredit = Request.Form.TryGetValue("Credit", out var creditValue);
 
-
-            if (Vehicules.PrixAchat < Vehicules.MontantPayeeEspece)
+            if (!isEspece && !isCheque && !isVirement && !isCredit)
             {
-                check_Prix_MontantPayee = true;
-                await OnGet(Vehicules.Id);
+                check_all_checkboxes = true;
+                await OnGet(Vehicules.MarqueId);
                 return Page();
             }
+
+
+            //if (await Check_ChequePayee())
+            //    return Page();
+
+
+            //if (Vehicules.PrixAchat < Vehicules.MontantPayeeEspece)
+            //{
+            //    check_Prix_MontantPayee = true;
+            //    await OnGet(Vehicules.Id);
+            //    return Page();
+            //}
 
 
             //var modePaiement = await _db.ModePaiments.Where(m => m.Id == Vehicules.ModePayementId).Select(m => m.Mode).SingleOrDefaultAsync();
@@ -112,7 +147,7 @@ namespace AUTOPARC.Pages.Vehicule
             }
             catch (Exception)
             {
-                check_exception = true;
+                //check_exception = true;
                 await OnGet(Vehicules.Id);
                 return Page();
             }
@@ -123,8 +158,8 @@ namespace AUTOPARC.Pages.Vehicule
 
         public async Task<IActionResult> OnPostDelete()
         {
-            if (await Check_ChequePayee())
-                return Page();
+            //if (await Check_ChequePayee())
+            //    return Page();
 
             await TryDeleteCheck();
 
@@ -138,7 +173,7 @@ namespace AUTOPARC.Pages.Vehicule
 
 
 
-        private async Task<bool> TryUpdateCheque()
+        private async Task<bool> UpdateCheque()
         {
             if (string.IsNullOrEmpty(Cheques.Numero) || string.IsNullOrEmpty(Cheques.AuNomDe) ||
                 Cheques.DateReglement == null || Cheques.DateEcheance == null ||
@@ -151,14 +186,14 @@ namespace AUTOPARC.Pages.Vehicule
 
             if (Vehicules.PrixAchat != (Vehicules.MontantPayeeEspece + Cheques.Montant))
             {
-                check_montant = true;
+                //check_montant = true;
                 await OnGet(Vehicules.Id);
                 return false;
             }
 
             if (Cheques.DateReglement > Cheques.DateEcheance)
             {
-                check_date = true;
+                //check_date = true;
                 await OnGet(Vehicules.Id);
                 return false;
             }
@@ -211,39 +246,6 @@ namespace AUTOPARC.Pages.Vehicule
 
 
 
-        private async Task<bool> RemoveChequeModelStateEntriesAsync()
-        {
-            if (Cheques.Id != 0)
-            {
-                await TryDeleteCheck();
-                return true;
-            }
-            else
-            {
-                foreach (var key in ModelState.Keys.ToList())
-                    if (key.StartsWith("Cheques."))
-                        ModelState.Remove(key);
-                return true;
-            }
-        }
-
-
-
-
-
-
-        private async Task<bool> Check_ChequePayee()
-        {
-            var cheque = await _db.Cheques.Where(chq => chq.Action == "Vehicule" && chq.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-            if (cheque != null && cheque.Etat == "payé")
-            {
-                check_etat_paye = true;
-                await OnGet(Vehicules.Id);
-                return true;
-            }
-            return false;
-        }
-
 
 
 
@@ -257,6 +259,164 @@ namespace AUTOPARC.Pages.Vehicule
                 _db.Cheques.Remove(cheque);
                 await _db.SaveChangesAsync();
             }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private async Task<bool> InsertChequeAsync()
+        {
+            if (string.IsNullOrEmpty(Cheques.Numero) || string.IsNullOrEmpty(Cheques.AuNomDe) ||
+                Cheques.DateReglement == null || Cheques.DateEcheance == null ||
+                Cheques.Montant == 0 || Cheques.BanqueId == 0)
+            {
+                check_cheque_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+
+            if (Cheques.DateReglement > Cheques.DateEcheance)
+            {
+                check_cheque_date = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+
+            try
+            {
+                Vehicules.MontantPayeeCheque = Cheques.Montant;
+                Cheques.ActionNum = Vehicules.Num;
+                await _db.Cheques.AddAsync(Cheques);
+                return true;
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mySqlEx)
+            {
+                if (mySqlEx.Message.Contains("Numero"))
+                {
+                    check_numero_cheque_existance = true;
+                    await OnGet(Vehicules.MarqueId);
+                }
+                return false;
+            }
+            catch
+            {
+                check_cheque_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+        }
+
+
+
+
+        private async Task<bool> InsertVirementAsync()
+        {
+            if (string.IsNullOrEmpty(Virements.Rib) || string.IsNullOrEmpty(Virements.AuNomDe) ||
+                Virements.Montant == 0 || Virements.BanqueId == 0 ||
+                 Virements.DateVirement == null)
+            {
+                check_cheque_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+
+            try
+            {
+                Vehicules.MontantPayeeVirement = Virements.Montant;
+                Virements.ActionNum = Vehicules.Num;
+                await _db.Virements.AddAsync(Virements);
+                return true;
+            }
+            catch
+            {
+                check_virement_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+        }
+
+
+
+
+        private async Task<bool> InsertCreditAsync()
+        {
+            if (Credits.Montant == 0 || Credits.Mensualite == 0 || Credits.BanqueId == 0 ||
+                Credits.DateDebut == null || Credits.DateFin == null)
+            {
+                check_credit_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+
+            if (Credits.Montant < Credits.Mensualite)
+            {
+                check_credit_montantParMoi = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+
+            if (Credits.DateDebut > Credits.DateFin)
+            {
+                check_credit_date = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+
+            try
+            {
+                Vehicules.MontantPayeeCredit = Credits.Montant;
+                Credits.ActionNum = Vehicules.Num;
+                await _db.Credits.AddAsync(Credits);
+                return true;
+            }
+            catch
+            {
+                check_virement_exception = true;
+                await OnGet(Vehicules.MarqueId);
+                return false;
+            }
+        }
+
+
+
+
+
+
+        private async Task RemoveChequeModelStateEntriesAsync()
+        {
+            foreach (var key in ModelState.Keys.ToList())
+                if (key.StartsWith("Cheques."))
+                    ModelState.Remove(key);
+        }
+        private async Task RemoveVirementModelStateEntriesAsync()
+        {
+            foreach (var key in ModelState.Keys.ToList())
+                if (key.StartsWith("Virements."))
+                    ModelState.Remove(key);
+        }
+        private async Task RemoveCreditModelStateEntriesAsync()
+        {
+            foreach (var key in ModelState.Keys.ToList())
+                if (key.StartsWith("Credits."))
+                    ModelState.Remove(key);
         }
     }
 }

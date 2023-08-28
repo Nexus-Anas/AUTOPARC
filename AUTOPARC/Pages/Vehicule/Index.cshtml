@@ -1,97 +1,184 @@
 ﻿@page
 @model AUTOPARC.Pages.Vehicule.IndexModel
 @{
-    ViewData["Title"] = "Liste des Vehicule";
+    ViewData["Title"] = "Liste des Véhicule";
 }
 
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Vehicules</h3>
+        <h3 class="mb-0 text-center text-light">Véhicules</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Listes des Vehicules</h4>
+            <h4 class="card-title title-2">Listes des Véhicules</h4>
+            
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="displayOption" id="displayVehicule" checked>
+                <label class="form-check-label" for="displayVehicule">Listes des Véhicules</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="displayOption" id="displayEtat">
+                <label class="form-check-label" for="displayEtat">Situation des Véhicules</label>
+            </div>
+
             <hr>
 
             <div class="mt-5">
-                <div class="table-responsive">
-                    <table id="zero_config" class="table table-borderless table-striped table-earning">
-                        <thead>
-                            <tr>
-                                <th class="text text-white bg-primary" style="font-size:18px">Num</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Matricule</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Categorie</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Marque</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Modele</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Montant Payé</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Reste</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Etat</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Vehicules)
-                            {
-                                string etat_vehicule = item.EtatVehicule.Etat;
-                                var cheque = Model.ChequesList.Where(chq => chq.ActionNum == item.Num).SingleOrDefault();
-                                var virement = Model.VirementsList.Where(v => v.ActionNum == item.Num).SingleOrDefault();
-                                var credit = Model.CreditsList.Where(c => c.ActionNum == item.Num).SingleOrDefault();
-
-
-                                string badge_vehicule = etat_vehicule == "Actif" ? "badge-success" : etat_vehicule == "En panne" ? "badge-danger" : etat_vehicule == "Vendu" ? "badge-secondary" : "badge-warning";
-                                string badge_cheque = cheque != null ? (cheque.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
-                                string badge_virement = virement != null ? (virement.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
-                                string badge_credit = credit != null ? (credit.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
-
-                                decimal reste = item.PrixAchat - item.MontantPayeeTotal;
-
-                                <tr style="font-size:18px">
-                                    <td class="text-dark">@item.Num</td>
-                                    <td class="text-dark">@item.Matricule</td>
-                                    <td class="text-dark">@item.Categorie.Nom</td>
-                                    <td class="text-dark">@item.Marque.Nom</td>
-                                    <td class="text-dark">@item.Modele.Nom</td>
-                                    <td class="text-dark h6">
-                                        @if (item.MontantPayeeEspece != 0)
-                                        {
-                                            <p>Espece: @item.MontantPayeeEspece <span class="badge badge-success">payé</span></p>
-                                        }
-                                        @if (item.MontantPayeeCheque != 0)
-                                        {
-                                            <p>Cheque: @item.MontantPayeeCheque <span class="badge @badge_cheque">@cheque.Etat</span></p>
-                                        }
-                                        @if (item.MontantPayeeVirement != 0)
-                                        {
-                                            <p>Virement: @item.MontantPayeeVirement <span class="badge @badge_virement">@virement.Etat</span></p>
-                                        }
-                                        @if (item.MontantPayeeCredit != 0)
-                                        {
-                                            <p>Credit: @item.MontantPayeeCredit <span class="badge @badge_credit">@credit.Etat</span></p>
-                                        }
-                                    </td>
-                                    <td class="text-dark">
-                                        @if (reste == 0)
-                                        {
-                                            <span class="badge badge-success">0</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge badge-danger">@reste</span>
-                                        }
-                                    </td>
-                                    <td class="text-center" style="font-size:20px"><span class="badge @badge_vehicule">@item.EtatVehicule.Etat</span></td>
-                                    <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
-                                    </td>
+                <!-- Listes des Vehicules-->
+                <div id="VehiculeContainer">
+                    <div class="table-responsive">
+                        <table id="zero_config" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>
+                                    <th class="text-white bg-primary"><span class="h5">Num</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Matricule</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Categorie</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Marque</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Modele</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Carburant</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Fournisseur</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Etat</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Action</span></th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Vehicules)
+                                {
+                                    string etat_vehicule = item.EtatVehicule.Etat;
+                                    string badge_vehicule = etat_vehicule == "Actif" ? "badge-success" : etat_vehicule == "En panne" ? "badge-danger" : etat_vehicule == "Vendu" ? "badge-secondary" : "badge-warning";
+                                    <tr class="h5">
+                                        <td class="text-dark">@item.Num</td>
+                                        <td class="text-dark">@item.Matricule</td>
+                                        <td class="text-dark">@item.Categorie.Nom</td>
+                                        <td class="text-dark">@item.Marque.Nom</td>
+                                        <td class="text-dark">@item.Modele.Nom</td>
+                                        <td class="text-dark">@item.Carburant.Type</td>
+                                        <td class="text-dark">@item.Frs.Nom</td>
+                                        <td class="text-center"><span class="badge @badge_vehicule">@item.EtatVehicule.Etat</span></td>
+                                        <td class="text-dark">
+                                            <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Listes des Etats-->
+                <div id="EtatContainer" style="display: none;">
+                    <div class="table-responsive">
+                        <table id="zero_config" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>
+                                    <th class="text-white bg-primary"><span class="h5">Num</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Matricule</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Prix d'Achat</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Montant Payé</span></th>
+                                    <th class="text-white bg-primary"><span class="h5">Etat Paiement</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Reste</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Etat Véhicule</span></th>
+                                    <th class="text-white bg-primary text-center"><span class="h5">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Vehicules)
+                                {
+                                    string etat_vehicule = item.EtatVehicule.Etat;
+                                    var cheque = Model.ChequesList.Where(chq => chq.ActionNum == item.Num).SingleOrDefault();
+                                    var virement = Model.VirementsList.Where(v => v.ActionNum == item.Num).SingleOrDefault();
+                                    var credit = Model.CreditsList.Where(c => c.ActionNum == item.Num).SingleOrDefault();
+
+
+                                    string badge_vehicule = etat_vehicule == "Actif" ? "badge-success" : etat_vehicule == "En panne" ? "badge-danger" : etat_vehicule == "Vendu" ? "badge-secondary" : "badge-warning";
+                                    string badge_cheque = cheque != null ? (cheque.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                    string badge_virement = virement != null ? (virement.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                    string badge_credit = credit != null ? (credit.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+
+                                    decimal reste = item.PrixAchat - item.MontantPayeeTotal;
+                                    string resteFont = reste == 0 ? "text-success" : "text-danger";
+
+                                    <tr class="h5">
+                                        <td class="text-dark">@item.Num</td>
+                                        <td class="text-dark">@item.Matricule</td>
+                                        <td class="text-dark">@item.PrixAchat</td>
+                                        <td class="text-dark">
+                                            @if (item.MontantPayeeEspece != 0)
+                                            {
+                                                <p>Espece: @item.MontantPayeeEspece</p>
+                                            }
+                                            @if (item.MontantPayeeCheque != 0)
+                                            {
+                                                <p>Cheque: @item.MontantPayeeCheque</p>
+                                            }
+                                            @if (item.MontantPayeeVirement != 0)
+                                            {
+                                                <p>Virement: @item.MontantPayeeVirement</p>
+                                            }
+                                            @if (item.MontantPayeeCredit != 0)
+                                            {
+                                                <p>Credit: @item.MontantPayeeCredit</p>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.MontantPayeeEspece != 0)
+                                            {
+                                                <p><span class="badge badge-success">payé</span></p>
+                                            }
+                                            @if (item.MontantPayeeCheque != 0)
+                                            {
+                                                <p><span class="badge @badge_cheque">@cheque.Etat</span></p>
+                                            }
+                                            @if (item.MontantPayeeVirement != 0)
+                                            {
+                                                <p><span class="badge @badge_virement">@virement.Etat</span></p>
+                                            }
+                                            @if (item.MontantPayeeCredit != 0)
+                                            {
+                                                <p><span class="badge @badge_credit">@credit.Etat</span></p>
+                                            }
+                                        </td>
+                                        <td class="text-center"><span class="text @resteFont">@reste</span></td>
+                                        <td class="text-center"><span class="badge @badge_vehicule">@etat_vehicule</span></td>
+                                        <td class="text-dark">
+                                            <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-primary btn-block"><i class="bi bi-info-circle-fill"></i> info</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
+
+
+@section Scripts {
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const vehiculeContainer = document.getElementById("VehiculeContainer");
+            const etatContainer = document.getElementById("EtatContainer");
+
+            const displayVehiculeRadio = document.getElementById("displayVehicule");
+            const displayEtatRadio = document.getElementById("displayEtat");
+
+            displayVehiculeRadio.addEventListener("change", function () {
+                vehiculeContainer.style.display = "block";
+                etatContainer.style.display = "none";
+            });
+
+            displayEtatRadio.addEventListener("change", function () {
+                vehiculeContainer.style.display = "none";
+                etatContainer.style.display = "block";
+            });
+        });
+    </script>
+
+}

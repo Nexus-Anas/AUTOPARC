@@ -13,7 +13,6 @@ namespace AUTOPARC.Models
         {
             Cessions = new HashSet<Cessions>();
             Docs = new HashSet<Docs>();
-            ImageVehicule = new HashSet<ImageVehicule>();
             Maintenances = new HashSet<Maintenances>();
             RechargeCarburants = new HashSet<RechargeCarburants>();
         }
@@ -60,7 +59,6 @@ namespace AUTOPARC.Models
         public virtual AffectationChauffeurVehicules AffectationChauffeurVehicules { get; set; }
         public virtual ICollection<Cessions> Cessions { get; set; }
         public virtual ICollection<Docs> Docs { get; set; }
-        public virtual ICollection<ImageVehicule> ImageVehicule { get; set; }
         public virtual ICollection<Maintenances> Maintenances { get; set; }
         public virtual ICollection<RechargeCarburants> RechargeCarburants { get; set; }
     }
