@@ -17,7 +17,7 @@ namespace AUTOPARC.Pages.Parametrage.Credit
 
 
 
-
+        [BindProperty]
         public Credits Credits { get; set; }
         public Banques Banques { get; set; }
         public Vehicules Vehicules { get; set; }
@@ -50,6 +50,26 @@ namespace AUTOPARC.Pages.Parametrage.Credit
             CreditsDetailsList = await _db.CreditsDetails.Where(c => c.CreditId == Credits.Id).ToListAsync();
             ModePaimentsList = await _db.ModePaiments.ToListAsync();
             BanquesList = await _db.Banques.ToListAsync();
+        }
+
+
+
+
+
+
+        public async Task<IActionResult> OnPostUpdate()
+        {
+            if (ModelState.IsValid)
+            {
+                await OnGet(Credits.Id);
+                return Page();
+            }
+
+            var credit = await _db.Credits.Where(c => c.Id == Credits.Id).SingleOrDefaultAsync();
+            credit.Note = Credits.Note;
+            credit.Etat = Credits.Etat;
+            await _db.SaveChangesAsync();
+            return RedirectToPage("/Parametrage/Credit/Index");
         }
 
 

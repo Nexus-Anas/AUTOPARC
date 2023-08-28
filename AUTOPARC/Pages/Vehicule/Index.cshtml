@@ -93,7 +93,7 @@
 
 
                                     string badge_vehicule = etat_vehicule == "Actif" ? "badge-success" : etat_vehicule == "En panne" ? "badge-danger" : etat_vehicule == "Vendu" ? "badge-secondary" : "badge-warning";
-                                    string badge_cheque = cheque != null ? (cheque.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
+                                    string badge_cheque = cheque != null ? (cheque.Etat == "payé" ? "badge-success" : cheque.Etat == "impayé" ? "badge-danger" : "badge-warning") : string.Empty;
                                     string badge_virement = virement != null ? (virement.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
                                     string badge_credit = credit != null ? (credit.Etat == "payé" ? "badge-success" : "badge-danger") : string.Empty;
 

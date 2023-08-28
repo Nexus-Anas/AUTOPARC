@@ -15,16 +15,16 @@
             <div class="card-body wizard-content">
                 <h4 class="card-title title-2">Modifier Véhicule</h4>
                 <hr>
-                @*@if (Model.check_Prix_MontantPayee)
-                {
-                    <div class="alert alert-danger" role="alert">
-                        <p>le montant payé doit être inférieure ou égale au prix d'achat de la véhicule.</p>
-                    </div>
-                }
-                @if (Model.check_exception)
+                @if (Model.check_vehicule_exception)
                 {
                     <div class="alert alert-danger" role="alert">
                         <p>Veuillez vérifier vos entrées.</p>
+                    </div>
+                }
+                @if (Model.check_vehicule_matricule)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>Cet matricule existe déjà.</p>
                     </div>
                 }
                 @if (Model.check_cheque_exception)
@@ -39,24 +39,54 @@
                         <p>Le numéro du cheque est déjà utilisé.</p>
                     </div>
                 }
-                @if (Model.check_montant)
-                {
-                    <div class="alert alert-danger" role="alert">
-                        <p>le prix d'achat de la véhicule doit être égale au montant payé de la véhicule plus le montant du cheque.</p>
-                    </div>
-                }
-                @if (Model.check_date)
+                @if (Model.check_cheque_date)
                 {
                     <div class="alert alert-danger" role="alert">
                         <p>la date de reglement du cheque doit être inférieure ou égale a la date d'echeance.</p>
                     </div>
                 }
-                @if (Model.check_etat_paye)
+                @if (Model.check_virement_exception)
                 {
                     <div class="alert alert-danger" role="alert">
-                        <p>vous ne pouvez pas modifier ou supprimer cette véhicule car le chèque est encaissé.</p>
+                        <p>Veuillez vérifier vos entrées dans la phase du virement.</p>
                     </div>
-                }*@
+                }
+                @if (Model.check_credit_exception)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>Veuillez vérifier vos entrées dans la phase du credit.</p>
+                    </div>
+                }
+                @if (Model.check_credit_montantParMoi)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>le montant payé par moi doit être inférieure ou égale au Montant du crédit.</p>
+                    </div>
+                }
+                @if (Model.check_credit_date)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>la date de début du crédit doit être inférieure ou égale a la date de fin.</p>
+                    </div>
+                }
+                @if (Model.check_cheque_payee)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>vous ne pouvez pas supprimer ce véhicule car le chèque est payé!</p>
+                    </div>
+                }
+                @if (Model.check_virement_payee)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>vous ne pouvez pas supprimer ce véhicule car le virement est payé!</p>
+                    </div>
+                }
+                @if (Model.check_credit_payee)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>vous ne pouvez pas supprimer ce véhicule car il est en crédit!</p>
+                    </div>
+                }
                 <div id="carouselExampleIndicators" class="carousel slide mb-5" data-ride="carousel">
                     <ol class="carousel-indicators">
                         @for (int i = 0; i < Model.ImagesList.Count; i++)
@@ -88,6 +118,9 @@
                 <input asp-for="Vehicules.Id" type="hidden" />
                 <input asp-for="Vehicules.Num" type="hidden" />
                 <input asp-for="Vehicules.MarqueId" type="hidden" />
+                <input asp-for="Vehicules.MontantPayeeVirement" type="hidden" />
+                <input asp-for="Vehicules.MontantPayeeCheque" type="hidden" />
+                <input asp-for="Vehicules.MontantPayeeCredit" type="hidden" />
 
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
@@ -250,9 +283,13 @@
                                 <h3 class="mb-0 text-center text-light">Form de Cheque</h3>
                             </div>
                             <div class="p-1">
+                                @{
+                                    string cheque_etat = Model.Cheques != null ? Model.Cheques.Etat : "En porte feuille";
+                                }
                                 <input asp-for="Cheques.Id" type="hidden" />
                                 <input asp-for="Cheques.Action" value="Vehicule" type="hidden" />
-                                <input asp-for="Cheques.Etat" type="hidden" />
+                                <input asp-for="Cheques.Etat" value="@cheque_etat" type="hidden" />
+                                <input id="Cheques_Etat" asp-for="Cheques.Etat" type="hidden" />
                                 <input asp-for="Cheques.ActionNum" value="@Model.Vehicules.Num" type="hidden" />
 
                                 <div class="form-row">
@@ -314,10 +351,12 @@
                                 <h3 class="mb-0 text-center text-light">Form de Virement</h3>
                             </div>
                             <div class="p-1">
-
+                                @{
+                                    string virement_etat = Model.Virements != null ? Model.Virements.Etat : "payé";
+                                }
                                 <input asp-for="Virements.Id" type="hidden" />
                                 <input asp-for="Virements.Action" value="Vehicule" type="hidden" />
-                                <input asp-for="Virements.Etat" value="impayé" type="hidden" />
+                                <input asp-for="Virements.Etat" value="@virement_etat" type="hidden" />
                                 <input asp-for="Virements.ActionNum" value="@Model.Vehicules.Num" type="hidden" />
 
                                 <div class="form-row">
@@ -383,7 +422,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.Montant" class="control-label">Montant <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.Montant" type="text" class="form-control">
+                                        <input asp-for="Credits.Montant" type="text" class="form-control" readonly>
                                     </div>
                                 </div>
 
@@ -397,27 +436,21 @@
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
-                                        <select asp-for="Credits.BanqueId" class="form-control form-select">
-                                            <option value="">Choisir...</option>
-                                            @foreach (var item in Model.BanquesList)
-                                            {
-                                                <option value="@item.Id">@item.Nom</option>
-                                            }
-                                        </select>
+                                        <input asp-for="Credits.Banque.Nom" type="text" class="form-control" readonly>
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.DateDebut" class="control-label">Date Debut <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                        <input asp-for="Credits.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" readonly>
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.DateFin" class="control-label">Date Fin <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.DateFin" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                                        <input asp-for="Credits.DateFin" type="date" class="form-control" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -439,78 +472,72 @@
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label asp-for="Vehicules.Note">Note</label>
-                        <textarea asp-for="Vehicules.Note" class="form-control" rows="4" aria-required="true"></textarea>
+                        <textarea asp-for="Vehicules.Note" class="form-control" rows="4"></textarea>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.Moteur" class="text text-dark">Moteur</label>
                         <input asp-for="Vehicules.Moteur" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.Architecture" class="text text-dark">Architecture</label>
                         <input asp-for="Vehicules.Architecture" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.BoiteAVitesse" class="text text-dark">Boîte a Vitesse</label>
                         <input asp-for="Vehicules.BoiteAVitesse" type="text" class="form-control">
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.Longueur" class="text text-dark">Longueur</label>
                         <input asp-for="Vehicules.Longueur" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.Largeur" class="text text-dark">Largeur</label>
                         <input asp-for="Vehicules.Largeur" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.Hauteur" class="text text-dark">Hauteur</label>
                         <input asp-for="Vehicules.Hauteur" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.VolumeCoffre" class="text text-dark">Volume Coffre</label>
                         <input asp-for="Vehicules.VolumeCoffre" type="text" class="form-control">
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.PuissanceFiscale" class="text text-dark">Puissance Fiscale</label>
                         <input asp-for="Vehicules.PuissanceFiscale" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.PuissanceMax" class="text text-dark">Puissance Max</label>
                         <input asp-for="Vehicules.PuissanceMax" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.VitesseMax" class="text text-dark">Vitesse Max</label>
                         <input asp-for="Vehicules.VitesseMax" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.ConsomationMixte" class="text text-dark">Conso. Mixte</label>
                         <input asp-for="Vehicules.ConsomationMixte" type="text" class="form-control">
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.NbrPlace" class="text text-dark">Nombre de Place</label>
                         <input asp-for="Vehicules.NbrPlace" type="text" class="form-control">
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Vehicules.Poids" class="text text-dark">Poids</label>
                         <input asp-for="Vehicules.Poids" type="text" class="form-control">
                     </div>
@@ -611,6 +638,51 @@
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function () {
+            // Get references to the input fields
+            var montantInput = $("#Credits_Montant");
+            var mensualiteInput = $("#Credits_Mensualite");
+            var dateFinInput = $("#Credits_DateFin");
+
+            // Attach an input event handler to both Montant and Mensualite inputs
+            montantInput.on("input", updateDateFin);
+            mensualiteInput.on("input", updateDateFin);
+
+            function updateDateFin() {
+                var montant = parseFloat(montantInput.val());
+                var mensualite = parseFloat(mensualiteInput.val());
+
+                if (!isNaN(montant) && !isNaN(mensualite) && mensualite !== 0) {
+                    var months = Math.ceil(montant / mensualite);
+                    var currentDate = new Date();
+                    currentDate.setMonth(currentDate.getMonth() + months);
+                    var formattedDate = currentDate.toISOString().slice(0, 10); // Format as "yyyy-MM-dd"
+                    dateFinInput.val(formattedDate);
+                }
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var etat_cheque = $("#Cheques_Etat").val(); // Get the value of Cheques.Etat
+            var etat_virement = $("#Virements_Etat").val(); // Get the value of Virement.Etat
+            var inputs_cheque = $("#chequeForm input, #chequeForm select");
+            var inputs_virement = $("#virementForm input, #virementForm select");
+
+            if (etat_cheque === "payé") {
+                inputs_cheque.prop("readonly", true); // Disable all inputs and selects
+            }
+
+            if (etat_virement === "payé") {
+                inputs_virement.prop("readonly", true); // Disable all inputs and selects
+            }
+        });
+    </script>
+
+
     <style>
         .carousel-img {
             height: 50vh;

@@ -218,7 +218,7 @@
                             </div>
                             <div class="p-1">
                                 <input asp-for="Cheques.Action" value="Vehicule" type="hidden" />
-                                <input asp-for="Cheques.Etat" value="impayé" type="hidden" />
+                                <input asp-for="Cheques.Etat" value="En porte feuille" type="hidden" />
 
                                 <div class="form-row">
                                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
@@ -280,7 +280,7 @@
                             </div>
                             <div class="p-1">
                                 <input asp-for="Virements.Action" value="Vehicule" type="hidden" />
-                                <input asp-for="Virements.Etat" value="impayé" type="hidden" />
+                                <input asp-for="Virements.Etat" value="payé" type="hidden" />
 
                                 <div class="form-row">
                                     <div class="form-group col-12">
@@ -522,6 +522,34 @@
                     $('#' + selectedValue.toLowerCase() + 'Form').collapse('hide');
                 }
             });
+        });
+    </script>
+
+
+
+    <script>
+        $(document).ready(function () {
+            // Get references to the input fields
+            var montantInput = $("#Credits_Montant");
+            var mensualiteInput = $("#Credits_Mensualite");
+            var dateFinInput = $("#Credits_DateFin");
+
+            // Attach an input event handler to both Montant and Mensualite inputs
+            montantInput.on("input", updateDateFin);
+            mensualiteInput.on("input", updateDateFin);
+
+            function updateDateFin() {
+                var montant = parseFloat(montantInput.val());
+                var mensualite = parseFloat(mensualiteInput.val());
+
+                if (!isNaN(montant) && !isNaN(mensualite) && mensualite !== 0) {
+                    var months = Math.ceil(montant / mensualite);
+                    var currentDate = new Date();
+                    currentDate.setMonth(currentDate.getMonth() + months);
+                    var formattedDate = currentDate.toISOString().slice(0, 10); // Format as "yyyy-MM-dd"
+                    dateFinInput.val(formattedDate);
+                }
+            }
         });
     </script>
 }

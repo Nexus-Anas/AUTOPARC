@@ -333,7 +333,7 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.Etat)
                     .IsRequired()
-                    .HasColumnType("varchar(10)")
+                    .HasColumnType("varchar(25)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 

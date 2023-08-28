@@ -17,15 +17,17 @@
 
             <div class="mt-5">
                 <div class="table-responsive">
-                    <table class="table table-earning table-borderless table-hover">
+                    <table class="table table-borderless table-striped table-earning">
                         <thead>
                             <tr>
-                                <th class="text text-white bg-info">Numero</th>
-                                <th class="text text-white bg-info">Banque</th>
-                                <th class="text text-white bg-info">Date Echeance</th>
-                                <th class="text text-white bg-info">Montant (DH)</th>
-                                <th class="text text-white text-center bg-info">État</th>
-                                <th class="text text-white text-center bg-info">Consulter</th>
+                                <th class="text-white bg-info"><span class="h5">Numero</span></th>
+                                <th class="text-white bg-info"><span class="h5">Banque</span></th>
+                                <th class="text-white bg-info"><span class="h5">Date Reglement</span></th>
+                                <th class="text-white bg-info"><span class="h5">Date Echeance</span></th>
+                                <th class="text-white bg-info"><span class="h5">Date Valeur</span></th>
+                                <th class="text-white bg-info"><span class="h5">Montant</span></th>
+                                <th class="text-white bg-info"><span class="h5">État</span></th>
+                                <th class="text-white bg-info"><span class="h5">Consulter</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,12 +35,14 @@
                             {
                                 string badge = item.Etat == "payé" ? "badge badge-success" : "badge badge-danger";
 
-                                <tr>
-                                    <td class="text-dark h6">@item.Numero</td>
-                                    <td class="text-dark h6">@item.Banque.Nom</td>
-                                    <td class="text-dark h6">@item.DateEcheance.ToShortDateString()</td>
-                                    <td class="text-dark h6">@item.Montant</td>
-                                    <td class="text-center h5"><span class="@badge">@item.Etat</span></td>
+                                <tr class="h5">
+                                    <td class="text-dark">@item.Numero</td>
+                                    <td class="text-dark">@item.Banque.Nom</td>
+                                    <td class="text-dark">@item.DateReglement.ToShortDateString()</td>
+                                    <td class="text-dark">@item.DateEcheance.ToShortDateString()</td>
+                                    <td class="text-dark">@item.DateValeur?.ToShortDateString()</td>
+                                    <td class="text-dark">@item.Montant</td>
+                                    <td class="text-center"><span class="@badge">@item.Etat</span></td>
                                     <td class="text-dark">
                                         <a asp-route-id="@item.Id" asp-page="/Parametrage/Cheque/Details" class="text text-white btn btn-info btn-block font-weight-bold"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>

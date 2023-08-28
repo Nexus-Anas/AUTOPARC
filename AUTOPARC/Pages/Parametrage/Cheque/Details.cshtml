@@ -12,77 +12,87 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Payé Cheque</h4>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title title-2">Details Cheque</h4>
+                <input id="toggleSwitch" type="checkbox" data-toggle="toggle" data-onstyle="outline-success" data-offstyle="outline-danger">
+            </div>
+
             <hr>
+
             <form method="post">
                 <input asp-for="Cheques.Id" type="hidden"/>
                 <input asp-for="Cheques.Etat" type="hidden"/>
 
                 <div class="form-row">
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.Action" class="control-label">Action</label>
                         <input asp-for="Cheques.Action" type="text" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.ActionNum" class="control-label">Numéro d'Action</label>
                         <input asp-for="Cheques.ActionNum" type="text" class="form-control" readonly>
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque</label>
                         <input asp-for="Cheques.Numero" type="text" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <label asp-for="Cheques.Banque.Nom" class="control-label">Banque</label>
-                        <input asp-for="Cheques.Banque.Nom" type="text" class="form-control" readonly>
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.BanqueId" class="control-label">Type Maintenance <span class="text-danger">*</span></label>
+                        <span asp-validation-for="Cheques.BanqueId" class="text text-danger"></span>
+                        <select asp-for="Cheques.BanqueId" class="form-control form-select required">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.BanquesList)
+                            {
+                                <option value="@item.Id">@item.Nom</option>
+                            }
+                        </select>
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.Montant" class="control-label">Montant (DH)</label>
                         <input asp-for="Cheques.Montant" type="text" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de:</label>
                         <input asp-for="Cheques.AuNomDe" type="text" class="form-control" readonly>
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement</label>
                         <input asp-for="Cheques.DateReglement" type="date" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance</label>
                         <input asp-for="Cheques.DateEcheance" type="date" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
                         <input asp-for="Cheques.DateValeur" type="date" class="form-control" readonly>
                     </div>
                 </div>
-
-                @if (Model.Cheques.Etat == "payé")
-                {
-                    <div class="form-group row text-white">
-                        <div class="col-12 mt-3">
-                            <a asp-page="/Parametrage/Cheque/Index" class="btn btn-secondary btn-lg btn-block">Retour</a>
-                        </div>
-                    </div>
-                    return;
-                }
+                
                 <div class="form-group row text-white">
-                    <div class="col-12 mt-3">
-                        <a data-toggle="modal" data-target="#payeemodal" class="btn btn-primary btn-lg btn-block">Payé</a>
+                    @if (Model.Cheques.Etat == "En porte feuille")
+                    {
+                        <div class="col-12 mt-3">
+                            <a data-toggle="modal" data-target="#payeemodal" class="btn btn-primary btn-lg btn-block">Payé</a>
+                        </div>
+                    }
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-success btn-lg btn-block">Modifier</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
+                        <a asp-page="/Parametrage/Cheque/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
                     </div>
                 </div>
 
@@ -104,7 +114,64 @@
                     </div>
                 </div>
 
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment supprimer ce cheque?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Delete" class="btn btn-danger btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Modal -->
+                <div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment modifier ce cheque?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </form>
         </div>
     </div>
 </div>
+
+
+
+@section Scripts {
+    
+    <partial name="_ValidationScriptsPartial" />
+
+
+    <script type="text/javascript">
+        // Event listener for toggle switch change
+        $('#toggleSwitch').on('change', function () {
+            var isToggleOn = $(this).prop('checked');
+
+            // Get all input elements and select elements within the form
+            var allInputs = $('form input, form select');
+
+            // Enable or disable all inputs and selects based on the toggle state
+            allInputs.prop('readonly', !isToggleOn);
+            allInputs.prop('disabled', !isToggleOn);
+        });
+    </script>
+
+}

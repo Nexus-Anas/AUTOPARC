@@ -80,13 +80,6 @@ namespace AUTOPARC.Pages.Vehicule
             bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
             bool isCredit = Request.Form.TryGetValue("Credit", out var creditValue);
 
-            if (!isEspece && !isCheque && !isVirement && !isCredit)
-            {
-                check_all_checkboxes = true;
-                await OnGet(Vehicules.MarqueId);
-                return Page();
-            }
-
             if (!isCheque)
                 await RemoveChequeModelStateEntriesAsync();
 
@@ -249,6 +242,7 @@ namespace AUTOPARC.Pages.Vehicule
             try
             {
                 Vehicules.MontantPayeeVirement = Virements.Montant;
+                Vehicules.MontantPayeeTotal += Virements.Montant;
                 Virements.ActionNum = Vehicules.Num;
                 await _db.Virements.AddAsync(Virements);
                 return true;
