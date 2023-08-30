@@ -34,6 +34,7 @@ namespace AUTOPARC.Models
         public virtual DbSet<ModePaiments> ModePaiments { get; set; }
         public virtual DbSet<Modeles> Modeles { get; set; }
         public virtual DbSet<RechargeCarburants> RechargeCarburants { get; set; }
+        public virtual DbSet<Suividepense> Suividepense { get; set; }
         public virtual DbSet<TypeCarburants> TypeCarburants { get; set; }
         public virtual DbSet<TypeDocs> TypeDocs { get; set; }
         public virtual DbSet<TypeFournisseurs> TypeFournisseurs { get; set; }
@@ -46,7 +47,7 @@ namespace AUTOPARC.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;port=3306;database=auto_parc_db;uid=root", x => x.ServerVersion("10.4.27-mariadb"));
+                optionsBuilder.UseMySql("server=localhost;database=auto_parc_db;user=root", x => x.ServerVersion("8.0.31-mysql"));
             }
         }
 
@@ -64,13 +65,9 @@ namespace AUTOPARC.Models
                     .HasName("Vehicule_ID")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.ChauffeurId)
-                    .HasColumnName("Chauffeur_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ChauffeurId).HasColumnName("Chauffeur_ID");
 
                 entity.Property(e => e.DateDebutAffectation).HasColumnType("datetime");
 
@@ -81,9 +78,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VehiculeId).HasColumnName("Vehicule_ID");
 
                 entity.HasOne(d => d.Chauffeur)
                     .WithOne(p => p.AffectationChauffeurVehicules)
@@ -106,9 +101,7 @@ namespace AUTOPARC.Models
                     .HasName("Nom")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Nom)
                     .IsRequired()
@@ -125,9 +118,7 @@ namespace AUTOPARC.Models
                     .HasName("Nom")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Nom)
                     .IsRequired()
@@ -146,9 +137,7 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.VehiculeId)
                     .HasName("FK_CESSIONS_VEHICULE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.ContactAcheteur)
                     .HasColumnName("Contact_Acheteur")
@@ -160,9 +149,7 @@ namespace AUTOPARC.Models
                     .HasColumnName("Date_Cession")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.ModePaimentId)
-                    .HasColumnName("Mode_Paiment_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ModePaimentId).HasColumnName("Mode_Paiment_ID");
 
                 entity.Property(e => e.MontantRecu)
                     .HasColumnName("Montant_Recu")
@@ -178,9 +165,7 @@ namespace AUTOPARC.Models
                     .HasColumnName("Prix_Cession")
                     .HasColumnType("decimal(9,2)");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VehiculeId).HasColumnName("Vehicule_ID");
 
                 entity.HasOne(d => d.ModePaiment)
                     .WithMany(p => p.Cessions)
@@ -211,9 +196,7 @@ namespace AUTOPARC.Models
                     .HasName("Portable")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Adresse)
                     .HasColumnType("varchar(250)")
@@ -236,6 +219,7 @@ namespace AUTOPARC.Models
                     .HasColumnType("date");
 
                 entity.Property(e => e.Disponibilite)
+                    .IsRequired()
                     .HasColumnType("varchar(3)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
@@ -252,6 +236,7 @@ namespace AUTOPARC.Models
                     .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.NumeroPermisConduire)
+                    .IsRequired()
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
@@ -285,9 +270,7 @@ namespace AUTOPARC.Models
                     .HasName("Numero")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.AuNomDe)
                     .IsRequired()
@@ -296,9 +279,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.BanqueId)
-                    .HasColumnName("Banque_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.BanqueId).HasColumnName("Banque_ID");
 
                 entity.Property(e => e.DateEcheance)
                     .HasColumnName("Date_Echeance")
@@ -344,9 +325,7 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.VehiculeId)
                     .HasName("FK_DOC_VEHICULE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.DateDebut)
                     .HasColumnName("Date_Debut")
@@ -356,9 +335,7 @@ namespace AUTOPARC.Models
                     .HasColumnName("Date_Fin")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.FrsId)
-                    .HasColumnName("Frs_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.FrsId).HasColumnName("Frs_ID");
 
                 entity.Property(e => e.Numero)
                     .IsRequired()
@@ -366,9 +343,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.TypeId)
-                    .HasColumnName("Type_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.TypeId).HasColumnName("Type_ID");
 
                 entity.Property(e => e.UrlDoc)
                     .HasColumnName("Url_Doc")
@@ -376,9 +351,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VehiculeId).HasColumnName("Vehicule_ID");
 
                 entity.HasOne(d => d.Frs)
                     .WithMany(p => p.Docs)
@@ -407,9 +380,7 @@ namespace AUTOPARC.Models
                     .HasName("Etat")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Etat)
                     .IsRequired()
@@ -440,9 +411,7 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.VilleId)
                     .HasName("FK_FRS_VILLE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Adresse)
                     .HasColumnType("varchar(250)")
@@ -470,13 +439,9 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.TypeFrsId)
-                    .HasColumnName("TypeFrs_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.TypeFrsId).HasColumnName("TypeFrs_ID");
 
-                entity.Property(e => e.VilleId)
-                    .HasColumnName("Ville_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VilleId).HasColumnName("Ville_ID");
 
                 entity.HasOne(d => d.TypeFrs)
                     .WithMany(p => p.Fournisseurs)
@@ -487,6 +452,7 @@ namespace AUTOPARC.Models
                 entity.HasOne(d => d.Ville)
                     .WithMany(p => p.Fournisseurs)
                     .HasForeignKey(d => d.VilleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FRS_VILLE");
             });
 
@@ -497,9 +463,7 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.VehiculeId)
                     .HasName("FK_IMAGE_VEHICULE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Url)
                     .IsRequired()
@@ -508,9 +472,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VehiculeId).HasColumnName("Vehicule_ID");
 
                 entity.HasOne(d => d.Vehicule)
                     .WithMany(p => p.ImageVehicule)
@@ -532,13 +494,9 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.VehiculeId)
                     .HasName("FK_MAINTENANCE_VEHICULE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.ChauffeurId)
-                    .HasColumnName("Chauffeur_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ChauffeurId).HasColumnName("Chauffeur_ID");
 
                 entity.Property(e => e.Cout).HasColumnType("decimal(9,2)");
 
@@ -551,17 +509,13 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.MethodePayementId)
-                    .HasColumnName("Methode_Payement_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.MethodePayementId).HasColumnName("Methode_Payement_ID");
 
                 entity.Property(e => e.MontantPayee)
                     .HasColumnName("Montant_Payee")
                     .HasColumnType("decimal(9,2)");
 
-                entity.Property(e => e.TypeId)
-                    .HasColumnName("Type_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.TypeId).HasColumnName("Type_ID");
 
                 entity.Property(e => e.UrlDoc)
                     .HasColumnName("Url_Doc")
@@ -569,9 +523,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VehiculeId).HasColumnName("Vehicule_ID");
 
                 entity.HasOne(d => d.Chauffeur)
                     .WithMany(p => p.Maintenances)
@@ -600,9 +552,7 @@ namespace AUTOPARC.Models
                     .HasName("Nom")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Nom)
                     .IsRequired()
@@ -619,9 +569,7 @@ namespace AUTOPARC.Models
                     .HasName("Mode")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Mode)
                     .IsRequired()
@@ -641,13 +589,9 @@ namespace AUTOPARC.Models
                     .HasName("Nom")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.MarqueId)
-                    .HasColumnName("Marque_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.MarqueId).HasColumnName("Marque_ID");
 
                 entity.Property(e => e.Nom)
                     .IsRequired()
@@ -675,23 +619,15 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.VehiculeId)
                     .HasName("FK_RECHARGE_VEHICULE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.ChauffeurId)
-                    .HasColumnName("Chauffeur_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ChauffeurId).HasColumnName("Chauffeur_ID");
 
                 entity.Property(e => e.DateRecharge)
                     .HasColumnName("Date_Recharge")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Km).HasColumnType("int(11)");
-
-                entity.Property(e => e.ModePaimentId)
-                    .HasColumnName("Mode_Paiment_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ModePaimentId).HasColumnName("Mode_Paiment_ID");
 
                 entity.Property(e => e.Note)
                     .HasColumnType("varchar(250)")
@@ -702,9 +638,7 @@ namespace AUTOPARC.Models
 
                 entity.Property(e => e.Quantite).HasColumnType("decimal(6,2)");
 
-                entity.Property(e => e.VehiculeId)
-                    .HasColumnName("Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.VehiculeId).HasColumnName("Vehicule_ID");
 
                 entity.HasOne(d => d.Chauffeur)
                     .WithMany(p => p.RechargeCarburants)
@@ -725,6 +659,38 @@ namespace AUTOPARC.Models
                     .HasConstraintName("FK_RECHARGE_VEHICULE");
             });
 
+            modelBuilder.Entity<Suividepense>(entity =>
+            {
+                entity.ToTable("suividepense");
+
+                entity.HasIndex(e => e.ModePayementId)
+                    .HasName("FK_SUIVIDEPENSE_MODEPAIEMENT");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DateDepense)
+                    .HasColumnName("Date_Depense")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ModePayementId).HasColumnName("Mode_Payement_ID");
+
+                entity.Property(e => e.Montant).HasColumnType("decimal(9,2)");
+
+                entity.Property(e => e.NumDepense).HasColumnName("Num_Depense");
+
+                entity.Property(e => e.Objet)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.HasOne(d => d.ModePayement)
+                    .WithMany(p => p.Suividepense)
+                    .HasForeignKey(d => d.ModePayementId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SUIVIDEPENSE_MODEPAIEMENT");
+            });
+
             modelBuilder.Entity<TypeCarburants>(entity =>
             {
                 entity.ToTable("type_carburants");
@@ -733,9 +699,7 @@ namespace AUTOPARC.Models
                     .HasName("Type")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Type)
                     .IsRequired()
@@ -752,9 +716,7 @@ namespace AUTOPARC.Models
                     .HasName("Type")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Type)
                     .IsRequired()
@@ -771,9 +733,7 @@ namespace AUTOPARC.Models
                     .HasName("Type")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Type)
                     .IsRequired()
@@ -790,9 +750,7 @@ namespace AUTOPARC.Models
                     .HasName("Type")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Type)
                     .IsRequired()
@@ -830,9 +788,7 @@ namespace AUTOPARC.Models
                 entity.HasIndex(e => e.ModeleId)
                     .HasName("FK_VEHICULE_MODELE");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Architecture)
                     .HasColumnType("varchar(25)")
@@ -845,13 +801,9 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.CarburantId)
-                    .HasColumnName("Carburant_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.CarburantId).HasColumnName("Carburant_ID");
 
-                entity.Property(e => e.CategorieId)
-                    .HasColumnName("Categorie_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.CategorieId).HasColumnName("Categorie_ID");
 
                 entity.Property(e => e.ConsomationMixte)
                     .HasColumnName("Consomation_Mixte")
@@ -867,20 +819,14 @@ namespace AUTOPARC.Models
                     .HasColumnName("Date_Mis_En_Circulation")
                     .HasColumnType("date");
 
-                entity.Property(e => e.EtatVehiculeId)
-                    .HasColumnName("Etat_Vehicule_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.EtatVehiculeId).HasColumnName("Etat_Vehicule_ID");
 
-                entity.Property(e => e.FrsId)
-                    .HasColumnName("Frs_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.FrsId).HasColumnName("Frs_ID");
 
                 entity.Property(e => e.Hauteur)
                     .HasColumnType("varchar(25)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
-
-                entity.Property(e => e.Kilometrage).HasColumnType("int(11)");
 
                 entity.Property(e => e.Largeur)
                     .HasColumnType("varchar(25)")
@@ -892,9 +838,7 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.MarqueId)
-                    .HasColumnName("Marque_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.MarqueId).HasColumnName("Marque_ID");
 
                 entity.Property(e => e.Matricule)
                     .IsRequired()
@@ -902,13 +846,9 @@ namespace AUTOPARC.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
-                entity.Property(e => e.ModePayementId)
-                    .HasColumnName("Mode_Payement_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ModePayementId).HasColumnName("Mode_Payement_ID");
 
-                entity.Property(e => e.ModeleId)
-                    .HasColumnName("Modele_ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.ModeleId).HasColumnName("Modele_ID");
 
                 entity.Property(e => e.MontantPayee)
                     .HasColumnName("Montant_Payee")
@@ -1014,9 +954,7 @@ namespace AUTOPARC.Models
                     .HasName("Nom")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Nom)
                     .IsRequired()

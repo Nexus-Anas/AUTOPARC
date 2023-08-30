@@ -19,12 +19,12 @@ namespace AUTOPARC.Models
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public string Cin { get; set; }
-        public DateTime? DateNaissance { get; set; }
+        public DateTime DateNaissance { get; set; }
         public string Portable { get; set; }
         public string Email { get; set; }
         public string Adresse { get; set; }
         public string NumeroPermisConduire { get; set; }
-        public DateTime? DateExpirationPermis { get; set; }
+        public DateTime DateExpirationPermis { get; set; }
         public string Disponibilite { get; set; }
         public DateTime DateEmbauche { get; set; }
         public string Remarques { get; set; }

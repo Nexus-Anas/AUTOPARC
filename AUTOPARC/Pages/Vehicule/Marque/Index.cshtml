@@ -12,12 +12,12 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Liste des Marques de Véhicules</h4>
+            <h4 class="card-title title-2">Liste des Marques par Véhicule</h4>
             <hr>
             @if (Model.checkTypeID)
             {
                 <div class="alert alert-danger" role="alert">
-                    <p>Suppression non autorise! Marque deja utilise.</p>
+                    <p>Suppression non autorisée! Marque déjà utilisée.</p>
                 </div>
             }
             <div class="mt-4">
@@ -27,7 +27,7 @@
                         <div class="input-group">
                             <button class="btn btn-primary" style="font-size:18px" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus"></i>&nbsp; Nouvelle marque</button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
 
                 <form method="post">

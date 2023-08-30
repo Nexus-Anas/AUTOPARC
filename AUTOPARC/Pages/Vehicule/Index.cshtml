@@ -4,7 +4,6 @@
     ViewData["Title"] = "Liste des Vehicule";
 }
 
-
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
         <h3 class="mb-0 text-center text-light">Vehicules</h3>
@@ -12,44 +11,53 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Listes des Vehicules</h4>
-            <hr>
-
-            <div class="mt-5">
-                <div class="table-responsive">
-                    <table id="zero_config" class="table table-borderless table-striped table-earning">
-                        <thead>
-                            <tr>
-                                <th class="text text-white bg-primary" style="font-size:18px">Matricule</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Categorie</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Marque</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Modele</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Etat</th>
-                                <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Vehicules)
-                            {
-                                string state = item.EtatVehicule.Etat;
-                                string badge = state == "Active" ? "badge-success" : state == "En panne" ? "badge-danger" : state == "Vendu" ? "badge-secondary" : "badge-warning";
-
-                                <tr style="font-size:18px">
-                                    <td class="text-dark">@item.Matricule</td>
-                                    <td class="text-dark">@item.Categorie.Nom</td>
-                                    <td class="text-dark">@item.Marque.Nom</td>
-                                    <td class="text-dark">@item.Modele.Nom</td>
-                                    <td class="text-center" style="font-size:20px"><span class="badge @badge">@item.EtatVehicule.Etat</span></td>
-                                    <td class="text-dark">
-                                        <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-success btn-block"><i class="bi bi-info-circle-fill"></i> Consulter</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h4 class="card-title title-2">Listes des Véhicules</h4>
+                    </div>
+                    <div class="input-group col-sm-3">
+                        <a asp-page="/Vehicule/Create" class="btn btn-primary" style="font-size:18px"><i class="fas fa-plus"></i>&nbsp; Ajouter véhicule</a>
+                    </div>
                 </div>
             </div>
+                <hr>
+                <div class="mt-5">
+                    <div class="table-responsive">
+                        <table id="zero_config" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>
+                                    <th class="text text-white bg-primary" style="font-size:18px">Matricule</th>
+                                    <th class="text text-white bg-primary" style="font-size:18px">Categorie</th>
+                                    <th class="text text-white bg-primary" style="font-size:18px">Marque</th>
+                                    <th class="text text-white bg-primary" style="font-size:18px">Modele</th>
+                                    <th class="text text-white text-center bg-primary" style="font-size:18px">Etat</th>
+                                    <th class="text text-white text-center bg-primary" style="font-size:18px">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Vehicules)
+                                {
+                                    string state = item.EtatVehicule.Etat;
+                                    string badge = state == "Active" ? "badge-success" : state == "En panne" ? "badge-danger" : state == "Vendu" ? "badge-secondary" : "badge-warning";
 
+                                    <tr style="font-size:18px">
+                                        <td class="text-dark">@item.Matricule</td>
+                                        <td class="text-dark">@item.Categorie.Nom</td>
+                                        <td class="text-dark">@item.Marque.Nom</td>
+                                        <td class="text-dark">@item.Modele.Nom</td>
+                                        <td class="text-center" style="font-size:20px"><span class="badge @badge">@item.EtatVehicule.Etat</span></td>
+                                        <td class="text-dark">
+                                            <a asp-route-id="@item.Id" asp-page="/Vehicule/Details" class="text text-white btn btn-success btn-block"><i class="bi bi-info-circle-fill"></i> Consulter</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            
         </div>
-    </div>
+</div>
 </div>
