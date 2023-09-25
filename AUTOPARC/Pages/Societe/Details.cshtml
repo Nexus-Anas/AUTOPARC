@@ -1,0 +1,210 @@
+﻿@page
+@model AUTOPARC.Pages.Societe.DetailsModel
+@{
+    ViewData["Title"] = "Modifier Société";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Sociétés</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Modifier Société</h4>
+
+            <hr>
+            @if (Model.check_exception)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
+            @if (Model.societe_existe)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>vous ne pouvez pas supprimer cette société car certains objets sont enregistrés à son nom.</p>
+                </div>
+            }
+            @if (Model.only_one_company)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>vous ne pouvez pas supprimer cette société car c'est la seule qui existe.</p>
+                </div>
+            }
+            <form method="post" enctype="multipart/form-data">
+
+                <input asp-for="Societes.Id" type="hidden" />
+                <input asp-for="Societes.SocieteParDefault" type="hidden" />
+                @{
+                    var path = "/images/logo/";
+                    var logoSociete = Model?.Societes?.LogoUrl;
+                    var logoNotFound = "no_picture_found.jpg";
+                    var logo = logoSociete != null ? path + logoSociete : path + logoNotFound;
+                    var alt = logoSociete != null ? logoSociete.Substring(logoSociete.LastIndexOf("_") + 1) : "no logo found";
+                }
+                
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <div class="square-logo-container mt-2 mb-4">
+                            <img src="@logo" alt="@alt" class="img-fluid" style="max-width:100px; height:auto" />
+                            @if (alt.Equals("no logo found"))
+                            {
+                                <p class="text text-secondary">@alt</p>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.company_count > 1 && !Model.Societes.SocieteParDefault)
+                    {
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex justify-content-end">
+                                <div class="custom-control custom-checkbox mr-2">
+                                    <label class="h5 form-check-label mr-2" for="SocieteParDefault"><span class="badge badge-secondary">Societe Par default</span></label>
+                                    <input class="form-check-input payment-checkbox ml-1" type="checkbox" id="SocieteParDefault" name="SocieteParDefault" value="SocieteParDefault">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.RaisonSocial">Raison Social <span class="text-danger">*</span></label>
+                        <input asp-for="Societes.RaisonSocial" type="text" class="form-control" required>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.VilleId">Ville</label>
+                        <span asp-validation-for="Societes.VilleId" class="text-danger"></span>
+                        <select asp-for="Societes.VilleId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.VillesList)
+                            {
+                                <option value="@item.Id">@item.Nom</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                @{
+
+                    var logoColor = logoSociete != null ? "text text-primary" : string.Empty;
+                    var logoName = logoSociete != null ? (":" + logoSociete) : string.Empty;
+                }
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label class="control-label">Logo <span class="@logoColor">@logoName</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputFileAdd">URL</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputFile" name="files" accept=".jpg, .jpeg, .png, .ico, .svg, .webp">
+                                <label class="custom-file-label" for="inputFile">Choisir un Logo...</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.Bas1">Bas 1</label>
+                        <span asp-validation-for="Societes.Bas1" class="text-danger"></span>
+                        <textarea asp-for="Societes.Bas1" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.Bas2">Bas 2</label>
+                        <span asp-validation-for="Societes.Bas2" class="text-danger"></span>
+                        <textarea asp-for="Societes.Bas2" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Societes.Adresse">Adresse</label>
+                        <span asp-validation-for="Societes.Adresse" class="text-danger"></span>
+                        <textarea asp-for="Societes.Adresse" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row text-white">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-success btn-lg btn-block">Modifier</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
+                        <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
+                        <a asp-page="/Societe/Index" class="btn btn-lg btn-secondary btn-block">Retour</a>
+                    </div>
+                </div>
+
+
+
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment supprimer cette société?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Delete" class="btn btn-danger btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Modal -->
+                <div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Voulez-vous vraiment modifier cette société?</h4>
+                                <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button asp-page-handler="Update" class="btn btn-success btn-lg">Confirmer</button>
+                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+@section DocUploadJS {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inputFile').on("change", function () {
+                var inputFiles = $(this).prop("files");
+                var logoinput = $('#inputFile');
+
+                // Update input label
+                if (inputFiles.length === 0) {
+                    logoinput.next(".custom-file-label").html("Choisir un fichier...");
+                } else {
+                    logoinput.next(".custom-file-label").html(inputFiles[0].name);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,59 @@
+﻿@page
+@model AUTOPARC.Pages.Maintenance.TelechargerDocModel
+@{
+    ViewData["Title"] = "Liste des Fichiers des Maintenances";
+}
+
+
+<div class="container-fluid">
+
+    <div class="container-fluid bg-dark py-1 mb-2">
+        <h3 class="text-center text-light">Maintenances</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title title-2 text-dark">Liste des Fichiers des Maintenances</h4>
+            <hr>
+
+            <form method="post" enctype="multipart/form-data">
+
+                <!-- Table -->
+                <div class="d-flex justify-content-center">
+                    <div class="table-responsive col-xl-5 col-lg-8 col-md-6 col-sm-8 col-12">
+                        <table id="zero_config" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>
+                                    <th class="text-white bg-primary">
+                                        <span class="h5">Document</span>
+                                    </th>
+                                    <th class="text-white bg-primary d-flex justify-content-end">
+                                        <span class="h5">Télecharger</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.UrlDocsList)
+                                {
+                                    var fileName = item.Url.Substring(item.Url.LastIndexOf("_") + 1);
+                                    <tr>
+                                        <td class="text-dark text-capitalize"><span class="h5">@fileName</span></td>
+                                        <td class="text-dark d-flex justify-content-end">
+                                            <button asp-route-id="@item.Id" asp-page-handler="Download" class="text text-white btn btn-secondary mr-1" data-toggle="tooltip" data-placement="left" title="Télecharger"><i class="bi bi-cloud-arrow-down-fill"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

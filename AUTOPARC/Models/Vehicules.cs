@@ -35,6 +35,7 @@ namespace AUTOPARC.Models
         public DateTime DateAchat { get; set; }
         public DateTime? DateMisEnCirculation { get; set; }
         public int Kilometrage { get; set; }
+        public int SocieteId { get; set; }
         public string Note { get; set; }
         public string Moteur { get; set; }
         public string Architecture { get; set; }
@@ -56,6 +57,7 @@ namespace AUTOPARC.Models
         public virtual Fournisseurs Frs { get; set; }
         public virtual Marques Marque { get; set; }
         public virtual Modeles Modele { get; set; }
+        public virtual Societes Societe { get; set; }
         public virtual AffectationChauffeurVehicules AffectationChauffeurVehicules { get; set; }
         public virtual ICollection<Cessions> Cessions { get; set; }
         public virtual ICollection<Docs> Docs { get; set; }

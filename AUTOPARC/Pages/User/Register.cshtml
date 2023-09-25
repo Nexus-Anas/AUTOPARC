@@ -1,0 +1,66 @@
+﻿@page
+@model AUTOPARC.Pages.User.RegisterModel
+@{
+    Layout = "/Pages/Shared/_LayoutUser.cshtml";
+}
+
+
+<div class="page-wrapper">
+    <div class="page-content--bge5">
+        <div class="container">
+            <div class="login-wrap">
+                <div class="login-content">
+                    <div class="login-logo">
+                        <a href="#">
+                            <img src="~/images/icon/logo.png" alt="CoolAdmin">
+                        </a>
+                    </div>
+                    <div class="login-form">
+                        <form method="post">
+                            <div class="form-group">
+                                <label asp-for="Users.Username">Nom d'utilisateur <span class="text-danger">*</span></label>
+                                <span asp-validation-for="Users.Username" class="text-danger"></span>
+                                <input asp-for="Users.Username" type="text" class="required form-control" placeholder="Entrer votre Nom d'utilisateur">
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Users.Email">Adresse e-mail <span class="text-danger">*</span></label>
+                                <span asp-validation-for="Users.Email" class="text-danger"></span>
+                                <input asp-for="Users.Email" type="email" class="required form-control" placeholder="Entrer votre Adresse e-mail">
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Users.Password">Mot de passe <span class="text-danger">*</span></label>
+                                <span asp-validation-for="Users.Password" class="text-danger"></span>
+                                <input asp-for="Users.Password" type="password" class="required form-control" placeholder="Entrer votre Mot de passe">
+                            </div>
+
+                            <div class="form-row mb-2">
+                                <div class="col-12 custom-control custom-checkbox">
+                                    <label class="form-check-label mr-2" for="isAdmin">Admin</label>
+                                    <input class="form-check-input payment-checkbox ml-1" type="checkbox" id="isAdmin" name="isAdmin" value="isAdmin">
+                                </div>
+                            </div>
+
+                            <button asp-page-handler="Register" class="btn btn-success btn-block">Registre</button>
+                        </form>
+                        <div class="register-link">
+                            <p>
+                                Vous avez déjà un compte ?
+                                <a asp-page="/User/Login" class="text-primary h6">Se connecter</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

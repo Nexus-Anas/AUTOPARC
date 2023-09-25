@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AUTOPARC.Pages.Document
@@ -20,6 +21,8 @@ namespace AUTOPARC.Pages.Document
         public List<Marques> MarquesList { get; set; }
         public List<Modeles> ModelesList { get; set; }
 
+        public bool error;
+
 
 
 
@@ -35,9 +38,10 @@ namespace AUTOPARC.Pages.Document
 
         public async Task<IActionResult> OnPostSelect()
         {
-            if (Vehicules.Id == 0)
+            var affectation = await _db.AffectationChauffeurVehicules.Where(a => a.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            if (affectation == null)
             {
-                ModelState.AddModelError("Vehicules.Matricule", "Veuillez sélectionner une vehicule.");
+                error = true;
                 await OnGet();
                 return Page();
             }

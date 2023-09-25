@@ -12,6 +12,7 @@ namespace AUTOPARC.Models
         public Fournisseurs()
         {
             Docs = new HashSet<Docs>();
+            Maintenances = new HashSet<Maintenances>();
             Vehicules = new HashSet<Vehicules>();
         }
 
@@ -27,6 +28,7 @@ namespace AUTOPARC.Models
         public virtual TypeFournisseurs TypeFrs { get; set; }
         public virtual Villes Ville { get; set; }
         public virtual ICollection<Docs> Docs { get; set; }
+        public virtual ICollection<Maintenances> Maintenances { get; set; }
         public virtual ICollection<Vehicules> Vehicules { get; set; }
     }
 }

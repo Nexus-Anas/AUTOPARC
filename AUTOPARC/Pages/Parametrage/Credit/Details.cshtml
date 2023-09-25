@@ -374,10 +374,16 @@
                 // Get the Note and Etat input elements
                 var noteInput = $('#Credits_Note');
                 var etatInput = $('#Credits_Etat');
+                var mensualiteInput = $('#Credits_Mensualite');
+                var etat = $("#Credits_Etat").val();
 
                 // Enable or disable Note and Etat based on the toggle state
                 noteInput.prop('readonly', !isToggleOn);
                 etatInput.prop('readonly', !isToggleOn);
+                if (etat !== 'payé') {
+                    mensualiteInput.prop('readonly', !isToggleOn);
+                }
+                console.log(etat);
             });
 
             // Event listener for payment checkboxes
@@ -391,6 +397,33 @@
                     $('#' + selectedValue.toLowerCase() + 'Form').collapse('hide');
                 }
             });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            // Get references to the input fields
+            var montantInput = $("#Credits_Montant");
+            var mensualiteInput = $("#Credits_Mensualite");
+            var dateFinInput = $("#Credits_DateFin");
+
+            // Attach an input event handler to both Montant and Mensualite inputs
+            montantInput.on("input", updateDateFin);
+            mensualiteInput.on("input", updateDateFin);
+
+            function updateDateFin() {
+                var montant = parseFloat(montantInput.val());
+                var mensualite = parseFloat(mensualiteInput.val());
+
+                if (!isNaN(montant) && !isNaN(mensualite) && mensualite !== 0) {
+                    var months = Math.ceil(montant / mensualite);
+                    var currentDate = new Date();
+                    currentDate.setMonth(currentDate.getMonth() + months);
+                    var formattedDate = currentDate.toISOString().slice(0, 10); // Format as "yyyy-MM-dd"
+                    dateFinInput.val(formattedDate);
+                }
+            }
         });
     </script>
 }

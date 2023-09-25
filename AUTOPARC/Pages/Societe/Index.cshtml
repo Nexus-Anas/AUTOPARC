@@ -1,0 +1,64 @@
+﻿@page
+@model AUTOPARC.Pages.Societe.IndexModel
+@{
+    ViewData["Title"] = "Liste des Société";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Sociétés</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <div class="row">
+                <div class="col-xl-8 col-12">
+                    <h4 class="card-title title-2">Listes des Sociétés</h4>
+                </div>
+                <div class="col-xl-4 col-12 text-right">
+                    <a href="#" class="btn btn-info mt-1"><i class="bi bi-printer-fill"></i> Imprimé</a>
+                </div>
+            </div>
+
+            <hr>
+            <div class="mt-3">
+
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="/Societe/Create" class="btn btn-primary btn-lg mb-2"><i class="fas fa-plus"></i>&nbsp; Nouvelle Société</a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-borderless table-striped table-earning">
+                        <thead>
+                            <tr>
+                                <th class="text-white bg-primary"><span class="h5">Raison Social</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Ville</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Par Default</span></th>
+                                <th class="text-white bg-primary text-center"><span class="h5">Consulter</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.SocietesList)
+                            {
+                                var societe_par_default = item.SocieteParDefault ? "Oui" : "Non";
+                                var badge = item.SocieteParDefault ? "badge-success" : "badge-danger";
+                                <tr class="h5">
+                                    <td class="text-dark">@item.RaisonSocial</td>
+                                    <td class="text-dark">@item?.Ville?.Nom</td>
+                                    <td class="text-dark"><p><span class="badge @badge">@societe_par_default</span></p></td>
+                                    <td class="text-dark text-center">
+                                        <a asp-route-id="@item.Id" asp-page="/Societe/Details" class="text text-white btn btn-primary"><i class="bi bi-info-circle-fill"></i> info</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

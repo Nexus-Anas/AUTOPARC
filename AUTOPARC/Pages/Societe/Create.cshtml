@@ -1,0 +1,129 @@
+﻿@page
+@model AUTOPARC.Pages.Societe.CreateModel
+@{
+    ViewData["Title"] = "Ajouter Société";
+}
+
+
+<div class="container-fluid">
+    <div class="container-fluid py-1 mb-2 bg-dark">
+        <h3 class="mb-0 text-center text-light">Sociétés</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body wizard-content">
+            <h4 class="card-title title-2">Ajouter Société</h4>
+
+            <hr>
+            @if (Model.check_exception)
+            {
+                <div asp-validation-summary=All class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
+            <form method="post" enctype="multipart/form-data">
+
+                @if (Model.societe_exist)
+                {
+                    <div class="form-row mb-2">
+
+                        <div class="col-12 custom-control custom-checkbox">
+                            <label class="form-check-label mr-2" for="SocieteParDefault">Societe Par default</label>
+                            <input class="form-check-input payment-checkbox ml-1" type="checkbox" id="SocieteParDefault" name="SocieteParDefault" value="SocieteParDefault">
+                        </div>
+
+                    </div>
+                }
+
+                <div class="form-row">
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.RaisonSocial">Raison Social <span class="text-danger">*</span></label>
+                        <input asp-for="Societes.RaisonSocial" type="text" class="form-control" required>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.VilleId">Ville</label>
+                        <span asp-validation-for="Societes.VilleId" class="text-danger"></span>
+                        <select asp-for="Societes.VilleId" class="form-control form-select">
+                            <option value="">Choisir...</option>
+                            @foreach (var item in Model.VillesList)
+                            {
+                                <option value="@item.Id">@item.Nom</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label class="control-label">Logo</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputFileAdd">URL</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputFile" name="files" accept=".jpg, .jpeg, .png, .ico, .svg, .webp">
+                                <label class="custom-file-label" for="inputFile">Choisir un Logo...</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.Bas1">Bas 1</label>
+                        <span asp-validation-for="Societes.Bas1" class="text-danger"></span>
+                        <textarea asp-for="Societes.Bas1" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Societes.Bas2">Bas 2</label>
+                        <span asp-validation-for="Societes.Bas2" class="text-danger"></span>
+                        <textarea asp-for="Societes.Bas2" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Societes.Adresse">Adresse</label>
+                        <span asp-validation-for="Societes.Adresse" class="text-danger"></span>
+                        <textarea asp-for="Societes.Adresse" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <button asp-page-handler="Create" class="btn btn-lg btn-primary btn-block mt-4 w-50 mx-auto">Ajouter</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+@section DocUploadJS {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inputFile').on("change", function () {
+                var inputFiles = $(this).prop("files");
+                var logoinput = $('#inputFile');
+
+                // Update input label
+                if (inputFiles.length === 0) {
+                    logoinput.next(".custom-file-label").html("Choisir un fichier...");
+                } else {
+                    logoinput.next(".custom-file-label").html(inputFiles[0].name);
+                }
+            });
+        });
+    </script>
+}

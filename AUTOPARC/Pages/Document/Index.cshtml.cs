@@ -24,6 +24,8 @@ namespace AUTOPARC.Pages.Document
         public List<Virements> VirementsList { get; set; }
         public List<Credits> CreditsList { get; set; }
 
+        private const string _action = "Document";
+
 
 
 
@@ -33,9 +35,9 @@ namespace AUTOPARC.Pages.Document
             TypeDocs = await _db.TypeDocs.ToListAsync();
             Fournisseurs = await _db.Fournisseurs.ToListAsync();
             ModePaiments = await _db.ModePaiments.ToListAsync();
-            ChequesList = await _db.Cheques.Where(chq => chq.Action == "Document").ToListAsync();
-            VirementsList = await _db.Virements.Where(v => v.Action == "Document").ToListAsync();
-            CreditsList = await _db.Credits.Where(v => v.Action == "Document").ToListAsync();
+            ChequesList = await _db.Cheques.Where(chq => chq.Action == _action).ToListAsync();
+            VirementsList = await _db.Virements.Where(v => v.Action == _action).ToListAsync();
+            CreditsList = await _db.Credits.Where(v => v.Action == _action).ToListAsync();
         }
     }
 }

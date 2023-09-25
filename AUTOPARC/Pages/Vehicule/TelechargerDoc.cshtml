@@ -1,0 +1,66 @@
+﻿@page
+@model AUTOPARC.Pages.Vehicule.TelechargerDocModel
+@{
+    ViewData["Title"] = "Liste des Images des Véhicules";
+}
+
+
+<div class="container-fluid">
+
+    <div class="container-fluid bg-dark py-1 mb-2">
+        <h3 class="text-center text-light">Véhicules</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-xl-8 col-12">
+                        <h4 class="card-title title-2 text-dark">Liste des Images des Véhicules</h4>
+                    </div>
+                    <div class="col-xl-4 col-12 text-right">
+                        <a class="btn btn-primary btn-lg text-white"><i class="fas fa-plus"></i>&nbsp; Nouvelle Image</a>
+                    </div>
+                </div>
+                <hr>
+
+
+                <!-- Table -->
+                <div class="d-flex justify-content-center">
+                    <div class="table-responsive col-xl-5 col-lg-8 col-md-6 col-sm-8 col-12">
+                        <table id="zero_config" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>
+                                    <th class="text-white bg-primary">
+                                        <span class="h5">Image</span>
+                                    </th>
+                                    <th class="text-white bg-primary d-flex justify-content-end">
+                                        <span class="h5">Télecharger</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.ImageVehiculesList)
+                                {
+                                    var fileName = item.Url.Substring(item.Url.LastIndexOf("_") + 1);
+                                    <tr>
+                                        <td class="text-dark text-capitalize"><span class="h5">@fileName</span></td>
+                                        <td class="text-dark d-flex justify-content-end">
+                                            <button asp-route-id="@item.Id" asp-page-handler="Download" class="text text-white btn btn-secondary mr-1" data-toggle="tooltip" data-placement="left" title="Télecharger"><i class="bi bi-cloud-arrow-down-fill"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

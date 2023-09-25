@@ -19,9 +19,14 @@ namespace AUTOPARC.Pages.SuiviDepense
 
         [BindProperty]
         public Suividepense Suividepense { get; set; }
-        public List<ModePaiments> ModePaiments { get; set; }
+
+        [BindProperty]
+        public Societes Societes { get; set; }
+
+        public List<Societes> SocietesList { get; set; }
 
         public bool check_exception;
+        public int SocieteCount;
 
 
 
@@ -29,7 +34,8 @@ namespace AUTOPARC.Pages.SuiviDepense
         public async Task OnGet(int id)
         {
             Suividepense = await _db.Suividepense.FindAsync(id);
-            ModePaiments = await _db.ModePaiments.ToListAsync();
+            SocietesList = await _db.Societes.ToListAsync();
+            SocieteCount = await _db.Societes.CountAsync();
         }
 
 
@@ -46,7 +52,7 @@ namespace AUTOPARC.Pages.SuiviDepense
                 depense.DateDepense = Suividepense.DateDepense;
                 depense.Objet = Suividepense.Objet;
                 depense.Montant = Suividepense.Montant;
-                depense.ModePayementId = Suividepense.ModePayementId;
+                depense.SocieteId = Suividepense.SocieteId;
 
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/SuiviDepense/Index");

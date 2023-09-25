@@ -18,31 +18,59 @@
             </div>
 
             <hr>
+            @if (Model.check_cheque_exception)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>Veuillez vérifier vos entrées.</p>
+                </div>
+            }
+            @if (Model.check_cheque_date)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>la date de reglement du cheque doit être inférieure ou égale a la date d'echeance.</p>
+                </div>
+            }
+            @if (Model.check_cheque_payee)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>vous ne pouvez pas mettre à jour ce chèque car il est payant!</p>
+                </div>
+            }
+            @if (Model.check_numero_cheque_existance)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>Ce numéro du cheque est déjà utilisé.</p>
+                </div>
+            }
 
             <form method="post">
                 <input asp-for="Cheques.Id" type="hidden"/>
-                <input asp-for="Cheques.Etat" type="hidden"/>
 
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.Action" class="control-label">Action</label>
-                        <input asp-for="Cheques.Action" type="text" class="form-control" readonly>
+                        <input asp-for="Cheques.Action" type="text" class="form-control exclude-from-toggle" readonly>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.ActionNum" class="control-label">Numéro d'Action</label>
-                        <input asp-for="Cheques.ActionNum" type="text" class="form-control" readonly>
+                        <input asp-for="Cheques.ActionNum" type="text" class="form-control exclude-from-toggle" readonly>
+                    </div>
+
+                    <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Cheques.Etat" class="control-label">Etat</label>
+                        <input asp-for="Cheques.Etat" type="text" class="form-control" disabled>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque</label>
-                        <input asp-for="Cheques.Numero" type="text" class="form-control" readonly>
+                        <input asp-for="Cheques.Numero" type="text" class="form-control" disabled>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <label asp-for="Cheques.BanqueId" class="control-label">Type Maintenance <span class="text-danger">*</span></label>
+                        <label asp-for="Cheques.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
                         <span asp-validation-for="Cheques.BanqueId" class="text text-danger"></span>
-                        <select asp-for="Cheques.BanqueId" class="form-control form-select required">
+                        <select asp-for="Cheques.BanqueId" class="form-control form-select required" disabled>
                             <option value="">Choisir...</option>
                             @foreach (var item in Model.BanquesList)
                             {
@@ -53,27 +81,27 @@
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.Montant" class="control-label">Montant (DH)</label>
-                        <input asp-for="Cheques.Montant" type="text" class="form-control" readonly>
+                        <input asp-for="Cheques.Montant" type="text" class="form-control" disabled>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de:</label>
-                        <input asp-for="Cheques.AuNomDe" type="text" class="form-control" readonly>
+                        <input asp-for="Cheques.AuNomDe" type="text" class="form-control" disabled>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement</label>
-                        <input asp-for="Cheques.DateReglement" type="date" class="form-control" readonly>
+                        <input asp-for="Cheques.DateReglement" type="date" class="form-control" disabled>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance</label>
-                        <input asp-for="Cheques.DateEcheance" type="date" class="form-control" readonly>
+                        <input asp-for="Cheques.DateEcheance" type="date" class="form-control" disabled>
                     </div>
 
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
-                        <input asp-for="Cheques.DateValeur" type="date" class="form-control" readonly>
+                        <input asp-for="Cheques.DateValeur" type="date" class="form-control" disabled>
                     </div>
                 </div>
                 
@@ -81,7 +109,7 @@
                     @if (Model.Cheques.Etat == "En porte feuille")
                     {
                         <div class="col-12 mt-3">
-                            <a data-toggle="modal" data-target="#payeemodal" class="btn btn-primary btn-lg btn-block">Payé</a>
+                            <a data-toggle="modal" data-target="#payeemodal" class="btn btn-primary btn-lg btn-block" disabled>Payé</a>
                         </div>
                     }
 
@@ -140,7 +168,7 @@
                                 <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
                             </div>
                             <div class="modal-footer">
-                                <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                <button asp-page-handler="Update" class="btn btn-success btn-lg">Confirmer</button>
                                 <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
                             </div>
                         </div>
@@ -161,17 +189,16 @@
 
 
     <script type="text/javascript">
-        // Event listener for toggle switch change
-        $('#toggleSwitch').on('change', function () {
-            var isToggleOn = $(this).prop('checked');
+    // Event listener for toggle switch change
+    $('#toggleSwitch').on('change', function () {
+        var isToggleOn = $(this).prop('checked');
 
-            // Get all input elements and select elements within the form
-            var allInputs = $('form input, form select');
+        // Get all input elements and select elements within the form that do not have the "exclude-from-toggle" class
+        var toggleableInputs = $('form input:not(.exclude-from-toggle), form select:not(.exclude-from-toggle)');
 
-            // Enable or disable all inputs and selects based on the toggle state
-            allInputs.prop('readonly', !isToggleOn);
-            allInputs.prop('disabled', !isToggleOn);
-        });
-    </script>
+        // Enable or disable the toggleable inputs based on the toggle state
+        toggleableInputs.prop('disabled', !isToggleOn);
+    });
+</script>
 
 }

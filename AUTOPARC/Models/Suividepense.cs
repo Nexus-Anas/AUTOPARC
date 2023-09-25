@@ -14,8 +14,8 @@ namespace AUTOPARC.Models
         public DateTime DateDepense { get; set; }
         public string Objet { get; set; }
         public decimal Montant { get; set; }
-        public int ModePayementId { get; set; }
+        public int SocieteId { get; set; }
 
-        public virtual ModePaiments ModePayement { get; set; }
+        public virtual Societes Societe { get; set; }
     }
 }

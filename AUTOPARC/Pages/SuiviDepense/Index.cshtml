@@ -7,38 +7,52 @@
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Suivi Depenses</h3>
+        <h3 class="mb-0 text-center text-light">Suivi Dépenses</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Listes des Depenses</h4>
-            <hr>
+            <div class="row">
+                <div class="col-xl-8 col-12">
+                    <h4 class="card-title title-2">Listes des Dépenses</h4>
+                </div>
+                <div class="col-xl-4 col-12 text-right">
+                    <a href="#" class="btn btn-info mt-1"><i class="bi bi-printer-fill"></i> Imprimé</a>
+                </div>
+            </div>
 
-            <div class="mt-5">
+            <hr>
+            <div class="mt-3">
+
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="/SuiviDepense/Create" class="btn btn-primary btn-lg mb-2"><i class="fas fa-plus"></i>&nbsp; Nouvelle Dépense</a>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-borderless table-striped table-earning">
+                    <table class="table table-borderless table-striped table-earning">
                         <thead>
                             <tr>
-                                <th class="text text-white bg-primary" style="font-size:18px">Num Depense</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Date</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Objet</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Montant</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Mode Paiment</th>
-                                <th class="text text-center text-white bg-primary" style="font-size:18px">Action</th>
+                                <th class="text-white bg-primary"><span class="h5">Num Dépense</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Date</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Objet</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Montant</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Société</span></th>
+                                <th class="text-white bg-primary text-center"><span class="h5">Consulter</span></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Suividepenses)
+                            @foreach (var item in Model.SuividepensesList)
                             {
-                                <tr style="font-size:16px">
+                                <tr class="h5">
                                     <td class="text-dark">@item.NumDepense</td>
                                     <td class="text-dark">@item.DateDepense.ToShortDateString()</td>
                                     <td class="text-dark">@item.Objet</td>
                                     <td class="text-dark">@item.Montant</td>
-                                    <td class="text-dark">@item.ModePayement.Mode</td>
-                                    <td class="text-dark d-flex justify-content-center">
-                                        <a asp-route-id="@item.Id" asp-page="/SuiviDepense/Details" class="text text-white btn btn-primary"><i class="bi bi-info-circle-fill"></i> Consulter</a>
+                                    <td class="text-dark">@item.Societe.RaisonSocial</td>
+                                    <td class="text-dark text-right">
+                                        <a asp-route-id="@item.Id" asp-page="/SuiviDepense/Details" class="text text-white btn btn-primary"><i class="bi bi-info-circle-fill"></i> info</a>
                                     </td>
                                 </tr>
                             }

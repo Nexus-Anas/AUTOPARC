@@ -15,12 +15,12 @@
         <div class="card-body">
             <h4 class="card-title title-2 text-dark">Ajouter Maintenance</h4>
             <hr>
-            @if (!ModelState.IsValid)
+            @if (Model.error)
             {
                 <div class="d-flex justify-content-center">
                     <div class="col-12">
                         <div class="alert alert-danger" role="alert">
-                            <p><span asp-validation-for="Vehicules.Matricule"></span></p>
+                            <p>veuillez sélectionner un véhicule attribué à un chauffeur</p>
                         </div>
                     </div>
                 </div>

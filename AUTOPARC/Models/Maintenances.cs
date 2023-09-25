@@ -15,16 +15,18 @@ namespace AUTOPARC.Models
         public int OperationId { get; set; }
         public int VehiculeId { get; set; }
         public int ChauffeurId { get; set; }
+        public int FrsId { get; set; }
         public DateTime DateMaintenance { get; set; }
         public decimal Cout { get; set; }
         public decimal MontantPayeeEspece { get; set; }
         public decimal MontantPayeeCheque { get; set; }
         public decimal MontantPayeeVirement { get; set; }
+        public decimal MontantPayeeCredit { get; set; }
         public decimal MontantPayeeTotal { get; set; }
         public string Description { get; set; }
-        public string UrlDoc { get; set; }
 
         public virtual Chauffeurs Chauffeur { get; set; }
+        public virtual Fournisseurs Frs { get; set; }
         public virtual OperationMaintenances Operation { get; set; }
         public virtual TypeMaintenances Type { get; set; }
         public virtual Vehicules Vehicule { get; set; }

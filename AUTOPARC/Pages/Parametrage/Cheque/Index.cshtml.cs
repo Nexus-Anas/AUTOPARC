@@ -16,15 +16,11 @@ namespace AUTOPARC.Pages.Parametrage.Cheque
 
 
         public List<Cheques> ChequesList { get; set; }
-        public List<Banques> BanquesList { get; set; }
 
 
 
 
         public async Task OnGet()
-        {
-            ChequesList = await _db.Cheques.ToListAsync();
-            BanquesList = await _db.Banques.ToListAsync();
-        }
+            => ChequesList = await _db.Cheques.ToListAsync();
     }
 }

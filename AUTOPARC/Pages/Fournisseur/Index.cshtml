@@ -12,27 +12,41 @@
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Listes des Fournisseur</h4>
+            <div class="row">
+                <div class="col-xl-8 col-12">
+                    <h4 class="card-title title-2">Listes des Fournisseur</h4>
+                </div>
+                <div class="col-xl-4 col-12 text-right">
+                    <a href="#" class="btn btn-info mt-1"><i class="bi bi-printer-fill"></i> Imprimé</a>
+                </div>
+            </div>
             <hr>
 
-            <div class="mt-5">
+            <div class="mt-3">
+
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="/Fournisseur/Create" class="btn btn-primary btn-lg mb-2"><i class="fas fa-plus"></i>&nbsp; Nouveau Fournisseur</a>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table id="zero_config" class="table table-borderless table-striped table-earning">
                         <thead>
                             <tr>
-                                <th class="text text-white bg-primary" style="font-size:18px">Nom</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Email</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Telephone</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Portable</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Ville</th>
-                                <th class="text text-white bg-primary" style="font-size:18px">Fonction</th>
-                                <th class="text text-center text-white bg-primary" style="font-size:18px">Action</th>
+                                <th class="text-white bg-primary"><span class="h5">Nom</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Email</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Telephone</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Portable</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Ville</span></th>
+                                <th class="text-white bg-primary"><span class="h5">Fonction</span></th>
+                                <th class="text-white bg-primary text-center"><span class="h5">Action</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Fournisseurs)
                             {
-                                <tr style="font-size:16px">
+                                <tr class="h5">
                                     <td class="text-dark">@item.Nom</td>
                                     <td class="text-dark">@item.Email</td>
                                     <td class="text-dark">@item.Telephone</td>
@@ -47,6 +61,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
         </div>

@@ -16,22 +16,32 @@ namespace AUTOPARC.Pages.Maintenance
 
 
 
-        public List<Maintenances> Maintenances { get; set; }
-        public List<TypeMaintenances> TypeMaintenances { get; set; }
-        public List<Vehicules> Vehicules { get; set; }
-        public List<Chauffeurs> Chauffeurs { get; set; }
-        public List<ModePaiments> ModePaiments { get; set; }
+        public List<Maintenances> MaintenancesList { get; set; }
+        public List<TypeMaintenances> TypeMaintenancesList { get; set; }
+        public List<OperationMaintenances> OperationMaintenancesList { get; set; }
+        public List<Fournisseurs> FournisseursList { get; set; }
+        public List<Vehicules> VehiculesList { get; set; }
+        public List<Chauffeurs> ChauffeursList { get; set; }
+        public List<Cheques> ChequesList { get; set; }
+        public List<Virements> VirementsList { get; set; }
+        public List<Credits> CreditsList { get; set; }
+
+        private const string _action = "Maintenance";
 
 
 
 
         public async Task OnGet()
         {
-            Maintenances = await _db.Maintenances.ToListAsync();
-            TypeMaintenances = await _db.TypeMaintenances.ToListAsync();
-            Vehicules = await _db.Vehicules.ToListAsync();
-            ModePaiments = await _db.ModePaiments.ToListAsync();
-            Chauffeurs = await _db.Chauffeurs.ToListAsync();
+            MaintenancesList = await _db.Maintenances.ToListAsync();
+            TypeMaintenancesList = await _db.TypeMaintenances.ToListAsync();
+            OperationMaintenancesList = await _db.OperationMaintenances.ToListAsync();
+            FournisseursList = await _db.Fournisseurs.ToListAsync();
+            VehiculesList = await _db.Vehicules.ToListAsync();
+            ChauffeursList = await _db.Chauffeurs.ToListAsync();
+            ChequesList = await _db.Cheques.Where(chq => chq.Action == _action).ToListAsync();
+            VirementsList = await _db.Virements.Where(v => v.Action == _action).ToListAsync();
+            CreditsList = await _db.Credits.Where(c => c.Action == _action).ToListAsync();
         }
     }
 }

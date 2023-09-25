@@ -12,11 +12,13 @@ namespace AUTOPARC.Models
         public Villes()
         {
             Fournisseurs = new HashSet<Fournisseurs>();
+            Societes = new HashSet<Societes>();
         }
 
         public int Id { get; set; }
         public string Nom { get; set; }
 
         public virtual ICollection<Fournisseurs> Fournisseurs { get; set; }
+        public virtual ICollection<Societes> Societes { get; set; }
     }
 }

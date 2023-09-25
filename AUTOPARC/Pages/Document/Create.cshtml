@@ -71,7 +71,7 @@
             <div class="mt-4">
                 <div class="container-fluid">
                     <div class="row d-flex justify-content-center">
-                        <div class="col-lg-8">
+                        <div class="col-xl-8 col-lg-10 col-12">
                             <div class="card" style="background-color:#F2F2F2">
                                 <div class="card-header font-weight-bold">Document</div>
                                 <div class="card-body">
@@ -84,13 +84,11 @@
                                         <input asp-for="Docs.VehiculeId" value="@Model.Vehicules.Id" type="hidden" />
 
                                         <div class="form-row">
-                                            <div class="form-group col-12">
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label class="control-label">Matricule véhicule <span class="text-danger">*</span></label>
                                                 <input type="text" value="@Model.Vehicules.Matricule" class="form-control" readonly>
                                             </div>
-                                        </div>
 
-                                        <div class="form-row">
                                             <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Docs.Numero" class="control-label">Numéro Document <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Docs.Numero" class="text text-danger"></span>
@@ -108,23 +106,7 @@
                                                     }
                                                 </select>
                                             </div>
-                                        </div>
 
-                                        <div class="form-row">
-                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                <label asp-for="Docs.DateDebut" class="control-label">Date Début <span class="text-danger">*</span></label>
-                                                <span asp-validation-for="Docs.DateDebut" class="text text-danger"></span>
-                                                <input asp-for="Docs.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control required" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")">
-                                            </div>
-
-                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                <label asp-for="Docs.DateFin" class="control-label">Date Fin <span class="text-danger">*</span></label>
-                                                <span asp-validation-for="Docs.DateFin" class="text text-danger"></span>
-                                                <input asp-for="Docs.DateFin" type="date" class="form-control required" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row">
                                             <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Docs.FrsId" class="control-label">Fournisseur <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Docs.FrsId" class="text text-danger"></span>
@@ -138,19 +120,27 @@
                                             </div>
 
                                             <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Docs.DateDebut" class="control-label">Date Début <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Docs.DateDebut" class="text text-danger"></span>
+                                                <input asp-for="Docs.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control required" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")">
+                                            </div>
+
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label asp-for="Docs.DateFin" class="control-label">Date Fin <span class="text-danger">*</span></label>
+                                                <span asp-validation-for="Docs.DateFin" class="text text-danger"></span>
+                                                <input asp-for="Docs.DateFin" type="date" class="form-control required" max="@DateTime.Now.AddYears(20).ToString("yyyy-MM-dd")">
+                                            </div>
+
+                                            <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label asp-for="Docs.PrixAchat" class="control-label">Prix d'Achat <span class="text-danger">*</span></label>
                                                 <span asp-validation-for="Docs.PrixAchat" class="text text-danger"></span>
                                                 <input asp-for="Docs.PrixAchat" type="text" class="form-control required">
                                             </div>
 
                                             <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                                @if (Model.check_all_checkboxes)
-                                                {
-                                                    <p class="text-danger">veuillez cocher au moins 1 case.</p>
-                                                }
                                                 <label class="control-label">Mode Paiement <span class="text-danger">*</span></label>
                                                 <div class="form-row">
-                                                    @foreach (var item in Model.ModePaimentsList)
+                                                    @foreach (var item in Model.ModePaimentsList.OrderBy(m => m.Id))
                                                     {
                                                         <div class="form-check ml-2">
                                                             <input class="form-check-input payment-checkbox" type="checkbox" id="@item.Mode" name="@item.Mode" value="@item.Mode">
@@ -159,13 +149,14 @@
                                                     }
                                                 </div>
                                             </div>
+
                                         </div>
 
 
 
 
                                         <div class="row">
-                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="col-12">
                                                 <!-- Form d'Espece -->
                                                 <div class="collapse border border-secondary border-3 mb-1" id="especeForm">
                                                     <div class="container-fluid mb-2 bg-dark">
@@ -185,23 +176,22 @@
                                             </div>
 
 
-                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="col-12">
                                                 <!-- Form de Cheque -->
                                                 <div class="collapse border border-secondary border-3 mb-1" id="chequeForm">
                                                     <div class="container-fluid mb-2 bg-dark">
                                                         <h3 class="mb-0 text-center text-light">Form de Cheque</h3>
                                                     </div>
                                                     <div class="p-1">
-                                                        <input asp-for="Cheques.Action" value="Document" type="hidden" />
-                                                        <input asp-for="Cheques.Etat" value="impayé" type="hidden" />
+                                                        <input asp-for="Cheques.Etat" value="En porte feuille" type="hidden" />
 
                                                         <div class="form-row">
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.Numero" class="control-label">Numéro du Cheque <span class="text-danger">*</span></label>
                                                                 <input asp-for="Cheques.Numero" type="text" class="form-control">
                                                             </div>
 
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
                                                                 <select asp-for="Cheques.BanqueId" class="form-control form-select">
                                                                     <option value="">Choisir...</option>
@@ -212,29 +202,29 @@
                                                                 </select>
                                                             </div>
 
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.Montant" class="control-label">Montant (DH) <span class="text-danger">*</span></label>
                                                                 <input asp-for="Cheques.Montant" type="text" value="0" class="form-control">
                                                             </div>
 
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.AuNomDe" class="control-label">Au nom de: <span class="text-danger">*</span></label>
                                                                 <input asp-for="Cheques.AuNomDe" type="text" class="form-control">
                                                             </div>
 
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.DateReglement" class="control-label">Date de Reglement <span class="text-danger">*</span></label>
                                                                 <input asp-for="Cheques.DateReglement" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
                                                             </div>
 
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.DateEcheance" class="control-label">Date d'Echeance <span class="text-danger">*</span></label>
                                                                 <input asp-for="Cheques.DateEcheance" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-row">
-                                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-12">
                                                                 <label asp-for="Cheques.DateValeur" class="control-label">Date Valeur</label>
                                                                 <input asp-for="Cheques.DateValeur" type="date" class="form-control">
                                                             </div>
@@ -247,15 +237,14 @@
                                             </div>
 
 
-                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="col-12">
                                                 <!-- Form de Virement -->
                                                 <div class="collapse border border-secondary border-3 mb-1" id="virementForm">
                                                     <div class="container-fluid mb-2 bg-dark">
                                                         <h3 class="mb-0 text-center text-light">Form de Virement</h3>
                                                     </div>
                                                     <div class="p-1">
-                                                        <input asp-for="Virements.Action" value="Document" type="hidden" />
-                                                        <input asp-for="Virements.Etat" value="impayé" type="hidden" />
+                                                        <input asp-for="Virements.Etat" value="payé" type="hidden" />
 
                                                         <div class="form-row">
                                                             <div class="form-group col-12">
@@ -305,14 +294,13 @@
                                             </div>
 
 
-                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="col-12">
                                                 <!-- Form de Credit -->
                                                 <div class="collapse border border-secondary border-3 mb-1" id="creditForm">
                                                     <div class="container-fluid mb-2 bg-dark">
                                                         <h3 class="mb-0 text-center text-light">Form de Credit</h3>
                                                     </div>
                                                     <div class="p-1">
-                                                        <input asp-for="Credits.Action" value="Document" type="hidden" />
                                                         <input asp-for="Credits.Etat" value="impayé" type="hidden" />
 
                                                         <div class="form-row">
@@ -370,14 +358,14 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-12">
-                                                <label class="control-label">URL Documents</label>
+                                                <label class="control-label">Documents</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputFileAdd">URL</span>
                                                     </div>
                                                     <div class="custom-file">
                                                         <input type="file" class="custom-file-input" id="inputFile" name="files" multiple>
-                                                        <label class="custom-file-label" for="inputFile">Choisir un fichier...</label>
+                                                        <label class="custom-file-label" for="inputFile">Choisir des documents...</label>
                                                     </div>
                                                 </div>
                                                 <div id="selectedFiles" class="mt-2"></div> <!-- Container to display selected files -->
@@ -417,6 +405,35 @@
             });
         });
     </script>
+
+
+
+    <script>
+        $(document).ready(function () {
+            // Get references to the input fields
+            var montantInput = $("#Credits_Montant");
+            var mensualiteInput = $("#Credits_Mensualite");
+            var dateFinInput = $("#Credits_DateFin");
+
+            // Attach an input event handler to both Montant and Mensualite inputs
+            montantInput.on("input", updateDateFin);
+            mensualiteInput.on("input", updateDateFin);
+
+            function updateDateFin() {
+                var montant = parseFloat(montantInput.val());
+                var mensualite = parseFloat(mensualiteInput.val());
+
+                if (!isNaN(montant) && !isNaN(mensualite) && mensualite !== 0) {
+                    var months = Math.ceil(montant / mensualite);
+                    var currentDate = new Date();
+                    currentDate.setMonth(currentDate.getMonth() + months);
+                    var formattedDate = currentDate.toISOString().slice(0, 10); // Format as "yyyy-MM-dd"
+                    dateFinInput.val(formattedDate);
+                }
+            }
+        });
+    </script>
+
 }
 
 

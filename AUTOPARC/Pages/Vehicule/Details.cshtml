@@ -10,10 +10,19 @@
         <h3 class="mb-0 text-center text-light">Véhicules</h3>
     </div>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="card">
             <div class="card-body wizard-content">
-                <h4 class="card-title title-2">Modifier Véhicule</h4>
+                <div class="row">
+                    <div class="col-xl-8 col-12">
+                        <h4 class="card-title title-2">Modifier Véhicule</h4>
+                    </div>
+
+                    <div class="col-xl-4 col-12 text-right">
+                        <a href="#" class="btn btn-info mt-1"><i class="bi bi-printer-fill"></i> Imprimé</a>
+                        <a asp-route-id="@Model.Vehicules.Num" asp-page="/Vehicule/TelechargerDoc" class="btn btn-primary mt-1"><i class="bi bi-box-arrow-up-right"></i> Consulter Images</a>
+                    </div>
+                </div>
                 <hr>
                 @if (Model.check_vehicule_exception)
                 {
@@ -69,22 +78,28 @@
                         <p>la date de début du crédit doit être inférieure ou égale a la date de fin.</p>
                     </div>
                 }
-                @if (Model.check_cheque_payee)
+                @if (Model.check_cheque_existance)
                 {
                     <div class="alert alert-danger" role="alert">
-                        <p>vous ne pouvez pas supprimer ce véhicule car le chèque est payé!</p>
+                        <p>vous ne pouvez pas supprimer ce véhicule car un cheque existe!</p>
                     </div>
                 }
-                @if (Model.check_virement_payee)
+                @if (Model.check_virement_existance)
                 {
                     <div class="alert alert-danger" role="alert">
-                        <p>vous ne pouvez pas supprimer ce véhicule car le virement est payé!</p>
+                        <p>vous ne pouvez pas supprimer ce véhicule car un virement est payé!</p>
                     </div>
                 }
-                @if (Model.check_credit_payee)
+                @if (Model.check_credit_existance)
                 {
                     <div class="alert alert-danger" role="alert">
                         <p>vous ne pouvez pas supprimer ce véhicule car il est en crédit!</p>
+                    </div>
+                }
+                @if (Model.check_operation_existance)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>vous ne pouvez pas supprimer ce véhicule car il a effectué des opérations</p>
                     </div>
                 }
                 <div id="carouselExampleIndicators" class="carousel slide mb-5" data-ride="carousel">
@@ -118,9 +133,45 @@
                 <input asp-for="Vehicules.Id" type="hidden" />
                 <input asp-for="Vehicules.Num" type="hidden" />
                 <input asp-for="Vehicules.MarqueId" type="hidden" />
-                <input asp-for="Vehicules.MontantPayeeVirement" type="hidden" />
                 <input asp-for="Vehicules.MontantPayeeCheque" type="hidden" />
+                <input asp-for="Vehicules.MontantPayeeVirement" type="hidden" />
                 <input asp-for="Vehicules.MontantPayeeCredit" type="hidden" />
+                <input asp-for="Vehicules.MontantPayeeTotal" type="hidden" />
+
+                @if (Model.SocietesList.Count == 1)
+                {
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <input asp-for="Vehicules.SocieteId" value="@Model.SocietesList.FirstOrDefault().Id" type="hidden" />
+                            <label class="control-label">Société</label>
+                            <input class="form-control" value="@Model.SocietesList.FirstOrDefault().RaisonSocial" type="text" readonly />
+                        </div>
+                    </div>
+                }
+
+                @if (Model.SocietesList.Count > 1 && !Model.operatons_exist)
+                {
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <select asp-for="Vehicules.SocieteId" class="form-control form-select">
+                                @foreach (var item in Model.SocietesList)
+                                {
+                                    <option value="@item.Id">@item.RaisonSocial</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <input asp-for="Vehicules.SocieteId" value="@Model.SocietesList.FirstOrDefault().Id" type="hidden" />
+                            <label class="control-label">Société</label>
+                            <input class="form-control" value="@Model.SocietesList.FirstOrDefault().RaisonSocial" type="text" readonly />
+                        </div>
+                    </div>
+                }
 
                 <div class="form-row">
                     <div class="form-group col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
@@ -220,13 +271,9 @@
                     </div>
 
                     <div class="form-group col-xl-8 col-lg-8 col-md-6 col-sm-6 col-12">
-                        @if (Model.check_all_checkboxes)
-                        {
-                            <p class="text-danger">veuillez cocher au moins 1 case.</p>
-                        }
                         <label class="control-label">Mode Paiement <span class="text-danger">*</span></label>
                         <div class="form-row">
-                            @foreach (var item in Model.ModePaimentsList)
+                            @foreach (var item in Model.ModePaimentsList.OrderBy(m => m.Id))
                             {
                                 <div class="form-check ml-2">
                                     @if (item.Mode == "Espece")
@@ -422,7 +469,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.Montant" class="control-label">Montant <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.Montant" type="text" class="form-control" readonly>
+                                        <input asp-for="Credits.Montant" type="text" class="form-control">
                                     </div>
                                 </div>
 
@@ -436,21 +483,27 @@
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.BanqueId" class="control-label">Banque <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.Banque.Nom" type="text" class="form-control" readonly>
+                                        <select asp-for="Credits.BanqueId" class="form-control form-select">
+                                            <option value="">Choisir...</option>
+                                            @foreach (var item in Model.BanquesList)
+                                            {
+                                                <option value="@item.Id">@item.Nom</option>
+                                            }
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.DateDebut" class="control-label">Date Debut <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" readonly>
+                                        <input asp-for="Credits.DateDebut" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label asp-for="Credits.DateFin" class="control-label">Date Fin <span class="text-danger">*</span></label>
-                                        <input asp-for="Credits.DateFin" type="date" class="form-control" readonly>
+                                        <input asp-for="Credits.DateFin" type="date" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -468,6 +521,22 @@
             <div class="card-body wizard-content">
                 <h4 class="card-title title-2">Informations Optionels</h4>
                 <hr>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label class="control-label">Images</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputFileAdd">URL</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputFile" name="files" multiple>
+                                <label class="custom-file-label" for="inputFile">Choisir des images...</label>
+                            </div>
+                        </div>
+                        <div id="selectedFiles" class="mt-2"></div> <!-- Container to display selected files -->
+                    </div>
+                </div>
 
                 <div class="form-row">
                     <div class="form-group col-12">
@@ -545,7 +614,7 @@
 
                 <div class="form-group row text-white">
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
-                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-primary btn-lg btn-block">Modifier</a>
+                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-success btn-lg btn-block">Modifier</a>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
                         <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
@@ -584,7 +653,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
-                                <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
+                                <button data-dismiss="modal" class="btn btn-success btn-lg">Annuler</button>
                             </div>
                         </div>
                     </div>
@@ -631,15 +700,6 @@
     </script>
 
     <script>
-        // JavaScript to enable automatic carousel sliding
-        $(document).ready(function () {
-            $('#carouselExampleIndicators').carousel({
-                interval: 3000
-            });
-        });
-    </script>
-
-    <script>
         $(document).ready(function () {
             // Get references to the input fields
             var montantInput = $("#Credits_Montant");
@@ -667,21 +727,37 @@
 
     <script>
         $(document).ready(function () {
-            var etat_cheque = $("#Cheques_Etat").val(); // Get the value of Cheques.Etat
-            var etat_virement = $("#Virements_Etat").val(); // Get the value of Virement.Etat
+            var etat_cheque = parseFloat($("#Vehicules_MontantPayeeCheque").val());
+            var etat_virement = parseFloat($("#Vehicules_MontantPayeeVirement").val());
+            var etat_credit = parseFloat($("#Vehicules_MontantPayeeCredit").val());
+
             var inputs_cheque = $("#chequeForm input, #chequeForm select");
             var inputs_virement = $("#virementForm input, #virementForm select");
+            var inputs_credit = $("#creditForm input, #creditForm select");
 
-            if (etat_cheque === "payé") {
-                inputs_cheque.prop("readonly", true); // Disable all inputs and selects
+            if (etat_cheque !== 0) {
+                inputs_cheque.prop("disabled", true); // Disable all inputs and selects
             }
-
-            if (etat_virement === "payé") {
-                inputs_virement.prop("readonly", true); // Disable all inputs and selects
+            if (etat_virement !== 0) {
+                inputs_virement.prop("disabled", true); // Disable all inputs and selects
+            }
+            if (etat_credit !== 0) {
+                inputs_credit.prop("disabled", true); // Disable all inputs and selects
             }
         });
     </script>
 
+
+
+    <!-- Carousel Script and Style -->
+    <script>
+        // JavaScript to enable automatic carousel sliding
+        $(document).ready(function () {
+            $('#carouselExampleIndicators').carousel({
+                interval: 3000
+            });
+        });
+    </script>
 
     <style>
         .carousel-img {
@@ -712,5 +788,32 @@
             const cleanValue = inputElement.value.replace(/\D/g, ''); // Remove any non-digit characters
             inputElement.value = cleanValue;
         }
+    </script>
+}
+
+
+@section DocUploadJS {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inputFile').on("change", function () {
+                var inputFiles = $(this).prop("files");
+                var selectedFilesContainer = $('#selectedFiles');
+
+                // Clear previous content
+                selectedFilesContainer.empty();
+
+                // Update input label
+                if (inputFiles.length === 0) {
+                    $(this).next(".custom-file-label").html("Choisir un fichier...");
+                } else {
+                    $(this).next(".custom-file-label").html(inputFiles.length);
+                }
+
+                // Display selected files in rows
+                for (var i = 0; i < inputFiles.length; i++) {
+                    selectedFilesContainer.append('<div>' + inputFiles[i].name + '</div>');
+                }
+            });
+        });
     </script>
 }

@@ -68,6 +68,9 @@ namespace AUTOPARC.Pages.Parametrage.Credit
             var credit = await _db.Credits.Where(c => c.Id == Credits.Id).SingleOrDefaultAsync();
             credit.Note = Credits.Note;
             credit.Etat = Credits.Etat;
+            credit.Mensualite = Credits.Mensualite;
+            credit.DateDebut = Credits.DateDebut;
+            credit.DateFin = Credits.DateFin;
             await _db.SaveChangesAsync();
             return RedirectToPage("/Parametrage/Credit/Index");
         }
@@ -130,6 +133,11 @@ namespace AUTOPARC.Pages.Parametrage.Credit
                     doc.MontantPayeeTotal += CreditsDetails.MensualitePayeeEspece;
                 }
 
+                if (credit.Action == "Maintenance")
+                {
+                    var maintenance = await _db.Maintenances.Where(m => m.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    maintenance.MontantPayeeTotal += CreditsDetails.MensualitePayeeEspece;
+                }
 
                 if (credit.Montant == credit.MontantPayeeTotal)
                     credit.Etat = "payé";
@@ -188,6 +196,12 @@ namespace AUTOPARC.Pages.Parametrage.Credit
                     doc.MontantPayeeTotal += CreditsDetails.MensualitePayeeCheque;
                 }
 
+                if (credit.Action == "Maintenance")
+                {
+                    var maintenance = await _db.Maintenances.Where(m => m.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    maintenance.MontantPayeeTotal += CreditsDetails.MensualitePayeeCheque;
+                }
+
                 Cheques.ActionNum = credit.Num;
                 await _db.Cheques.AddAsync(Cheques);
                 return true;
@@ -243,6 +257,13 @@ namespace AUTOPARC.Pages.Parametrage.Credit
                     doc.MontantPayeeTotal += CreditsDetails.MensualitePayeeVirement;
                 }
 
+
+                if (credit.Action == "Maintenance")
+                {
+                    var maintenance = await _db.Maintenances.Where(m => m.Num == credit.ActionNum).SingleOrDefaultAsync();
+                    maintenance.MontantPayeeTotal += CreditsDetails.MensualitePayeeVirement;
+                }
+
                 Virements.ActionNum = credit.Num;
                 await _db.Virements.AddAsync(Virements);
                 return true;
@@ -260,15 +281,21 @@ namespace AUTOPARC.Pages.Parametrage.Credit
 
         private async Task RemoveChequeModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Cheques."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Cheques."))
+                        ModelState.Remove(key);
+            });
         }
         private async Task RemoveVirementModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Virements."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Virements."))
+                        ModelState.Remove(key);
+            });
         }
     }
 }

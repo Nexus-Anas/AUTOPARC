@@ -1,0 +1,88 @@
+﻿@page
+@model AUTOPARC.Pages.SuiviDepense.SelectionSocieteModel
+@{
+    ViewData["Title"] = "Selection Marque";
+}
+
+
+<div class="container-fluid">
+
+    <div class="container-fluid bg-dark py-1 mb-2">
+        <h3 class="text-center text-light">Dépenses</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title title-2 text-dark">Sélectionnez Société</h4>
+            <hr>
+            @if (Model.SocietesList.Count == 0)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p><span>Aucune société n'est enregistrée, veuillez en enregistrer une et réessayer.</span></p>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.SocietesList.Count == 1)
+            {
+                <button id="selectBtn" asp-page-handler="Select" class="btn btn-primary">lol</button>
+            }
+            @if (Model.SocietesList.Count > 1)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <form method="post">
+
+                            <div class="card" style=" background-color:#DFDDDE">
+                                <div class="card-body">
+                                    <h4 class="card-title">Sélectionnez Société</h4>
+
+                                    <div class="form-group h6">
+                                        <select asp-for="Societes.Id" class="form-control form-select">
+                                            @foreach (var item in Model.SocietesList)
+                                            {
+                                                <option value="@item.Id">@item.RaisonSocial</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group row text-white">
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-3">
+                                            <button asp-page-handler="Select" class="btn btn-lg btn-primary btn-block">Suivant</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOMContentLoaded event fired"); // Check if this logs
+
+            // Select the button element by its id
+            var selectBtn = document.getElementById("selectBtn");
+
+            if (selectBtn) {
+                console.log("Button found"); // Check if the button is found
+                // Trigger a click event on the button element
+                selectBtn.click();
+            } else {
+                console.log("Button not found");
+            }
+        });
+    </script>
+
+}

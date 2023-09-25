@@ -34,6 +34,7 @@ namespace AUTOPARC.Pages.Vehicule
         public List<Fournisseurs> FournisseursList { get; set; }
         public List<ModePaiments> ModePaimentsList { get; set; }
         public List<Banques> BanquesList { get; set; }
+        public List<Societes> SocietesList { get; set; }
         public List<ImageVehicule> ImagesList { get; set; }
 
 
@@ -46,14 +47,14 @@ namespace AUTOPARC.Pages.Vehicule
         [BindProperty]
         public Credits Credits { get; set; }
 
-        [BindProperty]
-        public ImageVehicule ImageVehicule { get; set; }
 
-        public bool check_vehicule_exception, check_vehicule_matricule, check_all_checkboxes;
-        public bool check_cheque_exception, check_numero_cheque_existance, check_cheque_date, check_cheque_payee;
-        public bool check_virement_exception, check_virement_payee;
-        public bool check_credit_exception, check_credit_montantParMoi, check_credit_date, check_credit_payee;
+        public bool check_vehicule_exception, check_vehicule_matricule, check_operation_existance;
+        public bool check_cheque_exception, check_numero_cheque_existance, check_cheque_date;
+        public bool check_virement_exception;
+        public bool check_credit_exception, check_credit_montantParMoi, check_credit_date;
+        public bool check_cheque_existance, check_virement_existance, check_credit_existance;
 
+        public bool operatons_exist;
 
 
 
@@ -67,11 +68,21 @@ namespace AUTOPARC.Pages.Vehicule
             FournisseursList = await _db.Fournisseurs.ToListAsync();
             ModePaimentsList = await _db.ModePaiments.ToListAsync();
             BanquesList = await _db.Banques.ToListAsync();
+            SocietesList = await _db.Societes.ToListAsync();
             ImagesList = await _db.ImageVehicule.Where(i => i.VehiculeNum == Vehicules.Num).ToListAsync();
 
             Cheques = await _db.Cheques.Where(chq => chq.Action == "Vehicule" && chq.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
             Virements = await _db.Virements.Where(v => v.Action == "Vehicule" && v.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
             Credits = await _db.Credits.Where(c => c.Action == "Vehicule" && c.ActionNum == Vehicules.Num).SingleOrDefaultAsync();
+
+            var maintenance = await _db.Maintenances.Where(m => m.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            var document = await _db.Docs.Where(d => d.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            var carburant = await _db.RechargeCarburants.Where(rc => rc.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            var cession = await _db.Cessions.Where(c => c.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            if (maintenance != null || document != null || carburant != null || cession != null || Cheques != null || Virements != null || Credits != null)
+            {
+                operatons_exist = true;
+            }
         }
 
 
@@ -79,7 +90,6 @@ namespace AUTOPARC.Pages.Vehicule
 
         public async Task<IActionResult> OnPostUpdate()
         {
-            bool isEspece = Request.Form.TryGetValue("Espece", out var especeValue);
             bool isCheque = Request.Form.TryGetValue("Cheque", out var chequeValue);
             bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
             bool isCredit = Request.Form.TryGetValue("Credit", out var creditValue);
@@ -95,11 +105,6 @@ namespace AUTOPARC.Pages.Vehicule
 
             try
             {
-
-
-
-
-
                 var vehicule = await _db.Vehicules.FindAsync(Vehicules.Id);
                 vehicule.Matricule = Vehicules.Matricule;
                 vehicule.CarburantId = Vehicules.CarburantId;
@@ -128,21 +133,31 @@ namespace AUTOPARC.Pages.Vehicule
                 vehicule.VolumeCoffre = Vehicules.VolumeCoffre;
 
 
-                if (isCheque && !await UpdateChequeAsync())
+                if (isCheque && !await InsertChequeAsync())
                     return Page();
 
-                if (isVirement && !await UpdateVirementAsync())
+                if (isVirement && !await InsertVirementAsync())
                     return Page();
 
-                if (isCredit && !await UpdateCreditAsync())
+                if (isCredit && !await InsertCreditAsync())
                     return Page();
 
-
-                vehicule.MontantPayeeTotal -= vehicule.MontantPayeeEspece;
-                vehicule.MontantPayeeEspece = Vehicules.MontantPayeeEspece;
+                if (vehicule.MontantPayeeEspece != Vehicules.MontantPayeeEspece)
+                {
+                    Vehicules.MontantPayeeTotal -= vehicule.MontantPayeeEspece;
+                    vehicule.MontantPayeeEspece = Vehicules.MontantPayeeEspece;
+                    Vehicules.MontantPayeeTotal += vehicule.MontantPayeeEspece;
+                }
                 vehicule.MontantPayeeCheque = Vehicules.MontantPayeeCheque;
                 vehicule.MontantPayeeVirement = Vehicules.MontantPayeeVirement;
-                vehicule.MontantPayeeTotal += vehicule.MontantPayeeEspece;
+                vehicule.MontantPayeeCredit = Vehicules.MontantPayeeCredit;
+                vehicule.MontantPayeeTotal = Vehicules.MontantPayeeTotal;
+
+                if (!await CheckOperationExistance())
+                    vehicule.SocieteId = Vehicules.SocieteId;
+
+                if (!await InsertImagesAsync(Vehicules.Num))
+                    return Page();
 
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Vehicule/Index");
@@ -160,16 +175,10 @@ namespace AUTOPARC.Pages.Vehicule
 
         public async Task<IActionResult> OnPostDelete()
         {
-            //if (await Check_ChequePayee())
-            //    return Page();
-
-            if (!await TryDeleteCheck())
+            if (await CheckPaiementExistance())
                 return Page();
 
-            if (!await TryDeleteVirement())
-                return Page();
-
-            if (!await TryDeleteCredit())
+            if (await CheckOperationExistance())
                 return Page();
 
             _db.Vehicules.Remove(Vehicules);
@@ -181,11 +190,58 @@ namespace AUTOPARC.Pages.Vehicule
 
 
 
-        private async Task<bool> UpdateChequeAsync()
+
+        private async Task<bool> CheckPaiementExistance()
         {
+            if (Vehicules.MontantPayeeCheque != 0)
+            {
+                check_cheque_existance = true;
+                await OnGet(Vehicules.Id);
+                return true;
+            }
+            if (Vehicules.MontantPayeeVirement != 0)
+            {
+                check_virement_existance = true;
+                await OnGet(Vehicules.Id);
+                return true;
+            }
+            if (Vehicules.MontantPayeeCredit != 0)
+            {
+                check_credit_existance = true;
+                await OnGet(Vehicules.Id);
+                return true;
+            }
+            return false;
+        }
+
+        private async Task<bool> CheckOperationExistance()
+        {
+            var maintenance = await _db.Maintenances.Where(m => m.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            var document = await _db.Docs.Where(d => d.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            var carburant = await _db.RechargeCarburants.Where(rc => rc.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            var cession = await _db.Cessions.Where(c => c.VehiculeId == Vehicules.Id).FirstOrDefaultAsync();
+            if (maintenance != null || document != null || carburant != null || cession != null)
+            {
+                check_operation_existance = true;
+                await OnGet(Vehicules.Id);
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+
+
+        private async Task<bool> InsertChequeAsync()
+        {
+            if (Vehicules.MontantPayeeCheque != 0)
+                return true;
+
             if (string.IsNullOrEmpty(Cheques.Numero) || string.IsNullOrEmpty(Cheques.AuNomDe) ||
                 Cheques.DateReglement == null || Cheques.DateEcheance == null ||
-                Cheques.Montant <= 0 || Cheques.BanqueId == 0)
+                Cheques.Montant == 0 || Cheques.BanqueId == 0)
             {
                 check_cheque_exception = true;
                 await OnGet(Vehicules.Id);
@@ -201,22 +257,6 @@ namespace AUTOPARC.Pages.Vehicule
 
             try
             {
-                var cheque = await _db.Cheques.Where(chq => chq.Action == "Vehicule" && chq.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-
-                if (cheque != null)
-                {
-                    cheque.BanqueId = Cheques.BanqueId;
-                    cheque.Numero = Cheques.Numero;
-                    cheque.Montant = Cheques.Montant;
-                    cheque.AuNomDe = Cheques.AuNomDe;
-                    cheque.DateReglement = Cheques.DateReglement;
-                    cheque.DateEcheance = Cheques.DateEcheance;
-                    cheque.DateValeur = Cheques.DateValeur;
-                    Vehicules.MontantPayeeCheque = Cheques.Montant;
-
-                    return true;
-                }
-
                 Vehicules.MontantPayeeCheque = Cheques.Montant;
                 Cheques.ActionNum = Vehicules.Num;
                 await _db.Cheques.AddAsync(Cheques);
@@ -227,7 +267,7 @@ namespace AUTOPARC.Pages.Vehicule
                 if (mySqlEx.Message.Contains("Numero"))
                 {
                     check_numero_cheque_existance = true;
-                    await OnGet(Vehicules.Id);
+                    await OnGet(Vehicules.MarqueId);
                 }
                 return false;
             }
@@ -244,23 +284,22 @@ namespace AUTOPARC.Pages.Vehicule
 
 
 
-        private async Task<bool> UpdateVirementAsync()
+        private async Task<bool> InsertVirementAsync()
         {
+            if (Vehicules.MontantPayeeVirement != 0)
+                return true;
+
             if (string.IsNullOrEmpty(Virements.Rib) || string.IsNullOrEmpty(Virements.AuNomDe) ||
-                Virements.DateVirement == null || Virements.Montant <= 0 || Virements.BanqueId == 0)
+                Virements.Montant == 0 || Virements.BanqueId == 0 ||
+                 Virements.DateVirement == null)
             {
-                check_virement_exception = true;
+                check_cheque_exception = true;
                 await OnGet(Vehicules.Id);
                 return false;
             }
 
             try
             {
-                var virement = await _db.Virements.Where(v => v.Action == "Vehicule" && v.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-
-                if (virement != null)
-                    return true;
-
                 Vehicules.MontantPayeeVirement = Virements.Montant;
                 Vehicules.MontantPayeeTotal += Virements.Montant;
                 Virements.ActionNum = Vehicules.Num;
@@ -280,9 +319,12 @@ namespace AUTOPARC.Pages.Vehicule
 
 
 
-        private async Task<bool> UpdateCreditAsync()
+        private async Task<bool> InsertCreditAsync()
         {
-            if (Credits.Montant <= 0 || Credits.Mensualite <= 0 || Credits.BanqueId == 0 ||
+            if (Vehicules.MontantPayeeCredit != 0)
+                return true;
+
+            if (Credits.Montant == 0 || Credits.Mensualite == 0 || Credits.BanqueId == 0 ||
                 Credits.DateDebut == null || Credits.DateFin == null)
             {
                 check_credit_exception = true;
@@ -290,26 +332,32 @@ namespace AUTOPARC.Pages.Vehicule
                 return false;
             }
 
+            if (Credits.Montant < Credits.Mensualite)
+            {
+                check_credit_montantParMoi = true;
+                await OnGet(Vehicules.Id);
+                return false;
+            }
+
+            if (Credits.DateDebut > Credits.DateFin)
+            {
+                check_credit_date = true;
+                await OnGet(Vehicules.Id);
+                return false;
+            }
+
             try
             {
-                var credit = await _db.Credits.Where(c => c.Action == "Vehicule" && c.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-
-                if (credit != null)
-                {
-                    credit.Mensualite = Credits.Mensualite;
-                    credit.DateFin = Credits.DateFin;
-                    return true;
-                }
-
+                var num = await _db.Credits.OrderByDescending(n => n.Num).FirstOrDefaultAsync();
+                Credits.Num = num != null ? num.Num + 1 : 1;
                 Vehicules.MontantPayeeCredit = Credits.Montant;
                 Credits.ActionNum = Vehicules.Num;
-                Credits.Etat = "impayé";
                 await _db.Credits.AddAsync(Credits);
                 return true;
             }
             catch
             {
-                check_credit_exception = true;
+                check_virement_exception = true;
                 await OnGet(Vehicules.Id);
                 return false;
             }
@@ -319,55 +367,43 @@ namespace AUTOPARC.Pages.Vehicule
 
 
 
-        private async Task<bool> TryDeleteCheck()
+
+        private async Task<bool> InsertImagesAsync(int vehicule_num)
         {
-            var cheque = await _db.Cheques.Where(chq => chq.Action == "Vehicule" && chq.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-            if (cheque != null && cheque.Etat != "payé")
+            try
             {
-                _db.Cheques.Remove(cheque);
-                return true;
+                var files = HttpContext.Request.Form.Files;
+
+                if (files.Count > 0)
+                {
+                    foreach (var file in files)
+                    {
+                        if (file != null && file.Length > 0)
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            var filePath = Path.Combine(_env.WebRootPath, "images", fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                                await file.CopyToAsync(stream);
+
+                            var image = new ImageVehicule
+                            {
+                                Url = fileName,
+                                VehiculeNum = vehicule_num
+                            };
+                            _db.ImageVehicule.Add(image);
+                        }
+                    }
+                }
             }
-            else if(cheque != null && cheque.Etat == "payé")
+            catch (Exception)
             {
-                check_cheque_payee = true;
-                await OnGet(Vehicules.Id);
+                check_vehicule_exception = true;
+                await OnGet(Vehicules.MarqueId);
                 return false;
             }
             return true;
         }
-
-        private async Task<bool> TryDeleteVirement()
-        {
-            var virement = await _db.Virements.Where(v => v.Action == "Vehicule" && v.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-            if (virement != null && virement.Etat != "payé")
-            {
-                _db.Virements.Remove(virement);
-                return true;
-            }
-            else if (virement != null && virement.Etat == "payé")
-            {
-                check_virement_payee = true;
-                await OnGet(Vehicules.Id);
-                return false;
-            }
-            return true;
-        }
-
-        private async Task<bool> TryDeleteCredit()
-        {
-            var credit = await _db.Credits.Where(c => c.Action == "Vehicule" && c.ActionNum == Vehicules.Num).FirstOrDefaultAsync();
-
-            if (credit == null)
-                return true;
-
-            check_credit_payee = true;
-            await OnGet(Vehicules.Id);
-            return false;
-        }
-
-
-
-
 
 
 
@@ -376,21 +412,37 @@ namespace AUTOPARC.Pages.Vehicule
 
         private async Task RemoveChequeModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Cheques."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Cheques."))
+                        ModelState.Remove(key);
+            });
         }
+
+
         private async Task RemoveVirementModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Virements."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Virements."))
+                        ModelState.Remove(key);
+            });
         }
+
+
         private async Task RemoveCreditModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Credits."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Credits."))
+                        ModelState.Remove(key);
+            });
         }
+
+
+
     }
 }

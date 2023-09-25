@@ -7,12 +7,12 @@
 
 <div class="container-fluid">
     <div class="container-fluid py-1 mb-2 bg-dark">
-        <h3 class="mb-0 text-center text-light">Suivi Depenses</h3>
+        <h3 class="mb-0 text-center text-light">Suivi Dépenses</h3>
     </div>
 
     <div class="card">
         <div class="card-body wizard-content">
-            <h4 class="card-title title-2">Modifier Depense</h4>
+            <h4 class="card-title title-2">Modifier Dépense</h4>
             <hr>
             @if (Model.check_exception)
             {
@@ -24,36 +24,48 @@
 
                 <input asp-for="Suividepense.Id" type="hidden"/>
 
+                @if (Model.SocieteCount == 1)
+                {
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <input asp-for="Suividepense.SocieteId" value="@Model.SocietesList.FirstOrDefault().Id" type="hidden" />
+                            <label class="control-label">Société</label>
+                            <input class="form-control" value="@Model.SocietesList.FirstOrDefault().RaisonSocial" type="text" readonly />
+                        </div>
+                    </div>
+                }
+
+                @if (Model.SocieteCount > 1)
+                {
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <select asp-for="Suividepense.SocieteId" class="form-control form-select">
+                                @foreach (var item in Model.SocietesList)
+                                {
+                                    <option value="@item.Id">@item.RaisonSocial</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                }
+
                 <div class="form-row">
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Suividepense.NumDepense" class="control-label">Numero Depense</label>
+
+                    <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Suividepense.NumDepense" class="control-label">Numero Dépense</label>
                         <input asp-for="Suividepense.NumDepense" type="text" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Suividepense.DateDepense" class="control-label">Date Depense <span class="text-danger">*</span></label>
+                    <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Suividepense.DateDepense" class="control-label">Date Dépense <span class="text-danger">*</span></label>
                         <span asp-validation-for="Suividepense.DateDepense" class="text text-danger"></span>
                         <input asp-for="Suividepense.DateDepense" type="date" class="form-control required" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Suividepense.Montant">Montant Payee <span class="text-danger">*</span></label>
+                    <div class="form-group col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <label asp-for="Suividepense.Montant">Montant Payé <span class="text-danger">*</span></label>
                         <span asp-validation-for="Suividepense.Montant" class="text-danger"></span>
                         <input asp-for="Suividepense.Montant" type="text" class="required form-control" oninput="validateInput(this)">
-                    </div>
-
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-12">
-                        <label asp-for="Suividepense.ModePayementId">Methode de Payement <span class="text-danger">*</span></label>
-                        <span asp-validation-for="Suividepense.ModePayementId" class="text-danger"></span>
-                        <select asp-for="Suividepense.ModePayementId" class="form-control form-select">
-                            <option value="">Choisir...</option>
-                            @foreach (var item in Model.ModePaiments)
-                            {
-                                <option value="@item.Id">@item.Mode</option>
-                            }
-                        </select>
                     </div>
                 </div>
 
@@ -67,7 +79,7 @@
 
                 <div class="form-group row text-white">
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
-                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-primary btn-lg btn-block">Modifier</a>
+                        <a data-toggle="modal" data-target="#updatemodal" class="btn btn-success btn-lg btn-block">Modifier</a>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mt-3">
                         <a data-toggle="modal" data-target="#deletemodal" class="btn btn-danger btn-lg btn-block">Supprimer</a>
@@ -105,7 +117,7 @@
                                 <button type="button" class="close mb-1" data-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
                             </div>
                             <div class="modal-footer">
-                                <button asp-page-handler="Update" class="btn btn-primary btn-lg">Confirmer</button>
+                                <button asp-page-handler="Update" class="btn btn-success btn-lg">Confirmer</button>
                                 <button data-dismiss="modal" class="btn btn-secondary btn-lg">Annuler</button>
                             </div>
                         </div>

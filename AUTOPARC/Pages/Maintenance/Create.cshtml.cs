@@ -29,9 +29,12 @@ namespace AUTOPARC.Pages.Maintenance
 
         [BindProperty]
         public Maintenances Maintenances { get; set; }
+
         public Vehicules Vehicules { get; set; }
         public Chauffeurs Chauffeurs { get; set; }
         public List<TypeMaintenances> TypeMaintenancesList { get; set; }
+        public List<OperationMaintenances> OperationMaintenancesList { get; set; }
+        public List<Fournisseurs> FournisseursList { get; set; }
         public List<ModePaiments> ModePaimentsList { get; set; }
         public List<Banques> BanquesList { get; set; }
 
@@ -39,23 +42,29 @@ namespace AUTOPARC.Pages.Maintenance
         [BindProperty]
         public Cheques Cheques { get; set; }
 
-
         [BindProperty]
         public Virements Virements { get; set; }
 
+        [BindProperty]
+        public Credits Credits { get; set; }
 
-        public bool check_exception, check_cout_montantPayee, check_all_checkboxes;
-        public bool check_cheque_exception, check_numero_cheque_existance, check_date_cheque;
+
+        public bool check_maintenance_exception;
+        public bool check_cheque_exception, check_numero_cheque_existance, check_cheque_date;
         public bool check_virement_exception;
+        public bool check_credit_exception, check_credit_montantParMoi, check_credit_date;
+        private const string _action = "Maintenance";
 
 
 
 
         public async Task OnGet(int id)
         {
-            Vehicules = await _db.Vehicules.Where(v => v.Id == id).SingleOrDefaultAsync();
+            Vehicules = await _db.Vehicules.FindAsync(id);
             Chauffeurs = await _db.AffectationChauffeurVehicules.Where(c => c.VehiculeId == id).Select(c => c.Chauffeur).FirstOrDefaultAsync();
             TypeMaintenancesList = await _db.TypeMaintenances.ToListAsync();
+            OperationMaintenancesList = await _db.OperationMaintenances.ToListAsync();
+            FournisseursList = await _db.Fournisseurs.ToListAsync();
             ModePaimentsList = await _db.ModePaiments.ToListAsync();
             BanquesList = await _db.Banques.ToListAsync();
         }
@@ -71,13 +80,7 @@ namespace AUTOPARC.Pages.Maintenance
             bool isEspece = Request.Form.TryGetValue("Espece", out var especeValue);
             bool isCheque = Request.Form.TryGetValue("Cheque", out var chequeValue);
             bool isVirement = Request.Form.TryGetValue("Virement", out var virementValue);
-
-            if (!isEspece && !isCheque && !isVirement)
-            {
-                check_all_checkboxes = true;
-                await OnGet(Maintenances.VehiculeId);
-                return Page();
-            }
+            bool isCredit = Request.Form.TryGetValue("Credit", out var creditValue);
 
             if (!isCheque)
                 await RemoveChequeModelStateEntriesAsync();
@@ -85,24 +88,12 @@ namespace AUTOPARC.Pages.Maintenance
             if (!isVirement)
                 await RemoveVirementModelStateEntriesAsync();
 
-            if (isCheque && !await InsertChequeAsync())
-                return Page();
-
-            if (isVirement && !await InsertVirementAsync())
-                return Page();
-
-
+            if (!isCredit)
+                await RemoveCreditModelStateEntriesAsync();
 
 
             if (!ModelState.IsValid)
             {
-                await OnGet(Maintenances.VehiculeId);
-                return Page();
-            }
-
-            if (Maintenances.Cout < Maintenances.MontantPayeeEspece)
-            {
-                check_cout_montantPayee = true;
                 await OnGet(Maintenances.VehiculeId);
                 return Page();
             }
@@ -112,15 +103,26 @@ namespace AUTOPARC.Pages.Maintenance
                 Maintenances.MontantPayeeTotal += Maintenances.MontantPayeeEspece;
                 await _db.Maintenances.AddAsync(Maintenances);
 
-                if (!await InsertDocumentAsync())
+                if (isCheque && !await InsertChequeAsync())
                     return Page();
+
+                if (isVirement && !await InsertVirementAsync())
+                    return Page();
+
+                if (isCredit && !await InsertCreditAsync())
+                    return Page();
+
+                if (!await InsertDocumentsAsync(Maintenances.Num))
+                    return Page();
+
+
 
                 await _db.SaveChangesAsync();
                 return RedirectToPage("/Maintenance/Index");
             }
             catch (Exception)
             {
-                check_exception = true;
+                check_maintenance_exception = true;
                 await OnGet(Maintenances.VehiculeId);
                 return Page();
             }
@@ -146,7 +148,7 @@ namespace AUTOPARC.Pages.Maintenance
 
             if (Cheques.DateReglement > Cheques.DateEcheance)
             {
-                check_date_cheque = true;
+                check_cheque_date = true;
                 await OnGet(Maintenances.VehiculeId);
                 return false;
             }
@@ -154,9 +156,9 @@ namespace AUTOPARC.Pages.Maintenance
             try
             {
                 Maintenances.MontantPayeeCheque = Cheques.Montant;
+                Cheques.Action = _action;
                 Cheques.ActionNum = Maintenances.Num;
                 await _db.Cheques.AddAsync(Cheques);
-                await _db.SaveChangesAsync();
                 return true;
             }
             catch (DbUpdateException ex) when (ex.InnerException is MySqlException mySqlEx)
@@ -193,9 +195,55 @@ namespace AUTOPARC.Pages.Maintenance
             try
             {
                 Maintenances.MontantPayeeVirement = Virements.Montant;
+                Maintenances.MontantPayeeTotal += Virements.Montant;
+                Virements.Action = _action;
                 Virements.ActionNum = Maintenances.Num;
                 await _db.Virements.AddAsync(Virements);
-                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                check_virement_exception = true;
+                await OnGet(Maintenances.VehiculeId);
+                return false;
+            }
+        }
+
+
+
+
+        private async Task<bool> InsertCreditAsync()
+        {
+            if (Credits.Montant == 0 || Credits.Mensualite == 0 || Credits.BanqueId == 0 ||
+                Credits.DateDebut == null || Credits.DateFin == null)
+            {
+                check_credit_exception = true;
+                await OnGet(Maintenances.VehiculeId);
+                return false;
+            }
+
+            if (Credits.Montant < Credits.Mensualite)
+            {
+                check_credit_montantParMoi = true;
+                await OnGet(Maintenances.VehiculeId);
+                return false;
+            }
+
+            if (Credits.DateDebut > Credits.DateFin)
+            {
+                check_credit_date = true;
+                await OnGet(Maintenances.VehiculeId);
+                return false;
+            }
+
+            try
+            {
+                var num = await _db.Credits.OrderByDescending(n => n.Num).FirstOrDefaultAsync();
+                Credits.Num = num != null ? num.Num + 1 : 1;
+                Maintenances.MontantPayeeCredit = Credits.Montant;
+                Credits.Action = _action;
+                Credits.ActionNum = Maintenances.Num;
+                await _db.Credits.AddAsync(Credits);
                 return true;
             }
             catch
@@ -211,30 +259,38 @@ namespace AUTOPARC.Pages.Maintenance
 
 
 
-
-
-        private async Task<bool> InsertDocumentAsync()
+        private async Task<bool> InsertDocumentsAsync(int maintenance_num)
         {
             try
             {
-                if (HttpContext.Request.Form.Files.Count > 0)
+                var files = HttpContext.Request.Form.Files;
+
+                if (files.Count > 0)
                 {
-                    var file = HttpContext.Request.Form.Files[0];
-                    if (file != null && file.Length > 0)
+                    foreach (var file in files)
                     {
-                        var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-                        var filePath = Path.Combine(_env.WebRootPath, "Documents", "Maintenances", fileName);
+                        if (file != null && file.Length > 0)
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            var filePath = Path.Combine(_env.WebRootPath, "Docs", "Maintenances", fileName);
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                            await file.CopyToAsync(stream);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                                await file.CopyToAsync(stream);
 
-                        Maintenances.UrlDoc = fileName;
+                            var doc = new UrlDocs
+                            {
+                                Url = fileName,
+                                Action = _action,
+                                ActionNum = maintenance_num
+                            };
+                            _db.UrlDocs.Add(doc);
+                        }
                     }
                 }
             }
             catch (Exception)
             {
-                check_exception = true;
+                check_maintenance_exception = true;
                 await OnGet(Maintenances.VehiculeId);
                 return false;
             }
@@ -250,15 +306,37 @@ namespace AUTOPARC.Pages.Maintenance
 
         private async Task RemoveChequeModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Cheques."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Cheques."))
+                        ModelState.Remove(key);
+            });
         }
+
+
         private async Task RemoveVirementModelStateEntriesAsync()
         {
-            foreach (var key in ModelState.Keys.ToList())
-                if (key.StartsWith("Virements."))
-                    ModelState.Remove(key);
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Virements."))
+                        ModelState.Remove(key);
+            });
         }
+
+
+        private async Task RemoveCreditModelStateEntriesAsync()
+        {
+            await Task.Run(() =>
+            {
+                foreach (var key in ModelState.Keys.ToList())
+                    if (key.StartsWith("Credits."))
+                        ModelState.Remove(key);
+            });
+        }
+
+
+
     }
 }

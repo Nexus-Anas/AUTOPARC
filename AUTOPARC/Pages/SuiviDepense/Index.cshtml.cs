@@ -15,16 +15,16 @@ namespace AUTOPARC.Pages.SuiviDepense
 
 
 
-        public List<Suividepense> Suividepenses { get; set; }
-        public List<ModePaiments> ModePaiments { get; set; }
+        public List<Suividepense> SuividepensesList { get; set; }
+        public List<Societes> SocietesList { get; set; }
 
 
 
 
         public async Task OnGet()
         {
-            Suividepenses = await _db.Suividepense.ToListAsync();
-            ModePaiments = await _db.ModePaiments.ToListAsync();
+            SuividepensesList = await _db.Suividepense.ToListAsync();
+            SocietesList = await _db.Societes.ToListAsync();
         }
     }
 }

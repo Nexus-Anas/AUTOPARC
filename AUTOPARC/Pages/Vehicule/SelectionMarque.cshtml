@@ -25,9 +25,38 @@
                     </div>
                 </div>
             }
+            @if (Model.company_not_found)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            <p><span>Aucune société n'est enregistrée, veuillez en enregistrer une et réessayer.</span></p>
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="d-flex justify-content-center">
                 <div class="col-12">
                     <form method="post">
+
+                        @if (Model.SocietesList.Count > 1)
+                        {
+                            <div class="card" style=" background-color:#DFDDDE">
+                                <div class="card-body">
+                                    <h4 class="card-title">Sélectionnez Société</h4>
+
+                                    <div class="form-group h6">
+                                        <select asp-for="Societes.Id" class="form-control form-select">
+                                            @foreach (var item in Model.SocietesList)
+                                            {
+                                                <option value="@item.Id">@item.RaisonSocial</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
 
                         <div class="card" style=" background-color:#DFDDDE">
                             <div class="card-body">
